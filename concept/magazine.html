@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>민지와 대국의 웨딩 매거진</title>
+  <style>
+    @import url("https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css");
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:wght@400;500;600&family=Gowun+Batang:wght@400;700&display=swap");
+
+    :root{
+      --paper:#f7f1e8;
+      --ink:#171310;
+      --muted:#6f6258;
+      --accent:#a24f3d;
+      --accent-soft:#d8b49e;
+      --line:rgba(23,19,16,.13);
+      --shadow:0 26px 80px rgba(37,24,18,.16);
+      --maxw:430px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:"SUIT","Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.78), transparent 36%),
+        linear-gradient(180deg, #efe5d8 0%, #f7f1e8 18%, #ebdece 100%);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.3;
+      background-image:
+        linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,.16)),
+        repeating-linear-gradient(0deg, rgba(23,19,16,.015) 0 1px, transparent 1px 5px);
+      mix-blend-mode:soft-light;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; color:inherit; }
+
+    .page{
+      width:min(100%, var(--maxw));
+      margin:0 auto;
+      padding:14px 14px 72px;
+    }
+
+    .issue-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 2px 18px;
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+
+    .issue-bar strong{
+      color:var(--ink);
+      font-weight:700;
+    }
+
+    .cover{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(23,19,16,.08);
+      border-radius:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.68), rgba(255,255,255,.34));
+      box-shadow:0 18px 48px rgba(37,24,18,.12);
+      isolation:isolate;
+    }
+
+    .cover::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.42), transparent 24%, rgba(11,8,7,.22) 100%),
+        linear-gradient(90deg, rgba(255,255,255,.18), transparent 26%, transparent 74%, rgba(255,255,255,.08));
+      z-index:1;
+    }
+
+    .cover-photo{
+      position:relative;
+      aspect-ratio:3 / 4.65;
+      background:#dbcfc2;
+    }
+
+    .cover-photo img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      transform:scale(1.04);
+      filter:saturate(.95) contrast(1.04);
+    }
+
+    .masthead{
+      position:absolute;
+      left:18px;
+      right:18px;
+      top:18px;
+      z-index:2;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      color:#fff8f1;
+    }
+
+    .masthead-title{
+      margin:0;
+      font-family:"Cormorant Garamond","EB Garamond","Gowun Batang",serif;
+      font-size:clamp(40px, 12vw, 56px);
+      line-height:.9;
+      letter-spacing:-.08em;
+      font-weight:600;
+      text-transform:uppercase;
+    }
+
+    .masthead-meta{
+      text-align:right;
+      font-size:11px;
+      line-height:1.55;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .cover-copy{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:2;
+      color:#fffaf5;
+      display:grid;
+      gap:10px;
+    }
+
+    .cover-tag{
+      width:max-content;
+      padding:7px 12px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      background:rgba(20,12,9,.24);
+      backdrop-filter:blur(12px);
+      font-size:10px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+    }
+
+    .cover-headline{
+      margin:0;
+      font-family:"Cormorant Garamond","EB Garamond","Gowun Batang",serif;
+      font-size:clamp(52px, 16vw, 76px);
+      line-height:.86;
+      letter-spacing:-.09em;
+      font-weight:600;
+    }
+
+    .cover-deck{
+      margin:0;
+      max-width:250px;
+      font-size:14px;
+      line-height:1.8;
+      color:rgba(255,250,245,.9);
+    }
+
+    .cover-lines{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+      font-size:12px;
+      line-height:1.7;
+      letter-spacing:.06em;
+    }
+
+    .cover-line{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .cover-line::before{
+      content:"";
+      width:26px;
+      height:1px;
+      background:rgba(255,250,245,.5);
+    }
+
+    .section{
+      margin-top:54px;
+      padding:0;
+    }
+
+    .section.dark{
+      position:relative;
+      margin-inline:-14px;
+      padding:34px 14px;
+      background:linear-gradient(180deg, rgba(27,20,18,.98) 0%, rgba(41,30,26,.98) 100%);
+      color:#f7efe7;
+      overflow:hidden;
+    }
+
+    .section.dark::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at top right, rgba(216,180,158,.14), transparent 36%);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--accent);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.3em;
+      text-transform:uppercase;
+    }
+
+    .dark .eyebrow{ color:#d6a48b; }
+
+    .headline{
+      margin:0;
+      font-family:"Cormorant Garamond","EB Garamond","Gowun Batang",serif;
+      font-size:clamp(36px, 10vw, 48px);
+      line-height:.92;
+      letter-spacing:-.06em;
+      font-weight:600;
+    }
+
+    .body-copy{
+      margin:14px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.9;
+    }
+
+    .dark .body-copy,
+    .dark .meta-copy,
+    .dark .fact-card span,
+    .dark .count-note{
+      color:rgba(247,239,231,.78);
+    }
+
+    .editorial-grid{
+      display:grid;
+      gap:20px;
+      padding-inline:4px;
+    }
+
+    .dropcap{
+      font-family:"EB Garamond","Cormorant Garamond",serif;
+      font-size:56px;
+      line-height:.8;
+      float:left;
+      padding-right:10px;
+      color:var(--accent);
+    }
+
+    .quote-box{
+      padding:18px 0 0;
+      border-top:1px solid var(--line);
+      font-family:"EB Garamond","Cormorant Garamond","Gowun Batang",serif;
+      font-size:24px;
+      line-height:1.35;
+      letter-spacing:-.03em;
+    }
+
+    .quote-box strong{
+      display:block;
+      margin-top:10px;
+      font-size:12px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-family:"SUIT",sans-serif;
+    }
+
+    .spread{
+      display:grid;
+      gap:14px;
+      margin-inline:-14px;
+    }
+
+    .spread-hero{
+      overflow:hidden;
+      aspect-ratio:.92;
+      background:#ddd1c5;
+      border-top:1px solid rgba(23,19,16,.1);
+      border-bottom:1px solid rgba(23,19,16,.1);
+    }
+
+    .spread-hero img,
+    .spread-card img,
+    .gallery-stage img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+    }
+
+    .spread-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      padding-inline:14px;
+    }
+
+    .spread-card{
+      overflow:hidden;
+      background:#ddd1c5;
+      aspect-ratio:.95;
+      border:1px solid rgba(23,19,16,.08);
+    }
+
+    .spread-caption{
+      display:grid;
+      gap:4px;
+      padding:2px 14px 0;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.05em;
+    }
+
+    .spread-caption strong{
+      color:var(--ink);
+      font-size:14px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .countdown-wrap{
+      display:grid;
+      gap:22px;
+      position:relative;
+      z-index:1;
+      padding:2px 4px 0;
+      overflow:hidden;
+    }
+
+    .count-motion{
+      position:absolute;
+      left:0;
+      right:0;
+      top:8px;
+      overflow:hidden;
+      pointer-events:none;
+      opacity:.5;
+    }
+
+    .count-motion span{
+      display:block;
+      width:max-content;
+      font-family:"Cormorant Garamond","EB Garamond",serif;
+      font-size:clamp(44px, 10vw, 62px);
+      line-height:.8;
+      letter-spacing:.22em;
+      color:rgba(162,79,61,.12);
+      white-space:nowrap;
+      text-transform:uppercase;
+      animation:countMarquee 22s linear infinite;
+    }
+
+    .countdown-wrap::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:8px;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(162,79,61,.45), transparent);
+      transform-origin:left center;
+      animation:countScan 3.4s ease-in-out infinite;
+    }
+
+    .count-numbering{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) auto;
+      align-items:end;
+      gap:16px;
+      padding-bottom:16px;
+      border-bottom:1px solid var(--line);
+      position:relative;
+      z-index:1;
+    }
+
+    .count-kicker{
+      display:block;
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+      letter-spacing:.08em;
+    }
+
+    .count-note{
+      margin:0;
+      max-width:220px;
+      font-size:13px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    .count-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:0;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      margin-top:-2px;
+      position:relative;
+      z-index:1;
+    }
+
+    .count-card{
+      position:relative;
+      padding:18px 8px 16px;
+      text-align:center;
+      transition:transform .3s ease;
+    }
+
+    .count-card + .count-card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:18%;
+      bottom:18%;
+      width:1px;
+      background:var(--line);
+    }
+
+    .count-card strong{
+      display:block;
+      font-family:"Cormorant Garamond","EB Garamond",serif;
+      font-size:42px;
+      line-height:.86;
+      letter-spacing:-.08em;
+      font-variant-numeric:tabular-nums;
+      color:var(--ink);
+      transform-origin:center bottom;
+    }
+
+    .count-card span{
+      display:block;
+      margin-top:10px;
+      font-size:10px;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .count-card.is-ticking strong{
+      animation:countTick .58s cubic-bezier(.2,.8,.22,1);
+    }
+
+    .count-card.is-ticking span{
+      animation:countLabelFlash .58s ease;
+    }
+
+    .is-visible .count-card{
+      animation:countRise .8s cubic-bezier(.2,.8,.22,1) both;
+    }
+
+    .is-visible .count-card:nth-child(2){ animation-delay:.08s; }
+    .is-visible .count-card:nth-child(3){ animation-delay:.16s; }
+    .is-visible .count-card:nth-child(4){ animation-delay:.24s; }
+
+    @keyframes countMarquee{
+      from{ transform:translateX(0); }
+      to{ transform:translateX(-33.333%); }
+    }
+
+    @keyframes countScan{
+      0%, 100%{ transform:scaleX(.08); opacity:.1; }
+      50%{ transform:scaleX(1); opacity:.95; }
+    }
+
+    @keyframes countTick{
+      0%{
+        transform:translateY(16px) scale(.72);
+        opacity:.08;
+        filter:blur(10px);
+      }
+      45%{
+        transform:translateY(-5px) scale(1.16);
+        opacity:1;
+        filter:blur(0);
+      }
+      100%{
+        transform:translateY(0) scale(1);
+        opacity:1;
+        filter:blur(0);
+      }
+    }
+
+    @keyframes countLabelFlash{
+      0%{ letter-spacing:.4em; opacity:.22; }
+      100%{ letter-spacing:.26em; opacity:1; }
+    }
+
+    @keyframes countRise{
+      0%{
+        transform:translateY(24px);
+        opacity:0;
+      }
+      100%{
+        transform:translateY(0);
+        opacity:1;
+      }
+    }
+
+    .gallery-stage{
+      display:grid;
+      gap:16px;
+    }
+
+    .gallery-feature{
+      overflow:hidden;
+      aspect-ratio:1.12;
+      background:#ddd1c5;
+      border-top:1px solid rgba(23,19,16,.1);
+      border-bottom:1px solid rgba(23,19,16,.1);
+      box-shadow:0 18px 42px rgba(37,24,18,.1);
+    }
+
+    .gallery-caption{
+      display:grid;
+      gap:8px;
+      padding-bottom:2px;
+    }
+
+    .gallery-caption strong{
+      font-family:"Cormorant Garamond","EB Garamond","Gowun Batang",serif;
+      font-size:32px;
+      line-height:.95;
+      letter-spacing:-.05em;
+      font-weight:600;
+    }
+
+    .gallery-caption span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .gallery-orbit{
+      position:relative;
+      width:100%;
+      height:236px;
+      margin-top:-6px;
+    }
+
+    .gallery-thumb{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:72px;
+      height:72px;
+      margin:-36px 0 0 -36px;
+      padding:0;
+      border:none;
+      border-radius:50%;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 16px 34px rgba(37,24,18,.16);
+      cursor:pointer;
+      transition:transform .42s ease, opacity .35s ease, box-shadow .35s ease, filter .35s ease;
+      transform-origin:center;
+      will-change:transform;
+    }
+
+    .gallery-thumb img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+    }
+
+    .gallery-thumb.active{
+      box-shadow:0 22px 44px rgba(37,24,18,.24);
+    }
+
+    .gallery-controls{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .ghost-btn{
+      flex:1;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.5);
+      cursor:pointer;
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:0;
+      margin-top:18px;
+    }
+
+    .fact-card{
+      padding:14px 0;
+      border-top:1px solid var(--line);
+      display:grid;
+      grid-template-columns:74px 1fr;
+      align-items:start;
+      gap:10px;
+    }
+
+    .fact-card strong{
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+
+    .fact-card span{
+      font-family:"Gowun Batang","SUIT",serif;
+      font-size:15px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    .timeline{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .timeline-item{
+      display:grid;
+      grid-template-columns:72px 1fr;
+      gap:10px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
+    }
+
+    .timeline-item strong{
+      font-size:12px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+    }
+
+    .timeline-item span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .info-list{
+      display:grid;
+      gap:28px;
+      margin-top:18px;
+    }
+
+    .info-block{
+      border-top:1px solid var(--line);
+    }
+
+    .info-block:first-of-type{ border-top:none; }
+
+    .info-title{
+      margin:0;
+      font-family:"Cormorant Garamond","EB Garamond","Gowun Batang",serif;
+      font-size:30px;
+      line-height:1.02;
+      letter-spacing:-.05em;
+      font-weight:600;
+    }
+
+    .meta-copy{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.9;
+    }
+
+    .map-link{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top:14px;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .map-link::after{
+      content:"";
+      width:38px;
+      height:1px;
+      background:linear-gradient(90deg, rgba(23,19,16,.22), transparent);
+    }
+
+    .accordion{
+      margin-top:12px;
+      border-top:1px solid var(--line);
+    }
+
+    .acc-head{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      padding:16px 0;
+      border:none;
+      border-bottom:1px solid var(--line);
+      background:none;
+      text-align:left;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .acc-head span:last-child{
+      color:var(--muted);
+      font-size:20px;
+      font-weight:400;
+    }
+
+    .acc-body{
+      display:none;
+      padding:0 0 16px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .acc-body.open{ display:block; }
+
+    .acc-item{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.85;
+    }
+
+    .copy-btn{
+      margin-top:12px;
+      padding:0;
+      border:none;
+      background:none;
+      color:var(--ink);
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .copy-btn::after{
+      content:"";
+      display:block;
+      width:100%;
+      height:1px;
+      margin-top:6px;
+      background:linear-gradient(90deg, rgba(23,19,16,.24), transparent);
+    }
+
+    .closing{
+      padding:54px 4px 8px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.9;
+    }
+
+    [data-reveal]{
+      opacity:.04;
+      transform:translateY(24px);
+      transition:opacity .6s ease, transform .6s ease;
+    }
+
+    [data-reveal].is-visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width:390px){
+      .page{ padding-inline:12px; }
+      .section{ margin-top:46px; }
+      .section.dark{
+        margin-inline:-12px;
+        padding-inline:12px;
+      }
+      .count-numbering{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+      .count-note{
+        max-width:none;
+      }
+      .count-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .count-card:nth-child(2n)::after{
+        content:"";
+        position:absolute;
+        left:12%;
+        right:12%;
+        bottom:0;
+        height:1px;
+        background:var(--line);
+      }
+      .count-card:nth-child(3)::before{
+        display:none;
+      }
+      .gallery-orbit{
+        height:216px;
+      }
+      .gallery-thumb{
+        width:64px;
+        height:64px;
+        margin:-32px 0 0 -32px;
+      }
+      .count-motion span{
+        font-size:40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="issue-bar">
+      <div><strong>The Wedding Post</strong></div>
+      <div>Issue No. 1122</div>
+    </div>
+
+    <section class="cover" data-reveal>
+      <div class="cover-photo">
+        <img src="../images/hero-main.jpg" alt="신랑 신부 메인 사진" />
+      </div>
+
+      <div class="masthead">
+        <h1 class="masthead-title">Wedding<br />Magazine</h1>
+        <div class="masthead-meta">Seoul Edition<br />November 2026</div>
+      </div>
+
+      <div class="cover-copy">
+        <div class="cover-tag">Special Issue</div>
+        <h2 class="cover-headline">Daekuk<br />& Minji</h2>
+        <p class="cover-deck">서로의 계절이 되어온 두 사람이 가장 선명한 한 장면을 함께 시작합니다.</p>
+        <div class="cover-lines">
+          <div class="cover-line">2026.11.22 Sunday 12:30 PM</div>
+          <div class="cover-line">로얄파크 컨벤션 파크홀</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section editorial-grid" data-reveal>
+      <div>
+        <p class="eyebrow">Editor Note</p>
+        <h2 class="headline">사랑을 읽는 방식도<br />조금은 다르게</h2>
+        <p class="body-copy"><span class="dropcap">오</span>늘의 초대장은 단순한 안내 페이지보다, 한 권의 얇은 매거진처럼 천천히 넘겨보고 싶은 장면들로 구성했습니다. 사진과 문장, 그리고 우리가 함께 맞이할 하루의 온도를 한 장씩 편집하듯 담아냈습니다.</p>
+      </div>
+
+      <div class="quote-box">
+        "우리의 가장 좋은 장면은 늘 서로를 바라보는 순간에 시작되었습니다."
+        <strong>From The Couple</strong>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <p class="eyebrow">Photo Essay</p>
+      <h2 class="headline">한 번에 읽히지 않고<br />천천히 남는 표정들</h2>
+
+      <div class="spread" style="margin-top:20px;">
+        <div class="spread-hero">
+          <img src="../images/story-snap.jpg" alt="웨딩 스냅 사진" />
+        </div>
+
+        <div class="spread-grid">
+          <div class="spread-card">
+            <img src="../images/story-groom.jpg" alt="신랑 김대국" />
+          </div>
+          <div class="spread-card">
+            <img src="../images/story-bride.jpg" alt="신부 조민지" />
+          </div>
+        </div>
+
+        <div class="spread-caption">
+          <strong>Feature Story</strong>
+          <span>조용히 시선을 맞추던 순간, 자연스럽게 웃음이 번지던 장면, 그리고 오래 기억될 하루의 결을 사진으로 남겼습니다.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="countdown-wrap">
+        <div class="count-motion" aria-hidden="true">
+          <span>Count Down Count Down Count Down</span>
+        </div>
+        <div class="count-numbering">
+          <div>
+            <p class="eyebrow">Count Down</p>
+            <h2 class="headline">Issue Date<br />11.22</h2>
+            <span class="count-kicker">Sunday at 12:30 PM, Grand Hall Seoul</span>
+          </div>
+          <p class="count-note">하루가 가까워질수록 마음도 더 또렷해집니다. 함께해 주실 그 시간을 기다리고 있습니다.</p>
+        </div>
+
+        <div class="count-grid" aria-label="예식까지 남은 시간">
+          <div class="count-card"><strong id="cd-days">--</strong><span>Days</span></div>
+          <div class="count-card"><strong id="cd-hours">--</strong><span>Hours</span></div>
+          <div class="count-card"><strong id="cd-mins">--</strong><span>Mins</span></div>
+          <div class="count-card"><strong id="cd-secs">--</strong><span>Secs</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-stage" data-reveal>
+      <div>
+        <p class="eyebrow">Picture Desk</p>
+        <h2 class="headline">오늘의 커버 말고도<br />좋은 장면이 많아서</h2>
+      </div>
+
+      <div class="gallery-feature">
+        <img id="galleryMainImg" src="../images/gallery/gallery-01.jpg" alt="대표 갤러리 이미지" />
+      </div>
+
+      <div class="gallery-caption">
+        <strong id="galleryTitle">Soft Light</strong>
+        <span id="galleryCaption">햇살이 가장 부드럽게 머물던 오후.</span>
+      </div>
+
+      <div class="gallery-orbit" id="galleryOrbit" aria-label="원형 갤러리">
+        <button class="gallery-thumb active" type="button" data-gallery-src="../images/gallery/gallery-01.jpg" data-gallery-title="Soft Light" data-gallery-caption="햇살이 가장 부드럽게 머물던 오후." aria-label="사진 1">
+          <img src="../images/gallery/gallery-01.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-02.jpg" data-gallery-title="Slow Smile" data-gallery-caption="천천히 웃음이 번지던 장면." aria-label="사진 2">
+          <img src="../images/gallery/gallery-02.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-03.jpg" data-gallery-title="Eye Contact" data-gallery-caption="조용히 눈을 맞추던 순간." aria-label="사진 3">
+          <img src="../images/gallery/gallery-03.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-04.jpg" data-gallery-title="Wind Trace" data-gallery-caption="바람과 함께 걷던 오후의 결." aria-label="사진 4">
+          <img src="../images/gallery/gallery-04.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-05.jpg" data-gallery-title="Quiet Mood" data-gallery-caption="자연스럽게 서로를 바라보던 시간." aria-label="사진 5">
+          <img src="../images/gallery/gallery-05.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-06.jpg" data-gallery-title="No Words" data-gallery-caption="말없이도 충분했던 하루의 일부." aria-label="사진 6">
+          <img src="../images/gallery/gallery-06.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-07.jpg" data-gallery-title="True Face" data-gallery-caption="가장 우리다운 표정이 남은 컷." aria-label="사진 7">
+          <img src="../images/gallery/gallery-07.jpg" alt="" />
+        </button>
+        <button class="gallery-thumb" type="button" data-gallery-src="../images/gallery/gallery-08.jpg" data-gallery-title="Last Frame" data-gallery-caption="잔잔하게 오래 남을 마지막 장면." aria-label="사진 8">
+          <img src="../images/gallery/gallery-08.jpg" alt="" />
+        </button>
+      </div>
+
+      <div class="gallery-controls">
+        <button class="ghost-btn" type="button" id="galleryPrev">Previous</button>
+        <button class="ghost-btn" type="button" id="galleryNext">Next</button>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <p class="eyebrow">Ceremony Brief</p>
+      <h2 class="headline">예식의 핵심 정보도<br />한 페이지 안에서 또렷하게</h2>
+
+      <div class="detail-grid">
+        <div class="fact-card">
+          <strong>Date</strong>
+          <span>2026년 11월 22일<br />일요일 오후 12시 30분</span>
+        </div>
+        <div class="fact-card">
+          <strong>Venue</strong>
+          <span>로얄파크 컨벤션<br />파크홀</span>
+        </div>
+        <div class="fact-card">
+          <strong>Address</strong>
+          <span>서울 용산구 이태원로 29</span>
+        </div>
+        <div class="fact-card">
+          <strong>Dress</strong>
+          <span>편안한 축하의 마음으로<br />함께해 주세요</span>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong>12:00</strong>
+          <span>예식장 도착 및 하객 맞이</span>
+        </div>
+        <div class="timeline-item">
+          <strong>12:30</strong>
+          <span>본식 시작</span>
+        </div>
+        <div class="timeline-item">
+          <strong>13:30</strong>
+          <span>축하 인사와 식사</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <p class="eyebrow">Guide</p>
+      <h2 class="headline">오시는 길과<br />마음을 전하는 방법</h2>
+
+      <div class="info-list">
+        <div class="info-block">
+          <h3 class="info-title">로얄파크 컨벤션<br />파크홀</h3>
+          <p class="meta-copy">서울 용산구 이태원로 29<br />2026년 11월 22일 일요일 오후 12시 30분</p>
+          <a class="map-link" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">지도에서 보기</a>
+        </div>
+
+        <div class="info-block">
+          <h3 class="info-title">마음을 전하실 곳</h3>
+          <p class="meta-copy">필요하신 분들만 조용히 확인하실 수 있도록 계좌 정보를 아래에 남겨두었습니다.</p>
+
+          <div class="accordion">
+            <button class="acc-head" type="button" data-acc="groom"><span>신랑측 계좌</span><span>+</span></button>
+            <div class="acc-body" id="acc-groom">
+              <div class="acc-item">OO은행 123-456-789012 (예금주 김대국)</div>
+              <button class="copy-btn" type="button" data-copy="OO은행 123-456-789012 예금주 김대국">계좌번호 복사</button>
+            </div>
+
+            <button class="acc-head" type="button" data-acc="bride"><span>신부측 계좌</span><span>+</span></button>
+            <div class="acc-body" id="acc-bride">
+              <div class="acc-item">OO은행 987-654-321098 (예금주 조민지)</div>
+              <button class="copy-btn" type="button" data-copy="OO은행 987-654-321098 예금주 조민지">계좌번호 복사</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="closing">
+      함께해 주시는 모든 분들께 진심으로 감사드립니다.<br />
+      문의는 <a href="tel:010-0000-0000">신랑</a> / <a href="tel:010-0000-0000">신부</a> 에게 편하게 연락해 주세요.
+    </footer>
+  </main>
+
+  <script>
+    (function revealOnScroll() {
+      const items = document.querySelectorAll("[data-reveal]");
+      if (!items.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        });
+      }, { threshold: 0.2 });
+
+      items.forEach((item) => observer.observe(item));
+    })();
+
+    (function countdown() {
+      const daysEl = document.getElementById("cd-days");
+      const hoursEl = document.getElementById("cd-hours");
+      const minsEl = document.getElementById("cd-mins");
+      const secsEl = document.getElementById("cd-secs");
+      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+      const valueEls = [daysEl, hoursEl, minsEl, secsEl];
+      const prevValues = new Map();
+
+      const target = new Date("2026-11-22T12:30:00+09:00");
+      const animateValue = (el, value) => {
+        const next = String(value).padStart(2, "0");
+        if (prevValues.get(el) === next) return;
+        prevValues.set(el, next);
+        el.textContent = next;
+        const card = el.closest(".count-card");
+        if (!card) return;
+        card.classList.remove("is-ticking");
+        void card.offsetWidth;
+        card.classList.add("is-ticking");
+      };
+
+      const tick = () => {
+        const diff = Math.max(0, target - new Date());
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        animateValue(daysEl, days);
+        animateValue(hoursEl, hours);
+        animateValue(minsEl, mins);
+        animateValue(secsEl, secs);
+      };
+
+      tick();
+      setInterval(tick, 1000);
+
+      valueEls.forEach((el) => {
+        const card = el.closest(".count-card");
+        if (!card) return;
+        card.addEventListener("animationend", (event) => {
+          if (event.animationName === "countTick") {
+            card.classList.remove("is-ticking");
+          }
+        });
+      });
+    })();
+
+    (function gallery() {
+      const orbit = document.getElementById("galleryOrbit");
+      const main = document.getElementById("galleryMainImg");
+      const title = document.getElementById("galleryTitle");
+      const caption = document.getElementById("galleryCaption");
+      const prev = document.getElementById("galleryPrev");
+      const next = document.getElementById("galleryNext");
+      const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
+      if (!orbit || !main || !title || !caption || !prev || !next || !thumbs.length) return;
+
+      let activeIndex = thumbs.findIndex((thumb) => thumb.classList.contains("active"));
+      if (activeIndex < 0) activeIndex = 0;
+
+      const positionThumbs = () => {
+        const count = thumbs.length;
+        const radiusX = window.innerWidth < 390 ? 126 : 142;
+        const radiusY = window.innerWidth < 390 ? 74 : 84;
+
+        thumbs.forEach((thumb, index) => {
+          const relative = (index - activeIndex + count) % count;
+          const normalized = relative > count / 2 ? relative - count : relative;
+          const angle = (-90 + normalized * 34) * (Math.PI / 180);
+          const x = Math.cos(angle) * radiusX;
+          const y = Math.sin(angle) * radiusY;
+          const distance = Math.abs(normalized);
+          const scale = index === activeIndex ? 1.18 : Math.max(0.68, 1 - distance * 0.08);
+          const opacity = index === activeIndex ? 1 : Math.max(0.26, 1 - distance * 0.16);
+          const zIndex = index === activeIndex ? 30 : 20 - distance;
+
+          thumb.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+          thumb.style.opacity = opacity;
+          thumb.style.zIndex = zIndex;
+          thumb.style.filter = index === activeIndex ? "none" : "saturate(.72)";
+          thumb.classList.toggle("active", index === activeIndex);
+        });
+      };
+
+      const setActive = (index) => {
+        activeIndex = (index + thumbs.length) % thumbs.length;
+        const active = thumbs[activeIndex];
+        main.src = active.dataset.gallerySrc || "";
+        title.textContent = active.dataset.galleryTitle || "";
+        caption.textContent = active.dataset.galleryCaption || "";
+        positionThumbs();
+      };
+
+      thumbs.forEach((thumb, index) => {
+        thumb.addEventListener("click", () => setActive(index));
+      });
+
+      prev.addEventListener("click", () => setActive(activeIndex - 1));
+      next.addEventListener("click", () => setActive(activeIndex + 1));
+      window.addEventListener("resize", positionThumbs);
+
+      let startX = 0;
+      let moved = false;
+
+      orbit.addEventListener("touchstart", (event) => {
+        startX = event.touches[0].clientX;
+        moved = false;
+      }, { passive: true });
+
+      orbit.addEventListener("touchmove", (event) => {
+        if (Math.abs(event.touches[0].clientX - startX) > 12) moved = true;
+      }, { passive: true });
+
+      orbit.addEventListener("touchend", (event) => {
+        if (!moved) return;
+        const diff = event.changedTouches[0].clientX - startX;
+        if (Math.abs(diff) < 24) return;
+        setActive(activeIndex + (diff < 0 ? 1 : -1));
+      });
+
+      setActive(activeIndex);
+    })();
+
+    (function copyButtons() {
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        const original = button.textContent;
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(button.dataset.copy || "");
+            button.textContent = "복사 완료";
+            setTimeout(() => {
+              button.textContent = original;
+            }, 1200);
+          } catch (error) {
+            alert("복사에 실패했어요. 길게 눌러 직접 복사해 주세요.");
+          }
+        });
+      });
+    })();
+
+    (function accordion() {
+      document.querySelectorAll(".acc-head").forEach((head) => {
+        head.addEventListener("click", () => {
+          const key = head.dataset.acc;
+          const body = document.getElementById(`acc-${key}`);
+          if (!body) return;
+          body.classList.toggle("open");
+          const icon = head.querySelector("span:last-child");
+          if (icon) icon.textContent = body.classList.contains("open") ? "−" : "+";
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
