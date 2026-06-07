@@ -399,60 +399,557 @@
     }
 
     .count-band{
+      --count-shift:0px;
+      position:relative;
+      overflow:hidden;
       display:grid;
-      gap:18px;
+      gap:26px;
+      padding:0;
+      isolation:isolate;
     }
 
-    .count-head{
-      display:flex;
-      justify-content:space-between;
+    .count-bg{
+      position:relative;
+      min-height:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+      opacity:.98;
+    }
+
+    .count-gridlines,
+    .count-scan,
+    .count-bars,
+    .count-aurora,
+    .count-trail{
+      position:absolute;
+      inset:-16px 0 auto;
+      height:100svh;
+    }
+
+    .count-gridlines{
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size:100% 46px, 46px 100%;
+      mask-image:linear-gradient(180deg, transparent, rgba(0,0,0,.84) 12%, rgba(0,0,0,.84) 78%, transparent);
+      opacity:.12;
+      transform:translateY(calc(var(--count-shift) * -.18));
+    }
+
+    .count-scan{
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(114,166,255,.18) 50%, transparent 100%);
+      transform:translateY(-100%);
+      animation:countScan 5.2s linear infinite;
+      opacity:.72;
+    }
+
+    .count-bars{
+      inset:-16px 0 auto 0;
+      height:100svh;
+      background:
+        linear-gradient(90deg,
+          rgba(255,255,255,.04) 0 6%,
+          transparent 6% 10%,
+          rgba(255,255,255,.07) 10% 14%,
+          transparent 14% 19%,
+          rgba(255,255,255,.03) 19% 27%,
+          transparent 27% 100%);
+      transform:translateY(calc(var(--count-shift) * -.1));
+      opacity:.34;
+    }
+
+    .count-aurora{
+      inset:-10% -18% auto;
+      height:118svh;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(114,166,255,.22) 0, transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(255,255,255,.12) 0, transparent 18%),
+        radial-gradient(circle at 72% 62%, rgba(120,233,255,.12) 0, transparent 22%),
+        radial-gradient(circle at 34% 78%, rgba(162,193,255,.14) 0, transparent 20%);
+      filter:blur(18px);
+      mix-blend-mode:screen;
+      opacity:.92;
+      animation:countAurora 18s ease-in-out infinite alternate;
+    }
+
+    .count-trail{
+      inset:0 -10% auto;
+      height:104svh;
+      overflow:hidden;
+      opacity:.72;
+    }
+
+    .count-trail::before,
+    .count-trail::after{
+      content:"";
+      position:absolute;
+      inset:auto;
+      width:68vw;
+      max-width:320px;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.9) 38%, rgba(123,198,255,.88) 62%, transparent);
+      box-shadow:0 0 18px rgba(123,198,255,.28);
+    }
+
+    .count-trail::before{
+      top:28%;
+      left:-34vw;
+      transform:rotate(-12deg);
+      animation:countTrailOne 8.5s linear infinite;
+    }
+
+    .count-trail::after{
+      top:68%;
+      left:-40vw;
+      transform:rotate(8deg);
+      animation:countTrailTwo 11s linear infinite;
+    }
+
+    .count-pulse-dot{
+      position:absolute;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.95) 0 28%, rgba(123,198,255,.72) 46%, transparent 72%);
+      box-shadow:0 0 22px rgba(123,198,255,.34);
+      animation:countDotFloat 9s ease-in-out infinite;
+    }
+
+    .count-pulse-dot.one{
+      top:18%;
+      right:12%;
+      animation-delay:-1.2s;
+    }
+
+    .count-pulse-dot.two{
+      top:56%;
+      left:8%;
+      width:7px;
+      height:7px;
+      animation-duration:12s;
+      animation-delay:-4.1s;
+    }
+
+    .count-pulse-dot.three{
+      top:78%;
+      right:28%;
+      width:8px;
+      height:8px;
+      animation-duration:10s;
+      animation-delay:-2.8s;
+    }
+
+    .count-topline,
+    .count-main,
+    .count-ticket{
+      position:relative;
+      z-index:1;
+      padding-inline:0;
+    }
+
+    .count-band > .count-head,
+    .count-band > .count-grid{
+      display:none;
+    }
+
+    .count-topline{
+      display:grid;
       gap:16px;
+    }
+
+    .count-route{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:rgba(255,255,255,.56);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+    }
+
+    .count-route-line{
+      position:relative;
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.48), rgba(255,255,255,.14));
+      overflow:hidden;
+    }
+
+    .count-route-line::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:-16px;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.95) 0 24%, rgba(161,194,255,.55) 42%, transparent 68%);
+      transform:translateY(-50%);
+      animation:countFlight 3.8s linear infinite;
+      box-shadow:0 0 18px rgba(171,210,255,.35);
+    }
+
+    .count-dates{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+      gap:12px;
       align-items:end;
     }
 
+    .count-date-box{
+      display:grid;
+      gap:8px;
+      min-width:0;
+    }
+
+    .count-date-box.align-right{
+      text-align:right;
+    }
+
+    .count-micro{
+      color:rgba(255,255,255,.48);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+    }
+
+    .count-date-value{
+      color:#f8fbff;
+      font-size:clamp(18px, 4.8vw, 24px);
+      font-weight:700;
+      letter-spacing:-.04em;
+      white-space:nowrap;
+    }
+
+    .count-date-sub{
+      color:rgba(255,255,255,.58);
+      font-size:12px;
+      letter-spacing:.06em;
+    }
+
+    .count-arrow{
+      align-self:center;
+      color:rgba(255,255,255,.72);
+      font-size:24px;
+      font-weight:300;
+      transform:translateY(-4px);
+    }
+
+    .count-main{
+      display:grid;
+      gap:10px;
+      padding-bottom:4px;
+    }
+
+    .count-kicker{
+      margin:0;
+      color:rgba(175,201,255,.84);
+    }
+
+    .count-title{
+      margin:0;
+      max-width:320px;
+      color:#f7fbff;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","SUIT",sans-serif;
+      font-size:clamp(46px, 12vw, 68px);
+      line-height:.86;
+      letter-spacing:-.08em;
+      font-weight:700;
+    }
+
     .count-label{
-      color:var(--muted);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:end;
+      gap:18px;
+      color:rgba(255,255,255,.64);
+      font-size:12px;
+      line-height:1.7;
+    }
+
+    .count-live{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      color:#f8fbff;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      backdrop-filter:blur(14px);
+    }
+
+    .count-live i{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#8fd0ff;
+      box-shadow:0 0 0 0 rgba(143,208,255,.55);
+      animation:countPulse 1.6s ease-out infinite;
+    }
+
+    .count-ticket{
+      position:relative;
+      display:grid;
+      gap:14px;
+      padding:10px 0 0;
+      color:#eff6ff;
+    }
+
+    .count-ticket::before,
+    .count-ticket::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      height:1px;
+      border-radius:0;
+      transform:none;
+      box-shadow:none;
+    }
+
+    .count-ticket::before{
+      top:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.14) 10%, rgba(255,255,255,.14) 90%, transparent);
+    }
+
+    .count-ticket::after{
+      display:none;
+    }
+
+    .count-ticket-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:14px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.44);
+    }
+
+    .count-ticket-code{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .count-ticket-code strong{
+      color:#f8fbff;
       font-size:13px;
-      line-height:1.8;
-      max-width:140px;
+      letter-spacing:.28em;
+    }
+
+    .count-ticket-code small{
+      color:rgba(255,255,255,.34);
+      font-size:9px;
+      letter-spacing:.26em;
+    }
+
+    .count-ticket-track{
+      flex:1;
+      height:1px;
+      margin-bottom:6px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.24) 0 8px, transparent 8px 16px);
     }
 
     .count-grid{
       display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:10px;
+      grid-template-columns:repeat(4, minmax(72px,1fr));
+      gap:0;
     }
 
-    .count-card{
+    .count-cell{
       position:relative;
-      overflow:hidden;
-      padding:18px 16px;
-      border-radius:24px;
-      background:rgba(255,255,255,.44);
-      border:1px solid rgba(22,19,17,.08);
-      backdrop-filter:blur(14px);
+      min-width:0;
+      padding:14px 10px 18px 0;
     }
 
-    .story-step.dark .count-card{
-      background:rgba(255,255,255,.06);
-      border-color:rgba(255,255,255,.08);
+    .count-cell + .count-cell{
+      border-left:1px solid rgba(255,255,255,.08);
+    }
+
+    .count-cell::after{
+      content:"";
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:0;
+      height:2px;
+      background:linear-gradient(90deg, rgba(143,208,255,0), rgba(143,208,255,.8), rgba(143,208,255,0));
+      opacity:0;
+      transform:scaleX(.4);
+      transition:opacity .28s ease, transform .28s ease;
+    }
+
+    .count-cell.is-ticking::after{
+      opacity:1;
+      transform:scaleX(1);
     }
 
     .count-number{
+      position:relative;
       display:block;
-      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
-      font-size:42px;
-      line-height:.9;
+      height:clamp(58px, 14vw, 72px);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","SUIT",sans-serif;
+      font-size:clamp(32px, 8.5vw, 44px);
+      font-weight:700;
+      line-height:1;
       letter-spacing:-.08em;
+      font-variant-numeric:tabular-nums;
+      color:transparent;
+      perspective:700px;
+      transform-style:preserve-3d;
+      overflow:visible;
+    }
+
+    .count-number::before,
+    .count-number::after{
+      content:attr(data-value);
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      display:flex;
+      justify-content:flex-start;
+      overflow:hidden;
+      color:#f8fbff;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+      text-shadow:0 0 12px rgba(167,213,255,.08);
+      transition:transform .38s cubic-bezier(.22,.9,.18,1), color .3s ease, opacity .3s ease;
+      backface-visibility:hidden;
+    }
+
+    .count-number::before{
+      height:50%;
+      align-items:flex-start;
+      clip-path:inset(0 0 50% 0);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      transform-origin:center bottom;
+    }
+
+    .count-number::after{
+      height:100%;
+      align-items:flex-start;
+      clip-path:inset(50% 0 0 0);
+      transform-origin:center top;
+      opacity:.92;
+    }
+
+    .count-number-shadow{
+      position:absolute;
+      inset:50% 0 auto;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      opacity:.58;
+    }
+
+    .count-cell.is-ticking .count-number{
+      filter:drop-shadow(0 0 10px rgba(123,198,255,.16));
+    }
+
+    .count-cell.is-ticking .count-number::before{
+      transform:rotateX(-78deg);
+      color:#b8d8ff;
+      opacity:.4;
+    }
+
+    .count-cell.is-ticking .count-number::after{
+      transform:rotateX(10deg) translateY(-1px);
+      color:#8fc6ff;
     }
 
     .count-unit{
       display:block;
-      margin-top:10px;
-      font-size:11px;
-      letter-spacing:.18em;
+      margin-top:8px;
+      color:rgba(255,255,255,.46);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.22em;
       text-transform:uppercase;
-      color:var(--muted);
+    }
+
+    .count-footer{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      align-items:start;
+      color:rgba(255,255,255,.56);
+      font-size:10px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      padding-top:8px;
+    }
+
+    .count-meta{
+      display:grid;
+      gap:8px;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .count-meta strong{
+      color:#f8fbff;
+      font-size:15px;
+      font-weight:700;
+      letter-spacing:-.03em;
+      text-transform:none;
+    }
+
+    .count-meta.status strong{
+      color:#9ed1ff;
+    }
+
+    @keyframes countScan{
+      0%{ transform:translateY(-100%); }
+      100%{ transform:translateY(100%); }
+    }
+
+    @keyframes countFlight{
+      0%{ left:-16px; }
+      100%{ left:calc(100% + 16px); }
+    }
+
+    @keyframes countAurora{
+      0%{ transform:translate3d(-2%, -1%, 0) scale(1); }
+      50%{ transform:translate3d(3%, 2%, 0) scale(1.08); }
+      100%{ transform:translate3d(-1%, 4%, 0) scale(1.04); }
+    }
+
+    @keyframes countTrailOne{
+      0%{ transform:translate3d(0, 0, 0) rotate(-12deg) scaleX(.72); opacity:0; }
+      12%{ opacity:.7; }
+      50%{ opacity:1; }
+      100%{ transform:translate3d(150vw, 14vh, 0) rotate(-12deg) scaleX(1.08); opacity:0; }
+    }
+
+    @keyframes countTrailTwo{
+      0%{ transform:translate3d(0, 0, 0) rotate(8deg) scaleX(.64); opacity:0; }
+      18%{ opacity:.55; }
+      62%{ opacity:.92; }
+      100%{ transform:translate3d(158vw, -12vh, 0) rotate(8deg) scaleX(1.02); opacity:0; }
+    }
+
+    @keyframes countDotFloat{
+      0%,100%{ transform:translate3d(0, 0, 0) scale(.9); opacity:.46; }
+      40%{ transform:translate3d(14px, -20px, 0) scale(1.18); opacity:1; }
+      72%{ transform:translate3d(-10px, 16px, 0) scale(.98); opacity:.62; }
+    }
+
+    @keyframes countPulse{
+      0%{ box-shadow:0 0 0 0 rgba(143,208,255,.55); }
+      70%{ box-shadow:0 0 0 12px rgba(143,208,255,0); }
+      100%{ box-shadow:0 0 0 0 rgba(143,208,255,0); }
     }
 
     .gallery-stage{
@@ -772,6 +1269,16 @@
       .page{ padding-inline:14px; }
       .hero-photo{ border-radius:30px; }
       .hero-names{ font-size:clamp(46px, 13vw, 68px); }
+      .count-band{ gap:22px; }
+      .count-dates{ grid-template-columns:1fr; }
+      .count-date-box.align-right{ text-align:left; }
+      .count-arrow{ display:none; }
+      .count-label{ display:grid; }
+      .count-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .count-cell:nth-child(3){ border-left:none; }
+      .count-cell:nth-child(n + 3){ border-top:1px solid rgba(255,255,255,.08); }
+      .count-ticket-head{ gap:10px; }
+      .count-footer{ grid-template-columns:1fr; gap:10px; }
       .gallery-shell{ min-height:490px; }
       .gallery-ghost{ width:126px; }
       .gallery-orbit{ height:228px; }
@@ -856,6 +1363,78 @@
       <div class="sticky">
         <div class="panel" data-reveal>
           <div class="count-band">
+            <div class="count-bg" aria-hidden="true">
+              <div class="count-aurora"></div>
+              <div class="count-gridlines"></div>
+              <div class="count-scan"></div>
+              <div class="count-bars"></div>
+              <div class="count-trail"></div>
+              <span class="count-pulse-dot one"></span>
+              <span class="count-pulse-dot two"></span>
+              <span class="count-pulse-dot three"></span>
+            </div>
+
+            <div class="count-topline">
+              <div class="count-route">
+                <span>Now</span>
+                <span class="count-route-line"></span>
+                <span>Wedding Day</span>
+              </div>
+
+              <div class="count-dates" aria-label="현재 날짜부터 결혼식 날짜까지">
+                <div class="count-date-box">
+                  <span class="count-micro">Current Date</span>
+                  <strong class="count-date-value" id="countTodayDate">--</strong>
+                  <span class="count-date-sub" id="countTodayMeta">Loading...</span>
+                </div>
+                <div class="count-arrow" aria-hidden="true">&rarr;</div>
+                <div class="count-date-box align-right">
+                  <span class="count-micro">Wedding Date</span>
+                  <strong class="count-date-value" id="countWeddingDate">2026.11.22</strong>
+                  <span class="count-date-sub" id="countWeddingMeta">Sunday 12:30 PM</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="count-main">
+              <p class="kicker count-kicker">Departure Board</p>
+              <h2 class="count-title">November 22<br />12:30 PM</h2>
+              <div class="count-label">
+                <span>공항 전광판처럼, 남은 시간이 또렷하게 한 칸씩 넘어갑니다.</span>
+                <span class="count-live"><i></i>On Time</span>
+              </div>
+            </div>
+
+            <div class="count-ticket" aria-label="예식까지 남은 시간">
+              <div class="count-ticket-head">
+                <span class="count-ticket-code"><strong>ICN</strong><small>NOW</small></span>
+                <span class="count-ticket-track"></span>
+                <span class="count-ticket-code"><small>ETA</small><strong>11.22</strong></span>
+              </div>
+
+              <div class="count-grid">
+                <div class="count-cell"><span class="count-number" id="cd-days" data-value="--">--</span><span class="count-number-shadow"></span><span class="count-unit">Days</span></div>
+                <div class="count-cell"><span class="count-number" id="cd-hours" data-value="--">--</span><span class="count-number-shadow"></span><span class="count-unit">Hours</span></div>
+                <div class="count-cell"><span class="count-number" id="cd-mins" data-value="--">--</span><span class="count-number-shadow"></span><span class="count-unit">Mins</span></div>
+                <div class="count-cell"><span class="count-number" id="cd-secs" data-value="--">--</span><span class="count-number-shadow"></span><span class="count-unit">Secs</span></div>
+              </div>
+
+              <div class="count-footer">
+                <div class="count-meta">
+                  <span>Gate</span>
+                  <strong>11</strong>
+                </div>
+                <div class="count-meta">
+                  <span>Zone</span>
+                  <strong>A</strong>
+                </div>
+                <div class="count-meta status">
+                  <span>Status</span>
+                  <strong id="countStatusLabel">On Time</strong>
+                </div>
+              </div>
+            </div>
+
             <div class="count-head">
               <div>
                 <p class="kicker">Count Down</p>
@@ -865,10 +1444,10 @@
             </div>
 
             <div class="count-grid" aria-label="예식까지 남은 시간">
-              <div class="count-card"><span class="count-number" id="cd-days">--</span><span class="count-unit">Days</span></div>
-              <div class="count-card"><span class="count-number" id="cd-hours">--</span><span class="count-unit">Hours</span></div>
-              <div class="count-card"><span class="count-number" id="cd-mins">--</span><span class="count-unit">Mins</span></div>
-              <div class="count-card"><span class="count-number" id="cd-secs">--</span><span class="count-unit">Secs</span></div>
+              <div class="count-card"><span class="count-number">--</span><span class="count-unit">Days</span></div>
+              <div class="count-card"><span class="count-number">--</span><span class="count-unit">Hours</span></div>
+              <div class="count-card"><span class="count-number">--</span><span class="count-unit">Mins</span></div>
+              <div class="count-card"><span class="count-number">--</span><span class="count-unit">Secs</span></div>
             </div>
           </div>
         </div>
@@ -986,30 +1565,96 @@
     })();
 
     (function countdown() {
+      const bandEl = document.querySelector(".count-band");
       const daysEl = document.getElementById("cd-days");
       const hoursEl = document.getElementById("cd-hours");
       const minsEl = document.getElementById("cd-mins");
       const secsEl = document.getElementById("cd-secs");
-      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+      const todayDateEl = document.getElementById("countTodayDate");
+      const todayMetaEl = document.getElementById("countTodayMeta");
+      const weddingDateEl = document.getElementById("countWeddingDate");
+      const weddingMetaEl = document.getElementById("countWeddingMeta");
+      const statusLabelEl = document.getElementById("countStatusLabel");
+      if (!bandEl || !daysEl || !hoursEl || !minsEl || !secsEl) return;
 
       const target = new Date("2026-11-22T12:30:00+09:00");
+      const weekdayFormat = new Intl.DateTimeFormat("en-US", { weekday: "long" });
+      const monthDayFormat = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric"
+      });
+      const timeFormat = new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      });
+
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}.${month}.${day}`;
+      };
+
+      const setAnimatedValue = (el, nextValue) => {
+        if (el.dataset.value === nextValue) return;
+        const cell = el.closest(".count-cell");
+        if (cell) {
+          cell.classList.remove("is-ticking");
+          void cell.offsetWidth;
+          cell.classList.add("is-ticking");
+        }
+        el.dataset.value = nextValue;
+        el.textContent = nextValue;
+      };
+
+      const statuses = ["On Time", "Approaching", "Stand By"];
+      let statusIndex = 0;
+
+      if (weddingDateEl) weddingDateEl.textContent = formatDate(target);
+      if (weddingMetaEl) {
+        weddingMetaEl.textContent = `${weekdayFormat.format(target)} ${timeFormat.format(target)}`;
+      }
+      if (statusLabelEl) statusLabelEl.textContent = statuses[0];
 
       const tick = () => {
-        const diff = Math.max(0, target - new Date());
+        const now = new Date();
+        const diff = Math.max(0, target - now);
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / 86400);
         const hours = Math.floor((totalSeconds % 86400) / 3600);
         const mins = Math.floor((totalSeconds % 3600) / 60);
         const secs = totalSeconds % 60;
 
-        daysEl.textContent = String(days).padStart(2, "0");
-        hoursEl.textContent = String(hours).padStart(2, "0");
-        minsEl.textContent = String(mins).padStart(2, "0");
-        secsEl.textContent = String(secs).padStart(2, "0");
+        setAnimatedValue(daysEl, String(days).padStart(2, "0"));
+        setAnimatedValue(hoursEl, String(hours).padStart(2, "0"));
+        setAnimatedValue(minsEl, String(mins).padStart(2, "0"));
+        setAnimatedValue(secsEl, String(secs).padStart(2, "0"));
+
+        if (todayDateEl) todayDateEl.textContent = formatDate(now);
+        if (todayMetaEl) {
+          todayMetaEl.textContent = `${weekdayFormat.format(now)} ${monthDayFormat.format(now)}`;
+        }
+      };
+
+      const syncBandMotion = () => {
+        const rect = bandEl.getBoundingClientRect();
+        const viewportMid = window.innerHeight * 0.5;
+        const bandMid = rect.top + rect.height * 0.5;
+        const distance = Math.max(-1, Math.min(1, (bandMid - viewportMid) / window.innerHeight));
+        bandEl.style.setProperty("--count-shift", `${distance * 34}px`);
       };
 
       tick();
+      syncBandMotion();
       setInterval(tick, 1000);
+      setInterval(() => {
+        if (!statusLabelEl) return;
+        statusIndex = (statusIndex + 1) % statuses.length;
+        statusLabelEl.textContent = statuses[statusIndex];
+      }, 4200);
+      window.addEventListener("scroll", syncBandMotion, { passive: true });
+      window.addEventListener("resize", syncBandMotion);
     })();
 
     (function dramaticGallery() {
