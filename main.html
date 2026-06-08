@@ -60,6 +60,68 @@
       padding:0 16px 72px;
     }
 
+    .progress-ui{
+      position:fixed;
+      inset:0 auto auto 50%;
+      z-index:30;
+      width:min(100vw, var(--maxw));
+      height:100svh;
+      transform:translateX(-50%);
+      pointer-events:none;
+    }
+
+    .progress-top{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:2px;
+      background:rgba(22,19,17,.12);
+      overflow:hidden;
+    }
+
+    .progress-top-fill{
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg, rgba(184,154,128,.95), rgba(22,19,17,.86));
+      transform-origin:left center;
+      transform:scaleX(var(--screen-progress, 0));
+      transition:transform .18s linear;
+    }
+
+    .progress-rail{
+      position:absolute;
+      top:50%;
+      right:6px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      transform:translateY(-50%);
+    }
+
+    .progress-step{
+      position:relative;
+      width:2px;
+      height:44px;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(22,19,17,.16);
+    }
+
+    .progress-step::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(22,19,17,.9);
+      transform-origin:top center;
+      transform:scaleY(var(--step-progress, 0));
+      transition:transform .18s linear, background-color .24s ease;
+    }
+
+    .progress-step.is-active::after{
+      background:linear-gradient(180deg, rgba(184,154,128,.96), rgba(22,19,17,.94));
+    }
+
     .hero{
       min-height:100svh;
       display:flex;
@@ -956,6 +1018,18 @@
       padding:52px 0 12px;
     }
 
+    .gallery-step{
+      min-height:185svh;
+    }
+
+    .gallery-step .sticky{
+      align-items:center;
+    }
+
+    .gallery-panel{
+      width:100%;
+    }
+
     .gallery-shell{
       position:relative;
       margin-top:26px;
@@ -1064,27 +1138,6 @@
       filter:none;
     }
 
-    .gallery-meta{
-      margin-top:10px;
-      text-align:center;
-    }
-
-    .gallery-meta strong{
-      display:block;
-      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
-      font-size:28px;
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .gallery-meta span{
-      display:block;
-      margin-top:10px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-    }
-
     .gallery-nav{
       display:flex;
       justify-content:center;
@@ -1104,7 +1157,19 @@
     .info{
       padding:48px 0 0;
       display:grid;
-      gap:18px;
+      gap:0;
+    }
+
+    .info-step{
+      min-height:165svh;
+    }
+
+    .info-step .sticky{
+      align-items:center;
+    }
+
+    .info-panel{
+      width:100%;
     }
 
     .info-block{
@@ -1112,7 +1177,7 @@
       border-top:1px solid var(--line);
     }
 
-    .info-block:last-child{
+    .info-step:last-child .info-block{
       border-bottom:1px solid var(--line);
     }
 
@@ -1157,16 +1222,16 @@
       height:auto;
     }
 
-    .info .info-block:first-child{
+    .info-step:first-child .info-block{
       display:flex;
       flex-direction:column;
     }
 
-    .info .info-block:first-child .info-label{ order:1; }
-    .info .info-block:first-child .info-title{ order:2; }
-    .info .info-block:first-child .info-copy{ order:3; }
-    .info .info-block:first-child .map-preview{ order:4; }
-    .info .info-block:first-child .map-link{ order:5; }
+    .info-step:first-child .info-label{ order:1; }
+    .info-step:first-child .info-title{ order:2; }
+    .info-step:first-child .info-copy{ order:3; }
+    .info-step:first-child .map-preview{ order:4; }
+    .info-step:first-child .map-link{ order:5; }
 
     .map-link{
       display:inline-flex;
@@ -1267,6 +1332,8 @@
 
     @media (max-width: 390px){
       .page{ padding-inline:14px; }
+      .progress-ui{ width:100vw; }
+      .progress-rail{ right:4px; }
       .hero-photo{ border-radius:30px; }
       .hero-names{ font-size:clamp(46px, 13vw, 68px); }
       .count-band{ gap:22px; }
@@ -1292,6 +1359,17 @@
   </style>
 </head>
 <body>
+  <div class="progress-ui" aria-hidden="true">
+    <div class="progress-top"><div class="progress-top-fill"></div></div>
+    <div class="progress-rail">
+      <span class="progress-step"></span>
+      <span class="progress-step"></span>
+      <span class="progress-step"></span>
+      <span class="progress-step"></span>
+      <span class="progress-step"></span>
+    </div>
+  </div>
+
   <main class="page">
     <section class="hero">
       <div class="hero-top">
@@ -1315,7 +1393,7 @@
       <div class="scroll-cue">Scroll to Begin</div>
     </section>
 
-    <section class="story-step dark">
+    <section class="story-step dark" data-screen="1">
       <div class="sticky">
         <div class="panel center" data-reveal>
           <p class="kicker">One Day</p>
@@ -1332,7 +1410,7 @@
       </div>
     </section>
 
-    <section class="story-step">
+    <section class="story-step" data-screen="2">
       <div class="sticky">
         <div class="panel" data-reveal>
           <div class="statement">
@@ -1359,7 +1437,7 @@
       </div>
     </section>
 
-    <section class="story-step dark">
+    <section class="story-step dark" data-screen="3">
       <div class="sticky">
         <div class="panel" data-reveal>
           <div class="count-band">
@@ -1454,12 +1532,16 @@
       </div>
     </section>
 
-    <section class="gallery-stage">
-      <p class="kicker">Gallery</p>
-      <h2 class="display">Orbit of<br />Moments</h2>
-      <p class="subcopy">중앙의 메인 장면과 주변을 맴도는 원형 컷들로, 조금 더 패션 에디토리얼 같은 흐름으로 바꿨습니다.</p>
+    <section class="story-step gallery-step" data-screen="4">
+      <div class="sticky">
+        <div class="panel gallery-panel gallery-stage">
+      <div data-reveal>
+        <p class="kicker">Gallery</p>
+        <h2 class="display">Orbit of<br />Moments</h2>
 
-      <div class="gallery-shell">
+      </div>
+
+          <div class="gallery-shell" data-reveal>
         <div class="gallery-stack" aria-hidden="true">
           <div class="gallery-ghost left"><img id="ghostLeft" src="./images/gallery/gallery-02.jpg" alt="" /></div>
           <div class="gallery-ghost right"><img id="ghostRight" src="./images/gallery/gallery-07.jpg" alt="" /></div>
@@ -1497,19 +1579,15 @@
         </div>
       </div>
 
-      <div class="gallery-meta">
-        <strong id="galleryTitle">Soft Light</strong>
-        <span id="galleryCaption">햇살이 가장 부드럽게 머물던 오후</span>
-      </div>
-
-      <div class="gallery-nav">
-        <button class="ghost-btn" type="button" id="galleryPrev">Previous</button>
-        <button class="ghost-btn" type="button" id="galleryNext">Next</button>
+        </div>
       </div>
     </section>
 
-    <section class="info">
-      <div class="info-block">
+    <section class="info" data-screen="5">
+      <div class="story-step info-step">
+        <div class="sticky">
+          <div class="panel info-panel">
+            <div class="info-block" data-reveal>
         <p class="info-label">Location</p>
         <a class="map-preview" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">
           <img src="./images/map.jpeg" alt="Wedding venue map" />
@@ -1517,9 +1595,15 @@
         <h2 class="info-title">로얄파크 컨벤션<br />파크홀</h2>
         <p class="info-copy">서울 용산구 이태원로 29<br />2026년 11월 22일 일요일 오후 12시 30분</p>
         <a class="map-link" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">지도에서 보기</a>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="info-block">
+      <div class="story-step info-step">
+        <div class="sticky">
+          <div class="panel info-panel">
+            <div class="info-block" data-reveal>
         <p class="info-label">Account</p>
         <h2 class="info-title">마음 전하실 곳</h2>
         <p class="info-copy">필요하신 분들만 조용히 확인하실 수 있도록 아래에 담아두었습니다.</p>
@@ -1535,6 +1619,9 @@
           <div class="acc-body" id="acc-bride">
             <div class="acc-item">OO은행 987-654-321098 (예금주 조민지)</div>
             <button class="copy-btn" type="button" data-copy="OO은행 987-654-321098 예금주 조민지">계좌번호 복사</button>
+          </div>
+        </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1562,6 +1649,56 @@
       }, { threshold: 0.42 });
 
       items.forEach((item) => observer.observe(item));
+    })();
+
+    (function screenProgress() {
+      const root = document.querySelector(".progress-ui");
+      const topFill = document.querySelector(".progress-top-fill");
+      const steps = Array.from(document.querySelectorAll(".progress-step"));
+      const screens = Array.from(document.querySelectorAll("[data-screen]"));
+      if (!root || !topFill || steps.length !== 5 || screens.length !== 5) return;
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const findActiveScreen = () => {
+        const pivot = window.innerHeight * 0.5;
+
+        return screens.reduce((best, screen, index) => {
+          const rect = screen.getBoundingClientRect();
+          const containsPivot = rect.top <= pivot && rect.bottom >= pivot;
+          const distance = containsPivot ? 0 : Math.min(Math.abs(rect.top - pivot), Math.abs(rect.bottom - pivot));
+
+          if (!best || distance < best.distance) {
+            return { screen, index, rect, distance };
+          }
+
+          return best;
+        }, null);
+      };
+
+      const sync = () => {
+        const active = findActiveScreen();
+        if (!active) return;
+
+        const { rect, index } = active;
+        const viewportMid = window.innerHeight * 0.5;
+        const progress = clamp((viewportMid - rect.top) / Math.max(rect.height, 1), 0, 1);
+
+        root.style.setProperty("--screen-progress", progress.toFixed(4));
+
+        steps.forEach((step, stepIndex) => {
+          let stepProgress = 0;
+          if (stepIndex < index) stepProgress = 1;
+          if (stepIndex === index) stepProgress = progress;
+
+          step.style.setProperty("--step-progress", stepProgress.toFixed(4));
+          step.classList.toggle("is-active", stepIndex === index);
+        });
+      };
+
+      sync();
+      window.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", sync);
     })();
 
     (function countdown() {
@@ -1660,14 +1797,12 @@
     (function dramaticGallery() {
       const orbit = document.getElementById("galleryOrbit");
       const main = document.getElementById("galleryMainImg");
-      const title = document.getElementById("galleryTitle");
-      const caption = document.getElementById("galleryCaption");
       const ghostLeft = document.getElementById("ghostLeft");
       const ghostRight = document.getElementById("ghostRight");
+      const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
       const prev = document.getElementById("galleryPrev");
       const next = document.getElementById("galleryNext");
-      const thumbs = Array.from(document.querySelectorAll(".gallery-thumb"));
-      if (!orbit || !main || !title || !caption || !ghostLeft || !ghostRight || !prev || !next || !thumbs.length) return;
+      if (!orbit || !main || !ghostLeft || !ghostRight || !thumbs.length) return;
 
       let activeIndex = thumbs.findIndex((thumb) => thumb.classList.contains("active"));
       if (activeIndex < 0) activeIndex = 0;
@@ -1707,8 +1842,6 @@
         activeIndex = (index + thumbs.length) % thumbs.length;
         const active = thumbs[activeIndex];
         main.src = active.dataset.gallerySrc || "";
-        title.textContent = active.dataset.galleryTitle || "";
-        caption.textContent = active.dataset.galleryCaption || "";
         updateGhosts();
         positionThumbs();
       };
@@ -1717,8 +1850,8 @@
         thumb.addEventListener("click", () => setActive(index));
       });
 
-      prev.addEventListener("click", () => setActive(activeIndex - 1));
-      next.addEventListener("click", () => setActive(activeIndex + 1));
+      if (prev) prev.addEventListener("click", () => setActive(activeIndex - 1));
+      if (next) next.addEventListener("click", () => setActive(activeIndex + 1));
       window.addEventListener("resize", positionThumbs);
 
       let startX = 0;
