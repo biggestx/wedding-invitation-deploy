@@ -475,7 +475,7 @@
 
     .count-topline{
       display:flex;
-      justify-content:space-between;
+      justify-content:flex-start;
       align-items:center;
       gap:12px;
       padding-bottom:0;
@@ -489,17 +489,6 @@
       letter-spacing:.24em;
       text-transform:uppercase;
       opacity:.62;
-    }
-
-    .count-live{
-      margin:0;
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      opacity:.56;
     }
 
     .count-stage{
@@ -661,10 +650,10 @@
       left:50%;
       bottom:calc(100% + 5px);
       color:#a04432;
-      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
-      font-size:34px;
-      font-weight:600;
-      line-height:.9;
+      font-family:"SUIT","Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:31px;
+      font-weight:700;
+      line-height:1;
       letter-spacing:0;
       transform:translateX(-50%);
       text-shadow:0 10px 22px rgba(160,68,50,.16);
@@ -734,9 +723,9 @@
     }
 
     .count-axis-point.wedding strong{
-      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
-      font-size:18px;
-      font-weight:600;
+      font-family:inherit;
+      font-size:11px;
+      font-weight:700;
       line-height:1;
     }
 
@@ -1225,7 +1214,6 @@
           <div class="count-band">
             <div class="count-topline">
               <p class="count-pill">Countdown</p>
-              <p class="count-live" id="countLiveLabel">November 22</p>
             </div>
 
             <div class="count-stage">
@@ -1431,7 +1419,6 @@
 
     (function countdown() {
       const stepEl = document.querySelector(".count-step");
-      const liveLabelEl = document.getElementById("countLiveLabel");
       const ddayValueEl = document.getElementById("countDdayValue");
       const narrativeEl = document.getElementById("countNarrative");
       const axisEl = document.getElementById("countAxis");
@@ -1456,40 +1443,11 @@
         axisEl.style.setProperty("--wedding-progress", toYearProgress(target));
       }
 
-      const getCountdownState = (daysRemaining, totalSeconds) => {
-        if (totalSeconds <= 0) {
-          return {
-            live: "Today",
-            narrative: "D-Day"
-          };
-        }
-
-        if (daysRemaining <= 7) {
-          return {
-            live: "This Week",
-            narrative: "D-Day"
-          };
-        }
-
-        if (daysRemaining <= 30) {
-          return {
-            live: "This Month",
-            narrative: "D-Day"
-          };
-        }
-
-        return {
-          live: "On Our Way",
-          narrative: "D-Day"
-        };
-      };
-
       const tick = () => {
         const now = new Date();
         const diff = Math.max(0, target - now);
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / 86400);
-        const state = getCountdownState(days, totalSeconds);
 
         const nextDday = totalSeconds <= 0 ? "Today" : String(days);
         if (ddayValueEl.dataset.text !== nextDday) {
@@ -1501,8 +1459,7 @@
             ddayValueEl.textContent = nextDday;
           }
         }
-        if (liveLabelEl) liveLabelEl.textContent = state.live;
-        if (narrativeEl) narrativeEl.textContent = state.narrative;
+        if (narrativeEl) narrativeEl.textContent = "D-Day";
         if (axisEl) axisEl.style.setProperty("--today-progress", toYearProgress(now));
         if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
       };
