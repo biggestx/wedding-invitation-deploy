@@ -461,214 +461,320 @@
     }
 
     .count-step{
-      min-height:170svh;
+      min-height:155svh;
     }
 
     .count-band{
       display:grid;
-      gap:26px;
+      gap:28px;
       padding:0;
+      position:relative;
+      min-height:360px;
+      align-content:center;
     }
 
     .count-topline{
       display:flex;
       justify-content:space-between;
-      align-items:flex-end;
-      gap:14px;
-      padding-bottom:14px;
-      border-bottom:1px solid var(--line);
+      align-items:center;
+      gap:12px;
+      padding-bottom:0;
     }
 
     .count-pill{
       margin:0;
-      color:var(--accent);
-      font-size:11px;
+      color:var(--muted);
+      font-size:10px;
       font-weight:700;
-      letter-spacing:.32em;
+      letter-spacing:.24em;
       text-transform:uppercase;
+      opacity:.62;
     }
 
     .count-live{
       margin:0;
       color:var(--muted);
-      font-size:11px;
+      font-size:10px;
       font-weight:700;
-      letter-spacing:.24em;
+      letter-spacing:.14em;
       text-transform:uppercase;
       white-space:nowrap;
+      opacity:.56;
     }
 
-    .count-main{
+    .count-stage{
+      position:relative;
       display:grid;
-      gap:12px;
+      gap:16px;
+      padding:28px 0 4px 22px;
+      border-left:1px solid rgba(22,19,17,.16);
+    }
+
+    .count-stage::before{
+      content:"";
+      position:absolute;
+      left:-4px;
+      top:32px;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--ink);
+      box-shadow:0 0 0 9px rgba(22,19,17,.045);
     }
 
     .count-kicker{
       margin:0;
       color:var(--muted);
       font-size:12px;
+      font-weight:700;
       letter-spacing:.18em;
       text-transform:uppercase;
+      opacity:.58;
     }
 
-    .count-title{
-      margin:0;
-      max-width:320px;
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","SUIT",sans-serif;
-      font-size:clamp(34px, 9vw, 52px);
-      line-height:1.02;
-      letter-spacing:-.06em;
-      font-weight:700;
-    }
-
-    .count-intro{
-      margin:0;
-      max-width:310px;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.8;
-    }
-
-    .count-ticket{
+    .count-axis{
+      --today-progress:50%;
+      --wedding-progress:89%;
+      position:relative;
       display:grid;
-      gap:18px;
-      padding:18px 0;
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
+      gap:13px;
+      padding:52px 0 8px;
     }
 
-    .count-grid{
+    .count-axis-track{
+      position:relative;
+      height:1px;
+      background:rgba(22,19,17,.16);
+    }
+
+    .count-axis-track::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      width:var(--today-progress);
+      height:1px;
+      background:rgba(22,19,17,.58);
+    }
+
+    .count-axis-sweep{
+      position:absolute;
+      left:0;
+      top:50%;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      transform:translate(-50%, -50%);
+      background:var(--ink);
+      box-shadow:0 0 0 4px rgba(22,19,17,.07), 0 10px 20px rgba(22,19,17,.16);
+      animation:countAxisSweep 3.8s cubic-bezier(.65,0,.35,1) infinite;
+    }
+
+    .count-axis-dot{
+      position:absolute;
+      top:50%;
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      transform:translate(-50%, -50%);
+      background:var(--paper);
+      border:1px solid rgba(22,19,17,.72);
+      box-shadow:0 0 0 5px rgba(248,242,235,.88);
+    }
+
+    .count-axis-dot.today{
+      left:var(--today-progress);
+      background:var(--ink);
+    }
+
+    .count-axis-dot.wedding{
+      left:var(--wedding-progress);
+      width:12px;
+      height:12px;
+      background:var(--ink);
+      border-color:var(--ink);
+      box-shadow:0 0 0 6px rgba(248,242,235,.9), 0 0 26px rgba(90,54,39,.16);
+    }
+
+    .count-axis-dot.wedding::after{
+      content:"";
+      position:absolute;
+      inset:-9px;
+      border-radius:50%;
+      border:1px solid rgba(90,54,39,.2);
+      animation:countWeddingPulse 2.8s ease-in-out infinite;
+    }
+
+    .count-axis-dday{
+      position:absolute;
+      left:var(--today-progress);
+      right:calc(100% - var(--wedding-progress));
+      top:24px;
       display:grid;
-      grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:14px;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+      min-width:96px;
+      pointer-events:none;
     }
 
-    .count-cell{
-      min-width:0;
-      display:grid;
-      gap:8px;
-      align-content:start;
+    .count-axis-dday::before,
+    .count-axis-dday::after{
+      display:none;
     }
 
-    .count-number{
+    .count-axis-dday-line{
+      position:relative;
       display:block;
-      color:var(--ink);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","SUIT",sans-serif;
-      font-size:clamp(28px, 7.6vw, 40px);
-      font-weight:700;
-      line-height:1;
-      letter-spacing:-.07em;
-      font-variant-numeric:tabular-nums;
-      transition:opacity .24s ease, transform .24s ease;
+      height:1px;
+      background:rgba(22,19,17,.36);
     }
 
-    .count-cell.is-ticking .count-number{
-      opacity:.7;
-      transform:translateY(1px);
+    .count-axis-dday-line::before{
+      content:"";
+      position:absolute;
+      top:50%;
+      width:1px;
+      height:9px;
+      background:rgba(22,19,17,.42);
+      transform:translateY(-50%);
     }
 
-    .count-unit{
-      display:block;
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.24em;
-      text-transform:uppercase;
+    .count-axis-dday-line.left::before{
+      left:0;
     }
 
-    .count-summary{
+    .count-axis-dday-line.right::before{
+      right:0;
+    }
+
+    .count-axis-dday-label{
+      position:relative;
       display:grid;
-      grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);
-      gap:20px;
-      align-items:start;
-    }
-
-    .count-dday{
-      display:grid;
-      gap:8px;
-      align-content:start;
-    }
-
-    .count-dday-label{
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.24em;
-      text-transform:uppercase;
-    }
-
-    .count-dday-value{
-      color:var(--ink);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","SUIT",sans-serif;
-      font-size:clamp(38px, 10vw, 56px);
-      line-height:.92;
-      letter-spacing:-.08em;
-      font-weight:700;
-      font-variant-numeric:tabular-nums;
-    }
-
-    .count-dates{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:16px;
-    }
-
-    .count-date-box{
-      display:grid;
-      gap:8px;
-      min-width:0;
-      padding-top:4px;
-      border-top:1px solid var(--line);
-    }
-
-    .count-micro{
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-    }
-
-    .count-date-value{
-      color:var(--ink);
-      font-size:17px;
-      font-weight:700;
-      letter-spacing:-.04em;
+      justify-items:center;
+      padding:0 4px;
       white-space:nowrap;
     }
 
-    .count-date-sub{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
+    .count-axis-dday-value{
+      position:absolute;
+      left:50%;
+      bottom:calc(100% + 5px);
+      color:#a04432;
+      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
+      font-size:34px;
+      font-weight:600;
+      line-height:.9;
+      letter-spacing:0;
+      transform:translateX(-50%);
+      text-shadow:0 10px 22px rgba(160,68,50,.16);
     }
 
-    .count-footer{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:16px;
-      padding-top:4px;
-      border-top:1px solid var(--line);
-    }
-
-    .count-meta{
-      display:grid;
-      gap:6px;
-    }
-
-    .count-meta span{
-      color:var(--muted);
-      font-size:10px;
+    .count-axis-dday-caption{
+      color:var(--ink);
+      font-size:11px;
       font-weight:700;
-      letter-spacing:.22em;
+      line-height:1;
+      letter-spacing:0;
+      opacity:.78;
       text-transform:uppercase;
     }
 
-    .count-meta strong{
+    .count-axis-labels,
+    .count-axis-points{
+      display:flex;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.2;
+      letter-spacing:0;
+      text-transform:uppercase;
+    }
+
+    .count-axis-points{
+      position:relative;
+      min-height:58px;
+      text-transform:none;
+    }
+
+    .count-axis-point{
+      position:absolute;
+      top:0;
+      display:grid;
+      gap:3px;
+      width:74px;
+      transform:translateX(-50%);
+    }
+
+    .count-axis-point.today{
+      left:var(--today-progress);
+      text-align:left;
+    }
+
+    .count-axis-point.wedding{
+      left:var(--wedding-progress);
+      text-align:right;
+      padding:4px 0 0;
+    }
+
+    .count-axis-point span{
+      opacity:.58;
+    }
+
+    .count-axis-point strong{
       color:var(--ink);
-      font-size:15px;
+      font-size:11px;
       font-weight:700;
-      letter-spacing:-.03em;
+      letter-spacing:0;
+    }
+
+    .count-axis-point.wedding span{
+      color:var(--ink);
+      opacity:.78;
+    }
+
+    .count-axis-point.wedding strong{
+      font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
+      font-size:18px;
+      font-weight:600;
+      line-height:1;
+    }
+
+    .count-footer{ display:none; }
+
+    @keyframes countAxisSweep{
+      0%{
+        left:0;
+        opacity:0;
+      }
+      12%{
+        opacity:1;
+      }
+      82%{
+        opacity:1;
+      }
+      100%{
+        left:var(--today-progress);
+        opacity:0;
+      }
+    }
+
+    @keyframes countWeddingPulse{
+      0%, 100%{
+        opacity:.28;
+        transform:scale(.88);
+      }
+      50%{
+        opacity:.7;
+        transform:scale(1.28);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .count-axis-sweep,
+      .count-axis-dot.wedding::after{
+        animation:none;
+      }
     }
 
     .gallery-stage{
@@ -994,18 +1100,34 @@
       .hero-photo{ border-radius:30px; }
       .hero-names{ font-size:clamp(46px, 13vw, 68px); }
       .count-step{ min-height:148svh; }
-      .count-band{ gap:18px; }
-      .count-title{ max-width:none; }
-      .count-intro{ max-width:none; }
-      .count-ticket{ gap:14px; padding:16px 0; }
-      .count-summary{ grid-template-columns:1fr; }
-      .count-dates{ grid-template-columns:1fr; }
-      .count-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
-      .count-cell:nth-child(n + 3){
-        padding-top:14px;
-        border-top:1px solid var(--line);
+      .count-band{
+        gap:22px;
+        min-height:330px;
       }
-      .count-footer{ grid-template-columns:1fr; gap:10px; }
+      .count-stage{
+        padding-left:18px;
+      }
+      .count-axis{
+        gap:12px;
+        padding-top:56px;
+      }
+      .count-axis-dday{
+        top:26px;
+        gap:5px;
+        min-width:90px;
+      }
+      .count-axis-dday-value{
+        font-size:30px;
+      }
+      .count-axis-point{
+        width:62px;
+      }
+      .count-axis-point.today{
+        transform:translateX(-24%);
+      }
+      .count-axis-point.wedding{
+        transform:translateX(-76%);
+      }
       .gallery-shell{ min-height:490px; }
       .gallery-ghost{ width:126px; }
       .gallery-orbit{ height:228px; }
@@ -1103,56 +1225,34 @@
           <div class="count-band">
             <div class="count-topline">
               <p class="count-pill">Countdown</p>
-              <p class="count-live" id="countLiveLabel">On Our Way</p>
+              <p class="count-live" id="countLiveLabel">November 22</p>
             </div>
 
-            <div class="count-main">
-              <p class="count-kicker">November 22, 2026</p>
-              <h2 class="count-title">A simple count toward our day.</h2>
-              <p class="count-intro" id="countNarrative">Our day is quietly getting closer, one second at a time.</p>
-            </div>
+            <div class="count-stage">
+              <p class="count-kicker">2026.11.22</p>
 
-            <div class="count-ticket" aria-label="예식까지 남은 시간">
-              <div class="count-grid">
-                <div class="count-cell"><span class="count-number" id="cd-days">--</span><span class="count-unit">Days</span></div>
-                <div class="count-cell"><span class="count-number" id="cd-hours">--</span><span class="count-unit">Hours</span></div>
-                <div class="count-cell"><span class="count-number" id="cd-mins">--</span><span class="count-unit">Mins</span></div>
-                <div class="count-cell"><span class="count-number" id="cd-secs">--</span><span class="count-unit">Secs</span></div>
-              </div>
-            </div>
-
-            <div class="count-summary">
-              <div class="count-dday">
-                <span class="count-dday-label">D-Day</span>
-                <strong class="count-dday-value" id="countDdayValue">D-00</strong>
-              </div>
-
-              <div class="count-dates" aria-label="오늘부터 예식일까지">
-                <div class="count-date-box">
-                  <span class="count-micro">Today</span>
-                  <strong class="count-date-value" id="countTodayDate">--</strong>
-                  <span class="count-date-sub" id="countTodayMeta">Loading...</span>
+              <div class="count-axis" id="countAxis" aria-label="2026년 진행 축">
+                <div class="count-axis-labels" aria-hidden="true">
+                  <span>26.01</span>
+                  <span>26.12</span>
                 </div>
-                <div class="count-date-box">
-                  <span class="count-micro">Wedding Day</span>
-                  <strong class="count-date-value" id="countWeddingDate">2026.11.22</strong>
-                  <span class="count-date-sub" id="countWeddingMeta">Sunday 12:30 PM</span>
+                <div class="count-axis-track">
+                  <span class="count-axis-sweep" aria-hidden="true"></span>
+                  <span class="count-axis-dot today" aria-hidden="true"></span>
+                  <span class="count-axis-dot wedding" aria-hidden="true"></span>
                 </div>
-              </div>
-            </div>
-
-            <div class="count-footer">
-              <div class="count-meta">
-                <span>Ceremony</span>
-                <strong>2026.11.22</strong>
-              </div>
-              <div class="count-meta">
-                <span>Time</span>
-                <strong>12:30 PM</strong>
-              </div>
-              <div class="count-meta">
-                <span>Status</span>
-                <strong id="countStatusLabel">On Our Way</strong>
+                <div class="count-axis-dday">
+                  <span class="count-axis-dday-line left" aria-hidden="true"></span>
+                  <span class="count-axis-dday-label">
+                    <strong class="count-axis-dday-value" id="countDdayValue" data-text="00"><span>00</span></strong>
+                    <span class="count-axis-dday-caption" id="countNarrative">D-Day</span>
+                  </span>
+                  <span class="count-axis-dday-line right" aria-hidden="true"></span>
+                </div>
+                <div class="count-axis-points">
+                  <span class="count-axis-point today"><span>Today</span><strong id="countTodayAxis">--.--</strong></span>
+                  <span class="count-axis-point wedding"><span>Wedding</span><strong>11.22</strong></span>
+                </div>
               </div>
             </div>
           </div>
@@ -1330,114 +1430,81 @@
     })();
 
     (function countdown() {
-      const daysEl = document.getElementById("cd-days");
-      const hoursEl = document.getElementById("cd-hours");
-      const minsEl = document.getElementById("cd-mins");
-      const secsEl = document.getElementById("cd-secs");
-      const todayDateEl = document.getElementById("countTodayDate");
-      const todayMetaEl = document.getElementById("countTodayMeta");
-      const weddingDateEl = document.getElementById("countWeddingDate");
-      const weddingMetaEl = document.getElementById("countWeddingMeta");
+      const stepEl = document.querySelector(".count-step");
       const liveLabelEl = document.getElementById("countLiveLabel");
-      const statusLabelEl = document.getElementById("countStatusLabel");
       const ddayValueEl = document.getElementById("countDdayValue");
       const narrativeEl = document.getElementById("countNarrative");
-      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+      const axisEl = document.getElementById("countAxis");
+      const todayAxisEl = document.getElementById("countTodayAxis");
+      if (!stepEl || !ddayValueEl) return;
 
       const target = new Date("2026-11-22T12:30:00+09:00");
-      const weekdayFormat = new Intl.DateTimeFormat("en-US", { weekday: "long" });
-      const monthDayFormat = new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "numeric"
-      });
-      const timeFormat = new Intl.DateTimeFormat("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-      });
-
-      const formatDate = (date) => {
-        const year = date.getFullYear();
+      const yearStart = new Date("2026-01-01T00:00:00+09:00");
+      const yearEnd = new Date("2026-12-31T23:59:59+09:00");
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const toYearProgress = (date) => {
+        const progress = (date - yearStart) / (yearEnd - yearStart);
+        return `${(clamp(progress, 0, 1) * 100).toFixed(2)}%`;
+      };
+      const formatAxisDate = (date) => {
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
-        return `${year}.${month}.${day}`;
+        return `${month}.${day}`;
       };
 
-      const setAnimatedValue = (el, nextValue) => {
-        if (el.textContent === nextValue) return;
-        const cell = el.closest(".count-cell");
-        if (cell) {
-          cell.classList.remove("is-ticking");
-          void cell.offsetWidth;
-          cell.classList.add("is-ticking");
-          window.setTimeout(() => cell.classList.remove("is-ticking"), 220);
-        }
-        el.textContent = nextValue;
-      };
+      if (axisEl) {
+        axisEl.style.setProperty("--wedding-progress", toYearProgress(target));
+      }
 
       const getCountdownState = (daysRemaining, totalSeconds) => {
         if (totalSeconds <= 0) {
           return {
             live: "Today",
-            status: "Just Married",
-            narrative: "Today is the day we finally say yes to forever."
+            narrative: "D-Day"
           };
         }
 
         if (daysRemaining <= 7) {
           return {
             live: "This Week",
-            status: "Almost Here",
-            narrative: "Only a few more sunsets remain until our ceremony begins."
+            narrative: "D-Day"
           };
         }
 
         if (daysRemaining <= 30) {
           return {
             live: "This Month",
-            status: "Getting Close",
-            narrative: "The calendar is finally starting to feel beautifully real."
+            narrative: "D-Day"
           };
         }
 
         return {
           live: "On Our Way",
-          status: "On Our Way",
-          narrative: "Our day is quietly getting closer, one second at a time."
+          narrative: "D-Day"
         };
       };
-
-      if (weddingDateEl) weddingDateEl.textContent = formatDate(target);
-      if (weddingMetaEl) {
-        weddingMetaEl.textContent = `${weekdayFormat.format(target)} ${timeFormat.format(target)}`;
-      }
-      if (liveLabelEl) liveLabelEl.textContent = "On Our Way";
-      if (statusLabelEl) statusLabelEl.textContent = "On Our Way";
-      if (narrativeEl) narrativeEl.textContent = "Our day is quietly getting closer, one second at a time.";
 
       const tick = () => {
         const now = new Date();
         const diff = Math.max(0, target - now);
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const mins = Math.floor((totalSeconds % 3600) / 60);
-        const secs = totalSeconds % 60;
         const state = getCountdownState(days, totalSeconds);
 
-        setAnimatedValue(daysEl, String(days).padStart(2, "0"));
-        setAnimatedValue(hoursEl, String(hours).padStart(2, "0"));
-        setAnimatedValue(minsEl, String(mins).padStart(2, "0"));
-        setAnimatedValue(secsEl, String(secs).padStart(2, "0"));
-
-        if (todayDateEl) todayDateEl.textContent = formatDate(now);
-        if (todayMetaEl) {
-          todayMetaEl.textContent = `${weekdayFormat.format(now)} ${monthDayFormat.format(now)}`;
+        const nextDday = totalSeconds <= 0 ? "Today" : String(days);
+        if (ddayValueEl.dataset.text !== nextDday) {
+          ddayValueEl.dataset.text = nextDday;
+          const labelEl = ddayValueEl.querySelector("span");
+          if (labelEl) {
+            labelEl.textContent = nextDday;
+          } else {
+            ddayValueEl.textContent = nextDday;
+          }
         }
-        if (ddayValueEl) ddayValueEl.textContent = totalSeconds <= 0 ? "D-Day" : `D-${days}`;
         if (liveLabelEl) liveLabelEl.textContent = state.live;
-        if (statusLabelEl) statusLabelEl.textContent = state.status;
         if (narrativeEl) narrativeEl.textContent = state.narrative;
+        if (axisEl) axisEl.style.setProperty("--today-progress", toYearProgress(now));
+        if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
       };
 
       tick();
