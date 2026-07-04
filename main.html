@@ -247,20 +247,51 @@
     }
 
     .scroll-cue{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
+      align-self:center;
+      position:relative;
+      width:56px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      color:var(--ink);
+      opacity:.66;
+    }
+
+    .scroll-cue::before,
+    .scroll-cue::after{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:22px;
+      border-right:1.5px solid currentColor;
+      border-bottom:1.5px solid currentColor;
+      transform:rotate(45deg);
+      animation:scrollArrow 1.6s ease-in-out infinite;
+    }
+
+    .scroll-cue::before{
+      top:2px;
+      opacity:.38;
+      animation-delay:-.24s;
     }
 
     .scroll-cue::after{
-      content:"";
-      flex:1;
-      height:1px;
-      background:linear-gradient(90deg, rgba(22,19,17,.18), rgba(22,19,17,.03));
+      top:14px;
+      opacity:.82;
+    }
+
+    @keyframes scrollArrow{
+      0%{
+        transform:translateY(-5px) rotate(45deg);
+        opacity:0;
+      }
+      45%{
+        opacity:.82;
+      }
+      100%{
+        transform:translateY(7px) rotate(45deg);
+        opacity:0;
+      }
     }
 
     .story-step{
@@ -754,6 +785,8 @@
     }
 
     @media (prefers-reduced-motion: reduce){
+      .scroll-cue::before,
+      .scroll-cue::after,
       .count-axis-sweep,
       .count-axis-dot.wedding::after{
         animation:none;
@@ -1151,7 +1184,7 @@
         </div>
       </div>
 
-      <div class="scroll-cue">Scroll to Begin</div>
+      <div class="scroll-cue" aria-label="아래로 스크롤"></div>
     </section>
 
     <section class="story-step dark" data-screen="1">
