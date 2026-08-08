@@ -224,11 +224,11 @@
     }
 
     .hero-sub{
-      margin:10px 0 0;
-      max-width:230px;
+      margin:12px 0 0;
+      max-width:250px;
       color:rgba(255,249,242,.88);
       font-size:14px;
-      line-height:1.8;
+      line-height:1.7;
     }
 
     .hero-word{
@@ -427,17 +427,17 @@
       margin:0;
       font-family:"Cormorant Garamond","Gowun Batang","SUIT",serif;
       font-size:clamp(42px, 11vw, 64px);
-      line-height:.95;
-      letter-spacing:-.06em;
+      line-height:1.04;
+      letter-spacing:-.05em;
       font-weight:600;
     }
 
     .statement-copy{
-      margin:16px 0 0;
-      max-width:280px;
+      margin:18px 0 0;
+      max-width:300px;
       color:var(--muted);
       font-size:15px;
-      line-height:1.9;
+      line-height:1.82;
     }
 
     .photo-cascade{
@@ -682,6 +682,19 @@
       letter-spacing:0;
       transform:translateX(-50%);
       text-shadow:0 10px 22px rgba(143,76,61,.14);
+    }
+
+    .count-axis-dday-value .count-day-number{
+      font-size:1em;
+      font-weight:700;
+    }
+
+    .count-axis-dday-value .count-day-unit{
+      margin-left:2px;
+      font-family:"SUIT","Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:.56em;
+      font-weight:500;
+      opacity:.82;
     }
 
     .count-axis-dday-caption{
@@ -1179,7 +1192,7 @@
           <div class="hero-title">
             <p class="hero-kicker">Save the Date</p>
             <h1 class="hero-names">WEDDING</h1>
-            <p class="hero-sub">서로의 계절이 되어, 가장 깊고 선명한 장면 하나를 함께 시작합니다.</p>
+            <p class="hero-sub">오랜 시간 함께해온 저희가<br />이제 결혼을 약속했습니다.</p>
           </div>
         </div>
       </div>
@@ -1210,8 +1223,8 @@
             <div class="statement-head">
               <div class="statement-back">Vow</div>
               <p class="kicker">Our Story</p>
-              <h2 class="statement-title">긴 시간 서로에게<br />가장 든든한 사람이 되어온 저희가</h2>
-              <p class="statement-copy">이제는 부부로서 같은 풍경을 만들어가려 합니다. 바쁘고 소중한 날, 저희의 시작을 가까이에서 함께 축복해 주세요.</p>
+              <h2 class="statement-title">함께해온<br />시간을 지나</h2>
+              <p class="statement-copy">두 사람이 부부로 새로운 시작을 하려 합니다.<br />오셔서 편한 마음으로 함께해 주시면 감사하겠습니다.</p>
             </div>
 
             <div class="photo-cascade">
@@ -1235,7 +1248,7 @@
         <div class="panel" data-reveal>
           <div class="count-band">
             <div class="count-topline">
-              <p class="count-pill">Until the Day</p>
+              <p class="count-pill">결혼까지 남은 시간</p>
             </div>
 
             <div class="count-stage">
@@ -1254,14 +1267,14 @@
                 <div class="count-axis-dday">
                   <span class="count-axis-dday-line left" aria-hidden="true"></span>
                   <span class="count-axis-dday-label">
-                    <strong class="count-axis-dday-value" id="countDdayValue" data-text="00"><span>00</span></strong>
-                    <span class="count-axis-dday-caption" id="countNarrative">D-Day</span>
+                    <strong class="count-axis-dday-value" id="countDdayValue" data-text="00일"><span class="count-day-number">00</span><span class="count-day-unit">일</span></strong>
+                    <span class="count-axis-dday-caption" id="countNarrative">남은 날</span>
                   </span>
                   <span class="count-axis-dday-line right" aria-hidden="true"></span>
                 </div>
                 <div class="count-axis-points">
-                  <span class="count-axis-point today"><span>Today</span><strong id="countTodayAxis">--.--</strong></span>
-                  <span class="count-axis-point wedding"><span>Wedding</span><strong>11.22</strong></span>
+                  <span class="count-axis-point today"><span>오늘</span><strong id="countTodayAxis">--.--</strong></span>
+                  <span class="count-axis-point wedding"><span>결혼식</span><strong>11.22</strong></span>
                 </div>
               </div>
             </div>
@@ -1275,7 +1288,7 @@
         <div class="panel gallery-panel gallery-stage">
       <div data-reveal>
         <p class="kicker">Gallery</p>
-        <h2 class="display">Orbit of<br />Moments</h2>
+        <h2 class="display">Gallery</h2>
 
       </div>
 
@@ -1290,28 +1303,28 @@
         </div>
 
         <div class="gallery-orbit" id="galleryOrbit" aria-label="원형 갤러리">
-          <button class="gallery-thumb active" type="button" data-gallery-src="./images/gallery/gallery-01.jpg" data-gallery-title="Soft Light" data-gallery-caption="햇살이 가장 부드럽게 머물던 오후" aria-label="사진 1">
+          <button class="gallery-thumb active" type="button" data-gallery-src="./images/gallery/gallery-01.jpg" data-gallery-title="Gallery 01" data-gallery-caption="함께한 어느 오후" aria-label="사진 1">
             <img src="./images/gallery/gallery-01.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-02.jpg" data-gallery-title="Slow Smile" data-gallery-caption="천천히 웃음이 번지던 장면" aria-label="사진 2">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-02.jpg" data-gallery-title="Gallery 02" data-gallery-caption="자연스럽게 웃던 순간" aria-label="사진 2">
             <img src="./images/gallery/gallery-02.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-03.jpg" data-gallery-title="Eye Contact" data-gallery-caption="조용히 눈을 맞추던 순간" aria-label="사진 3">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-03.jpg" data-gallery-title="Gallery 03" data-gallery-caption="가만히 마주 본 장면" aria-label="사진 3">
             <img src="./images/gallery/gallery-03.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-04.jpg" data-gallery-title="Wind Trace" data-gallery-caption="바람과 함께 걷던 오후의 결" aria-label="사진 4">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-04.jpg" data-gallery-title="Gallery 04" data-gallery-caption="천천히 걸어가던 시간" aria-label="사진 4">
             <img src="./images/gallery/gallery-04.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-05.jpg" data-gallery-title="Quiet Mood" data-gallery-caption="자연스럽게 서로를 바라보던 시간" aria-label="사진 5">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-05.jpg" data-gallery-title="Gallery 05" data-gallery-caption="편하게 서로를 바라보던 모습" aria-label="사진 5">
             <img src="./images/gallery/gallery-05.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-06.jpg" data-gallery-title="No Words" data-gallery-caption="말없이도 충분했던 하루의 일부" aria-label="사진 6">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-06.jpg" data-gallery-title="Gallery 06" data-gallery-caption="말보다 편했던 순간" aria-label="사진 6">
             <img src="./images/gallery/gallery-06.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-07.jpg" data-gallery-title="True Face" data-gallery-caption="가장 우리다운 표정이 남은 컷" aria-label="사진 7">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-07.jpg" data-gallery-title="Gallery 07" data-gallery-caption="평소의 저희와 닮은 표정" aria-label="사진 7">
             <img src="./images/gallery/gallery-07.jpg" alt="" />
           </button>
-          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-08.jpg" data-gallery-title="Last Frame" data-gallery-caption="잔잔하게 오래 남을 마지막 장면" aria-label="사진 8">
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-08.jpg" data-gallery-title="Gallery 08" data-gallery-caption="기억하고 싶은 한 장면" aria-label="사진 8">
             <img src="./images/gallery/gallery-08.jpg" alt="" />
           </button>
         </div>
@@ -1344,7 +1357,7 @@
             <div class="info-block" data-reveal>
               <p class="info-label">Account</p>
               <h2 class="info-title">마음 전하실 곳</h2>
-              <p class="info-copy">필요하신 분들만 조용히 확인하실 수 있도록 아래에 담아두었습니다.</p>
+              <p class="info-copy">필요하신 분들께서만<br />편하게 확인하실 수 있도록 준비했습니다.</p>
 
               <div class="accordion">
                 <button class="acc-head" type="button" data-acc="groom"><span>신랑측 계좌</span><span>+</span></button>
@@ -1366,7 +1379,7 @@
     </section>
 
     <footer class="footer">
-      귀한 걸음으로 함께해 주시는 모든 분들께 감사드립니다.<br />
+      함께해 주셔서 감사합니다.<br />
       문의는 <a href="tel:010-0000-0000">신랑</a> / <a href="tel:010-0000-0000">신부</a> 에게 편하게 주세요.
     </footer>
   </main>
@@ -1471,17 +1484,24 @@
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / 86400);
 
-        const nextDday = totalSeconds <= 0 ? "Today" : String(days);
+        const nextDday = totalSeconds <= 0 ? "오늘" : `${days}일`;
         if (ddayValueEl.dataset.text !== nextDday) {
           ddayValueEl.dataset.text = nextDday;
-          const labelEl = ddayValueEl.querySelector("span");
-          if (labelEl) {
-            labelEl.textContent = nextDday;
+          const numberEl = ddayValueEl.querySelector(".count-day-number");
+          const unitEl = ddayValueEl.querySelector(".count-day-unit");
+          if (numberEl && unitEl) {
+            if (totalSeconds <= 0) {
+              numberEl.textContent = "오늘";
+              unitEl.textContent = "";
+            } else {
+              numberEl.textContent = String(days);
+              unitEl.textContent = "일";
+            }
           } else {
             ddayValueEl.textContent = nextDday;
           }
         }
-        if (narrativeEl) narrativeEl.textContent = "D-Day";
+        if (narrativeEl) narrativeEl.textContent = "남은 날";
         if (axisEl) axisEl.style.setProperty("--today-progress", toYearProgress(now));
         if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
       };
