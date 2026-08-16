@@ -1,1 +1,3 @@
 images/originals/
+.http-server.log
+.http-server.err.log
