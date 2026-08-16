@@ -201,8 +201,12 @@
       position:absolute;
       left:16px;
       right:16px;
-      bottom:18px;
+      bottom:34px;
       z-index:2;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:10px;
     }
 
     .hero-kicker{
@@ -221,6 +225,13 @@
       line-height:.88;
       letter-spacing:-.08em;
       font-weight:600;
+    }
+
+    .hero-calligraphy{
+      display:block;
+      width:min(100%, 320px);
+      height:auto;
+      filter:drop-shadow(0 10px 24px rgba(15,10,8,.22));
     }
 
     .hero-sub{
@@ -1181,7 +1192,6 @@
   <main class="page">
     <section class="hero">
       <div class="hero-top">
-        <div><strong>Wedding</strong><br />Invitation</div>
         <div>2026.11.22<br />일요일 낮 1시</div>
       </div>
 
@@ -1190,9 +1200,7 @@
           <img src="./images/hero-main.jpg" alt="신랑 신부 메인 사진" />
           <div class="hero-word">FOREVER</div>
           <div class="hero-title">
-            <p class="hero-kicker">Save the Date</p>
-            <h1 class="hero-names">WEDDING</h1>
-            <p class="hero-sub">오랜 시간 함께해온 저희가<br />이제 결혼을 약속했습니다.</p>
+            <img class="hero-calligraphy" src="./images/hero-calligraphy-wedding-day.png" alt="Wedding day" />
           </div>
         </div>
       </div>
@@ -1203,7 +1211,6 @@
     <section class="story-step dark" data-screen="1">
       <div class="sticky">
         <div class="panel center" data-reveal>
-          <p class="kicker">One Day</p>
           <div class="date-massive">
             <div class="date-shadow">11.22</div>
             <div class="date-main">11.22</div>
@@ -1221,8 +1228,6 @@
         <div class="panel" data-reveal>
           <div class="statement">
             <div class="statement-head">
-              <div class="statement-back">Vow</div>
-              <p class="kicker">Our Story</p>
               <h2 class="statement-title">함께해온<br />시간을 지나</h2>
               <p class="statement-copy">두 사람이 부부로 새로운 시작을 하려 합니다.<br />오셔서 편한 마음으로 함께해 주시면 감사하겠습니다.</p>
             </div>
@@ -1257,7 +1262,6 @@
               <div class="count-axis" id="countAxis" aria-label="2026년 진행 축">
                 <div class="count-axis-labels" aria-hidden="true">
                   <span>26.01</span>
-                  <span>26.12</span>
                 </div>
                 <div class="count-axis-track">
                   <span class="count-axis-sweep" aria-hidden="true"></span>
@@ -1288,7 +1292,6 @@
         <div class="panel gallery-panel gallery-stage">
       <div data-reveal>
         <p class="kicker">Gallery</p>
-        <h2 class="display">Gallery</h2>
 
       </div>
 
