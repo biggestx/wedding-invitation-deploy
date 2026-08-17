@@ -116,6 +116,76 @@
       padding:0 16px 72px;
     }
 
+    .music-toggle{
+      position:fixed;
+      top:calc(env(safe-area-inset-top, 0px) + 18px);
+      right:18px;
+      z-index:6;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+      padding:0;
+      border:0;
+      background:transparent;
+      color:#fffaf4;
+      cursor:pointer;
+      opacity:1;
+      transition:transform .24s ease, opacity .24s ease, filter .24s ease;
+    }
+
+    .music-toggle:hover,
+    .music-toggle:focus-visible{
+      transform:translateY(-1px);
+      outline:none;
+    }
+
+    .music-toggle[data-muted="true"]{
+      opacity:.84;
+    }
+
+    .music-toggle .icon{
+      position:relative;
+      display:block;
+      width:24px;
+      height:24px;
+      flex:0 0 24px;
+      filter:drop-shadow(0 3px 10px rgba(18,16,15,.72));
+    }
+
+    .music-toggle .icon::before,
+    .music-toggle .icon::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:24px 24px;
+      transition:opacity .22s ease, transform .22s ease;
+    }
+
+    .music-toggle .icon::before{
+      opacity:1;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fffdf9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='11 5 6 9 3 9 3 15 6 15 11 19 11 5'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7'/%3E%3Cpath d='M18.5 5.5a9 9 0 0 1 0 13'/%3E%3C/svg%3E");
+    }
+
+    .music-toggle .icon::after{
+      opacity:0;
+      transform:scale(.92);
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffe7d2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='11 5 6 9 3 9 3 15 6 15 11 19 11 5'/%3E%3Cline x1='22' y1='9' x2='16' y2='15'/%3E%3Cline x1='16' y1='9' x2='22' y2='15'/%3E%3C/svg%3E");
+    }
+
+    .music-toggle[data-muted="true"] .icon::before{
+      opacity:0;
+      transform:scale(.92);
+    }
+
+    .music-toggle[data-muted="true"] .icon::after{
+      opacity:1;
+      transform:scale(1);
+    }
+
     .hero{
       position:relative;
       min-height:165svh;
@@ -1376,6 +1446,10 @@
   </style>
 </head>
 <body>
+  <audio id="weddingBgm" src="./images/bgm-alex-productions-traveling-around-the-world-129072.mp3" loop playsinline preload="auto"></audio>
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="배경음악 음소거" aria-pressed="false" data-muted="false">
+    <span class="icon" aria-hidden="true"></span>
+  </button>
   <div class="bokeh-shader" aria-hidden="true">
     <canvas id="bokehShaderCanvas"></canvas>
   </div>
@@ -1595,6 +1669,64 @@
   </main>
 
   <script>
+    (function setupBgm() {
+      const audio = document.getElementById("weddingBgm");
+      const toggle = document.getElementById("musicToggle");
+      if (!audio || !toggle) return;
+
+      const storageKey = "wedding-bgm-muted";
+      const storedMuted = window.localStorage.getItem(storageKey);
+      let isMuted = storedMuted === "true";
+      let hasPlaybackStarted = false;
+
+      audio.volume = 0.38;
+      audio.muted = isMuted;
+
+      const syncToggle = () => {
+        toggle.dataset.muted = String(isMuted);
+        toggle.setAttribute("aria-pressed", String(!isMuted));
+        toggle.setAttribute("aria-label", isMuted ? "배경음악 재생" : "배경음악 음소거");
+      };
+
+      const tryPlay = async () => {
+        if (isMuted) return;
+        try {
+          await audio.play();
+          hasPlaybackStarted = true;
+        } catch (error) {
+          hasPlaybackStarted = false;
+        }
+      };
+
+      const startFromGesture = () => {
+        if (!hasPlaybackStarted && !isMuted) {
+          tryPlay();
+        }
+      };
+
+      toggle.addEventListener("click", async () => {
+        isMuted = !isMuted;
+        audio.muted = isMuted;
+        window.localStorage.setItem(storageKey, String(isMuted));
+        syncToggle();
+
+        if (isMuted) {
+          audio.pause();
+          hasPlaybackStarted = false;
+          return;
+        }
+
+        await tryPlay();
+      });
+
+      ["pointerdown", "touchstart", "keydown"].forEach((eventName) => {
+        window.addEventListener(eventName, startFromGesture, { passive: true, once: true });
+      });
+
+      syncToggle();
+      tryPlay();
+    })();
+
     (() => {
       const canvas = document.getElementById("bokehShaderCanvas");
       if (!canvas) return;
