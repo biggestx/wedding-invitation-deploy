@@ -163,20 +163,6 @@
         linear-gradient(90deg, rgba(255,255,255,.18), transparent 24%, transparent 76%, rgba(255,255,255,.08));
     }
 
-    .hero-photo::before{
-      content:"";
-      position:absolute;
-      inset:-12%;
-      z-index:1;
-      pointer-events:none;
-      background:
-        linear-gradient(110deg, transparent 0%, rgba(255,255,255,.04) 38%, rgba(255,247,239,.24) 50%, rgba(255,255,255,.04) 62%, transparent 100%);
-      transform:translateX(-72%) skewX(-12deg);
-      opacity:.7;
-      mix-blend-mode:screen;
-      animation:heroShimmer 7.5s ease-in-out infinite;
-    }
-
     .hero-photo,
     .hero-date,
     .scroll-cue{
@@ -266,21 +252,6 @@
       color:rgba(255,249,242,.88);
       font-size:14px;
       line-height:1.7;
-    }
-
-    .hero-word{
-      position:absolute;
-      right:-4px;
-      top:18%;
-      z-index:2;
-      color:rgba(255,250,244,.18);
-      font-family:"Cormorant Garamond","SUIT",serif;
-      font-size:clamp(74px, 20vw, 118px);
-      line-height:.9;
-      letter-spacing:-.08em;
-      transform:rotate(90deg);
-      transform-origin:right top;
-      pointer-events:none;
     }
 
     .scroll-cue{
@@ -1319,23 +1290,6 @@
       filter:saturate(.88);
     }
 
-    @keyframes heroShimmer{
-      0%, 100%{
-        transform:translateX(-72%) skewX(-12deg);
-        opacity:0;
-      }
-      18%{
-        opacity:.18;
-      }
-      48%{
-        transform:translateX(18%) skewX(-12deg);
-        opacity:.7;
-      }
-      64%{
-        opacity:.1;
-      }
-    }
-
     @media (max-width: 390px){
       .page{ padding-inline:14px; }
       .hero-photo{ border-radius:30px; }
@@ -1395,10 +1349,6 @@
         opacity:1 !important;
       }
 
-      .hero-photo::before{
-        animation:none;
-        opacity:0;
-      }
     }
   </style>
 </head>
@@ -1411,7 +1361,6 @@
         <div class="hero-visual">
           <div class="hero-photo">
             <img src="./images/hero-main.jpg" alt="신랑 신부 메인 사진" />
-            <div class="hero-word">FOREVER</div>
             <div class="hero-title">
               <img class="hero-calligraphy" src="./images/hero-calligraphy-wedding-day.png" alt="Wedding day" />
             </div>
