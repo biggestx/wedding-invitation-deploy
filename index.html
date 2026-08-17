@@ -68,7 +68,7 @@
       z-index:2;
       pointer-events:none;
       overflow:hidden;
-      opacity:.56;
+      opacity:.6;
     }
 
     .bokeh-shader canvas{
@@ -853,7 +853,7 @@
 
     @media (prefers-reduced-motion: reduce){
       .bokeh-shader{
-        opacity:.48;
+        opacity:.52;
       }
 
       .scroll-cue::before,
@@ -1054,7 +1054,7 @@
     }
 
     .location-name{
-      margin:10px 0 0;
+      margin:0;
       color:var(--ink);
       font-family:"Gowun Batang","SUIT",serif;
       font-size:16px;
@@ -1063,7 +1063,7 @@
     }
 
     .info-copy{
-      margin:12px 0 0;
+      margin:10px 0 0;
       color:var(--muted);
       font-family:"Gowun Batang","SUIT",serif;
       font-size:16px;
@@ -1108,7 +1108,8 @@
       display:inline-flex;
       align-items:center;
       gap:10px;
-      margin-top:12px;
+      align-self:flex-end;
+      margin-top:16px;
       font-family:"Gowun Batang","SUIT",serif;
       font-size:14px;
       font-weight:700;
@@ -1530,11 +1531,11 @@
           <div class="panel info-panel">
             <div class="info-block" data-reveal="right">
               <p class="info-label">오시는길</p>
+              <p class="location-name">로얄파크 컨벤션 파크홀</p>
+              <p class="info-copy">2026년 11월 22일 일요일 낮 1시</p>
               <a class="map-preview" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">
                 <img src="./images/map.jpeg" alt="Wedding venue map" />
               </a>
-              <p class="location-name">로얄파크 컨벤션 파크홀</p>
-              <p class="info-copy">2026년 11월 22일 일요일 낮 1시</p>
               <a class="map-link" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">지도에서 보기</a>
               <div class="location-notes">
                 <div class="location-note"><strong>주소</strong>서울특별시 용산구 이태원로 29</div>
@@ -1667,9 +1668,9 @@
 
             float tintMix = hash11(fi * 8.71);
             vec3 orb = orbColor(tintMix);
-            float intensity = mix(0.045, 0.125, hash11(fi * 6.17));
+            float intensity = mix(0.05, 0.138, hash11(fi * 6.17));
             color += orb * light * intensity;
-            alpha += light * intensity * 0.27;
+            alpha += light * intensity * 0.3;
           }
 
           for (int i = 0; i < 18; i++) {
@@ -1679,13 +1680,13 @@
             pos.x += sin(t * 1.8 + fi) * 0.032;
             pos.y += cos(t * 1.4 + fi * 1.3) * 0.022;
             float spark = smoothstep(0.012, 0.0, length(uv - pos));
-            color += vec3(1.0, 0.97, 0.88) * spark * 0.07;
-            alpha += spark * 0.05;
+            color += vec3(1.0, 0.97, 0.88) * spark * 0.08;
+            alpha += spark * 0.058;
           }
 
-          color = 1.0 - exp(-1.0 * color);
-          color = pow(color, vec3(0.99));
-          alpha = clamp(alpha, 0.0, 0.19);
+          color = 1.0 - exp(-1.05 * color);
+          color = pow(color, vec3(0.985));
+          alpha = clamp(alpha, 0.0, 0.21);
 
           gl_FragColor = vec4(color, alpha);
         }
