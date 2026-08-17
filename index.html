@@ -46,6 +46,7 @@
       touch-action:pan-y pinch-zoom;
     }
 
+
     body::before{
       content:"";
       position:fixed;
@@ -125,6 +126,26 @@
       transition:transform .24s ease, opacity .24s ease, filter .24s ease;
     }
 
+    .progress-debug{
+      position:fixed;
+      left:10px;
+      top:calc(env(safe-area-inset-top, 0px) + 18px);
+      z-index:7;
+      min-width:56px;
+      padding:8px 10px;
+      border:1px solid rgba(22,19,17,.12);
+      border-radius:12px;
+      background:rgba(255,251,247,.84);
+      backdrop-filter:blur(10px);
+      color:var(--ink);
+      font-size:12px;
+      font-weight:700;
+      line-height:1;
+      letter-spacing:.02em;
+      text-align:center;
+      box-shadow:0 10px 24px rgba(22,19,17,.08);
+    }
+
     .music-toggle:hover,
     .music-toggle:focus-visible{
       transform:translateY(-1px);
@@ -178,7 +199,7 @@
 
     .hero{
       position:relative;
-      min-height:165svh;
+      min-height:220svh;
     }
 
     .hero .sticky{
@@ -399,7 +420,7 @@
 
     .story-step{
       position:relative;
-      min-height:185svh;
+      min-height:260svh;
     }
 
     .story-step::before{
@@ -621,7 +642,7 @@
     }
 
     .count-step{
-      min-height:155svh;
+      min-height:220svh;
     }
 
     .count-step::before{
@@ -948,7 +969,7 @@
     }
 
     .gallery-step{
-      min-height:160svh;
+      min-height:230svh;
     }
 
     .gallery-step .sticky{
@@ -1084,7 +1105,7 @@
     }
 
     .info-step{
-      min-height:140svh;
+      min-height:210svh;
     }
 
     .info-step .sticky{
@@ -1392,7 +1413,7 @@
         border-radius:999px 999px 20px 20px / 198px 198px 20px 20px;
       }
       .hero-names{ font-size:clamp(46px, 13vw, 68px); }
-      .count-step{ min-height:148svh; }
+      .count-step{ min-height:190svh; }
       .count-band{
         gap:22px;
         min-height:330px;
@@ -1455,6 +1476,7 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="배경음악 음소거" aria-pressed="false" data-muted="false">
     <span class="icon" aria-hidden="true"></span>
   </button>
+  <div class="progress-debug" id="progressDebug">0.000</div>
   <div class="scroll-wash" aria-hidden="true"></div>
 
   <main class="page">
@@ -1838,11 +1860,12 @@
 
     (function pageProgressWash() {
       const root = document.documentElement;
+      const debugEl = document.getElementById("progressDebug");
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-      const fillUntil = 0.95;
-      const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
+      const fillUntil = 1;
+      const progressMax = 2;
       const getViewport = () => ({
         width: Math.round(window.visualViewport?.width || window.innerWidth),
         height: Math.round(window.visualViewport?.height || window.innerHeight)
@@ -1850,9 +1873,6 @@
 
       let viewport = getViewport();
       let stableViewportHeight = viewport.height;
-      let targetProgress = 0;
-      let renderedProgress = 0;
-      let rafId = 0;
       const refreshViewportBaseline = () => {
         viewport = getViewport();
         stableViewportHeight = viewport.height;
@@ -1879,33 +1899,9 @@
 
         const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
         const filledProgress = clamp(progress / fillUntil, 0, 1);
-        targetProgress = filledProgress;
-        renderProgress();
-      };
-
-      const renderProgress = () => {
-        const sinceGesture = performance.now() - scrollState.lastGestureAt;
-        const isMomentumPhase = !scrollState.touchActive && sinceGesture < 220;
-        const easing = isMomentumPhase ? 0.025 : (scrollState.touchActive ? 0.055 : 0.08);
-
-        renderedProgress += (targetProgress - renderedProgress) * easing;
-        if (Math.abs(targetProgress - renderedProgress) < 0.001) {
-          renderedProgress = targetProgress;
-        }
-
-        root.style.setProperty("--page-progress", renderedProgress.toFixed(4));
-
-        if (Math.abs(targetProgress - renderedProgress) < 0.001) {
-          rafId = 0;
-          return;
-        }
-
-        rafId = window.requestAnimationFrame(renderProgress);
-      };
-
-      const requestRender = () => {
-        if (rafId) return;
-        rafId = window.requestAnimationFrame(renderProgress);
+        const displayProgress = filledProgress * progressMax;
+        root.style.setProperty("--page-progress", displayProgress.toFixed(4));
+        if (debugEl) debugEl.textContent = displayProgress.toFixed(3);
       };
 
       const handleResize = () => {
@@ -1919,10 +1915,7 @@
       };
 
       sync();
-      window.addEventListener("scroll", () => {
-        sync();
-        requestRender();
-      }, { passive: true });
+      window.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", handleResize);
       window.visualViewport?.addEventListener("resize", handleResize);
     })();
