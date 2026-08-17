@@ -1474,13 +1474,20 @@
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const getViewport = () => ({
+        width: Math.round(window.visualViewport?.width || window.innerWidth),
+        height: Math.round(window.visualViewport?.height || window.innerHeight)
+      });
+
+      let viewport = getViewport();
+      let stableViewportHeight = viewport.height;
 
       const findActiveScreen = () => {
         return screens.reduce((best, screen) => {
           const rect = screen.getBoundingClientRect();
-          const stickyRange = Math.max(rect.height - window.innerHeight, 1);
-          const isActive = rect.top <= 0 && rect.bottom >= window.innerHeight;
-          const distance = isActive ? 0 : Math.min(Math.abs(rect.top), Math.abs(rect.bottom - window.innerHeight));
+          const stickyRange = Math.max(rect.height - stableViewportHeight, 1);
+          const isActive = rect.top <= 0 && rect.bottom >= stableViewportHeight;
+          const distance = isActive ? 0 : Math.min(Math.abs(rect.top), Math.abs(rect.bottom - stableViewportHeight));
 
           if (!best || distance < best.distance) {
             return { rect, stickyRange, distance };
@@ -1491,6 +1498,14 @@
       };
 
       const sync = () => {
+        const nextViewport = getViewport();
+        if (nextViewport.width !== viewport.width) {
+          stableViewportHeight = nextViewport.height;
+        } else {
+          stableViewportHeight = Math.min(stableViewportHeight, nextViewport.height);
+        }
+        viewport = nextViewport;
+
         const active = findActiveScreen();
         if (!active) return;
 
@@ -1501,6 +1516,7 @@
       sync();
       window.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", sync);
+      window.visualViewport?.addEventListener("resize", sync);
     })();
 
     (function countdown() {
