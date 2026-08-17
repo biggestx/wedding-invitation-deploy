@@ -1811,9 +1811,11 @@
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
       const holdUntil = 1;
       const activeUntil = 1;
+      const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
+      const viewportLockMs = 320;
       const getViewport = () => ({
-        width: Math.round(window.visualViewport?.width || window.innerWidth),
-        height: Math.round(window.visualViewport?.height || window.innerHeight)
+        width: Math.round(document.documentElement.clientWidth || window.innerWidth),
+        height: Math.round(document.documentElement.clientHeight || window.innerHeight)
       });
 
       let viewport = getViewport();
@@ -1849,6 +1851,11 @@
         const nextViewport = getViewport();
         const widthChanged = nextViewport.width !== viewport.width;
         const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
+        const isViewportUiTransition = scrollState.touchActive || (performance.now() - scrollState.lastGestureAt) < viewportLockMs;
+        if (!widthChanged && isViewportUiTransition) {
+          viewport = nextViewport;
+          return;
+        }
         if (widthChanged || heightJumped) {
           refreshViewportBaseline();
           sync();
@@ -1870,11 +1877,13 @@
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
       const fillUntil = 1;
-      const progressMin = -2;
+      const progressMin = -1;
       const progressMax = 2;
+      const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
+      const viewportLockMs = 320;
       const getViewport = () => ({
-        width: Math.round(window.visualViewport?.width || window.innerWidth),
-        height: Math.round(window.visualViewport?.height || window.innerHeight)
+        width: Math.round(document.documentElement.clientWidth || window.innerWidth),
+        height: Math.round(document.documentElement.clientHeight || window.innerHeight)
       });
 
       let viewport = getViewport();
@@ -1914,6 +1923,11 @@
         const nextViewport = getViewport();
         const widthChanged = nextViewport.width !== viewport.width;
         const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
+        const isViewportUiTransition = scrollState.touchActive || (performance.now() - scrollState.lastGestureAt) < viewportLockMs;
+        if (!widthChanged && isViewportUiTransition) {
+          viewport = nextViewport;
+          return;
+        }
         if (widthChanged || heightJumped) {
           refreshViewportBaseline();
           sync();
