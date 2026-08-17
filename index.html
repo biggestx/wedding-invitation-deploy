@@ -85,13 +85,13 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(255,252,248,.62) 0%, rgba(239,228,216,.42) 48%, rgba(226,210,196,.5) 100%),
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.30) 0, transparent 34%),
-        radial-gradient(circle at 18% 82%, rgba(232,214,198,.24) 0, transparent 28%),
-        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.26) 38%, rgba(255,255,255,.14) 50%, transparent 64%);
+        linear-gradient(180deg, rgba(255,252,248,.68) 0%, rgba(240,226,213,.46) 48%, rgba(223,204,188,.62) 100%),
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.32) 0, transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(226,204,184,.24) 0, transparent 28%),
+        linear-gradient(115deg, transparent 12%, rgba(255,245,235,.24) 38%, rgba(255,255,255,.14) 50%, transparent 64%);
       transform-origin:top center;
       transform:scaleY(var(--page-progress, 0));
-      opacity:.4;
+      opacity:.48;
       filter:blur(6px);
       transition:transform .18s linear;
     }
@@ -104,7 +104,7 @@
       z-index:3;
       width:min(100%, var(--maxw));
       margin:0 auto;
-      padding:0 16px 72px;
+      padding:0 16px 0;
     }
 
     .music-toggle{
@@ -1122,7 +1122,12 @@
     }
 
     .info-accounts .info-block{
+      border-top:none;
       border-bottom:none;
+    }
+
+    .info-accounts{
+      min-height:100svh;
     }
 
     .info-label{
@@ -1865,6 +1870,7 @@
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
       const fillUntil = 1;
+      const progressMin = -2;
       const progressMax = 2;
       const getViewport = () => ({
         width: Math.round(window.visualViewport?.width || window.innerWidth),
@@ -1899,7 +1905,7 @@
 
         const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
         const filledProgress = clamp(progress / fillUntil, 0, 1);
-        const displayProgress = filledProgress * progressMax;
+        const displayProgress = progressMin + (filledProgress * (progressMax - progressMin));
         root.style.setProperty("--page-progress", displayProgress.toFixed(4));
         if (debugEl) debugEl.textContent = displayProgress.toFixed(3);
       };
