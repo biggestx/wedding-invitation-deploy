@@ -24,7 +24,10 @@
     }
 
     *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
+    html{
+      scroll-behavior:smooth;
+      overscroll-behavior-y:none;
+    }
 
     body{
       margin:0;
@@ -39,6 +42,8 @@
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
       overflow-x:hidden;
+      overscroll-behavior-y:none;
+      touch-action:pan-y pinch-zoom;
     }
 
     body::before{
@@ -1722,6 +1727,37 @@
       tryPlay();
     })();
 
+    (function trackScrollIntent() {
+      const state = {
+        touchActive: false,
+        lastGestureAt: performance.now()
+      };
+      window.__weddingScrollState = state;
+
+      const markActive = () => {
+        state.touchActive = true;
+        state.lastGestureAt = performance.now();
+      };
+
+      const markMove = () => {
+        state.lastGestureAt = performance.now();
+      };
+
+      const markInactive = () => {
+        state.touchActive = false;
+        state.lastGestureAt = performance.now();
+      };
+
+      window.addEventListener("touchstart", markActive, { passive: true });
+      window.addEventListener("touchmove", markMove, { passive: true });
+      window.addEventListener("touchend", markInactive, { passive: true });
+      window.addEventListener("touchcancel", markInactive, { passive: true });
+      window.addEventListener("pointerdown", markActive, { passive: true });
+      window.addEventListener("pointerup", markInactive, { passive: true });
+      window.addEventListener("pointercancel", markInactive, { passive: true });
+      window.addEventListener("wheel", markInactive, { passive: true });
+    })();
+
     (function revealOnScroll() {
       const items = document.querySelectorAll("[data-reveal]");
       if (!items.length) return;
@@ -1748,20 +1784,27 @@
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
       const holdUntil = 1;
       const activeUntil = 1;
-      const getViewportHeight = () => Math.round(window.visualViewport?.height || window.innerHeight);
+      const getViewport = () => ({
+        width: Math.round(window.visualViewport?.width || window.innerWidth),
+        height: Math.round(window.visualViewport?.height || window.innerHeight)
+      });
 
-      let viewportHeight = getViewportHeight();
+      let viewport = getViewport();
+      let stableViewportHeight = viewport.height;
       let ticking = false;
+      const refreshViewportBaseline = () => {
+        viewport = getViewport();
+        stableViewportHeight = viewport.height;
+      };
 
       const sync = () => {
         ticking = false;
-        viewportHeight = getViewportHeight();
 
         screens.forEach((screen) => {
           const rect = screen.getBoundingClientRect();
-          const stickyRange = Math.max(rect.height - viewportHeight, 1);
+          const stickyRange = Math.max(rect.height - stableViewportHeight, 1);
           const progress = clamp((-rect.top) / stickyRange, 0, 1);
-          const fullyHoldingViewport = rect.top <= 0 && rect.bottom >= viewportHeight;
+          const fullyHoldingViewport = rect.top <= 0 && rect.bottom >= stableViewportHeight;
           const isAnimated = fullyHoldingViewport && progress < holdUntil;
           const isActive = fullyHoldingViewport && progress < activeUntil;
           screen.classList.toggle("screen-animated", isAnimated);
@@ -1775,10 +1818,22 @@
         window.requestAnimationFrame(sync);
       };
 
+      const handleResize = () => {
+        const nextViewport = getViewport();
+        const widthChanged = nextViewport.width !== viewport.width;
+        const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
+        if (widthChanged || heightJumped) {
+          refreshViewportBaseline();
+          sync();
+          return;
+        }
+        viewport = nextViewport;
+      };
+
       sync();
       window.addEventListener("scroll", requestSync, { passive: true });
-      window.addEventListener("resize", requestSync);
-      window.visualViewport?.addEventListener("resize", requestSync);
+      window.addEventListener("resize", handleResize);
+      window.visualViewport?.addEventListener("resize", handleResize);
     })();
 
     (function pageProgressWash() {
@@ -1786,7 +1841,8 @@
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-      const fillUntil = 0.7;
+      const fillUntil = 0.95;
+      const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
       const getViewport = () => ({
         width: Math.round(window.visualViewport?.width || window.innerWidth),
         height: Math.round(window.visualViewport?.height || window.innerHeight)
@@ -1794,6 +1850,9 @@
 
       let viewport = getViewport();
       let stableViewportHeight = viewport.height;
+      let targetProgress = 0;
+      let renderedProgress = 0;
+      let rafId = 0;
       const refreshViewportBaseline = () => {
         viewport = getViewport();
         stableViewportHeight = viewport.height;
@@ -1820,8 +1879,33 @@
 
         const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
         const filledProgress = clamp(progress / fillUntil, 0, 1);
-        const easedProgress = Math.pow(filledProgress, 1.85);
-        root.style.setProperty("--page-progress", easedProgress.toFixed(4));
+        targetProgress = filledProgress;
+        renderProgress();
+      };
+
+      const renderProgress = () => {
+        const sinceGesture = performance.now() - scrollState.lastGestureAt;
+        const isMomentumPhase = !scrollState.touchActive && sinceGesture < 220;
+        const easing = isMomentumPhase ? 0.025 : (scrollState.touchActive ? 0.055 : 0.08);
+
+        renderedProgress += (targetProgress - renderedProgress) * easing;
+        if (Math.abs(targetProgress - renderedProgress) < 0.001) {
+          renderedProgress = targetProgress;
+        }
+
+        root.style.setProperty("--page-progress", renderedProgress.toFixed(4));
+
+        if (Math.abs(targetProgress - renderedProgress) < 0.001) {
+          rafId = 0;
+          return;
+        }
+
+        rafId = window.requestAnimationFrame(renderProgress);
+      };
+
+      const requestRender = () => {
+        if (rafId) return;
+        rafId = window.requestAnimationFrame(renderProgress);
       };
 
       const handleResize = () => {
@@ -1835,7 +1919,10 @@
       };
 
       sync();
-      window.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("scroll", () => {
+        sync();
+        requestRender();
+      }, { passive: true });
       window.addEventListener("resize", handleResize);
       window.visualViewport?.addEventListener("resize", handleResize);
     })();
