@@ -54,22 +54,6 @@
       filter:contrast(1.08) brightness(1);
     }
 
-    .bokeh-shader{
-      position:fixed;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-      overflow:hidden;
-      opacity:.92;
-    }
-
-    .bokeh-shader canvas{
-      width:100%;
-      height:100%;
-      display:block;
-      background:transparent;
-    }
-
     a{ color:inherit; text-decoration:none; }
     button{ font:inherit; color:inherit; }
 
@@ -887,10 +871,6 @@
     }
 
     @media (prefers-reduced-motion: reduce){
-      .bokeh-shader{
-        opacity:.72;
-      }
-
       .scroll-cue::before,
       .scroll-cue::after,
       .count-axis-sweep,
@@ -1415,9 +1395,6 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="배경음악 음소거" aria-pressed="false" data-muted="false">
     <span class="icon" aria-hidden="true"></span>
   </button>
-  <div class="bokeh-shader" aria-hidden="true">
-    <canvas id="bokehShaderCanvas"></canvas>
-  </div>
 
   <main class="page">
     <section class="hero" data-screen="0">
@@ -1689,207 +1666,6 @@
 
       syncToggle();
       tryPlay();
-    })();
-
-    (() => {
-      const canvas = document.getElementById("bokehShaderCanvas");
-      if (!canvas) return;
-
-      const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const gl =
-        canvas.getContext("webgl", { alpha: true, antialias: true, premultipliedAlpha: true }) ||
-        canvas.getContext("experimental-webgl", { alpha: true, antialias: true, premultipliedAlpha: true });
-
-      if (!gl) return;
-
-      const vertexSource = `
-        attribute vec2 a_position;
-        void main() {
-          gl_Position = vec4(a_position, 0.0, 1.0);
-        }
-      `;
-
-      const fragmentSource = `
-        precision highp float;
-
-        uniform vec2 u_resolution;
-        uniform float u_time;
-        uniform float u_mobileBoost;
-
-        float hash11(float p) {
-          p = fract(p * 0.1031);
-          p *= p + 33.33;
-          p *= p + p;
-          return fract(p);
-        }
-
-        vec2 hash21(float p) {
-          vec3 p3 = fract(vec3(p) * vec3(0.1031, 0.1030, 0.0973));
-          p3 += dot(p3, p3.yzx + 33.33);
-          return fract((p3.xx + p3.yz) * p3.zy);
-        }
-
-        float bokeh(vec2 uv, vec2 pos, float radius, float blur) {
-          float d = length(uv - pos);
-          return smoothstep(radius + blur, radius * 0.28, d);
-        }
-
-        vec3 orbColor(float t) {
-          vec3 c1 = vec3(1.00, 0.99, 0.97);
-          vec3 c2 = vec3(0.98, 0.89, 0.77);
-          vec3 c3 = vec3(0.96, 0.77, 0.60);
-          return mix(mix(c1, c2, 0.62), c3, t);
-        }
-
-        void main() {
-          vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-          vec3 color = vec3(0.0);
-          float alpha = 0.0;
-          float t = u_time * 0.58;
-
-          for (int i = 0; i < 30; i++) {
-            float fi = float(i);
-            vec2 seed = hash21(fi * 13.7);
-            vec2 drift = vec2(
-              sin(t * (0.86 + seed.x * 0.54) + fi * 1.5),
-              cos(t * (0.68 + seed.y * 0.52) + fi * 1.9)
-            );
-
-            vec2 pos = seed;
-            pos += drift * vec2(0.14, 0.10);
-
-            float radius = mix(0.034, 0.128, hash11(fi * 4.13));
-            float blur = radius * 2.4;
-            float light = bokeh(uv, pos, radius, blur);
-
-            vec3 orb = orbColor(hash11(fi * 8.71));
-            float intensity = mix(0.082, 0.19, hash11(fi * 6.17)) * u_mobileBoost;
-            color += orb * light * intensity;
-            alpha += light * intensity * 0.46;
-          }
-
-          for (int i = 0; i < 14; i++) {
-            float fi = float(i);
-            vec2 seed = hash21(90.0 + fi * 19.3);
-            vec2 pos = seed;
-            pos += vec2(
-              sin(t * 1.34 + fi * 0.8) * 0.042,
-              cos(t * 1.18 + fi * 1.1) * 0.03
-            );
-
-            float spark = smoothstep(0.018, 0.0, length(uv - pos));
-            color += vec3(1.0, 0.98, 0.92) * spark * 0.09 * u_mobileBoost;
-            alpha += spark * 0.082 * u_mobileBoost;
-          }
-
-          color = 1.0 - exp(-1.28 * color);
-          color = pow(color, vec3(0.96));
-          alpha = clamp(alpha, 0.0, 0.38 * u_mobileBoost);
-
-          gl_FragColor = vec4(color, alpha);
-        }
-      `;
-
-      const compileShader = (type, source) => {
-        const shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          throw new Error(gl.getShaderInfoLog(shader) || "Shader compile failed");
-        }
-        return shader;
-      };
-
-      const createProgram = (vsSource, fsSource) => {
-        const program = gl.createProgram();
-        const vs = compileShader(gl.VERTEX_SHADER, vsSource);
-        const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
-        gl.attachShader(program, vs);
-        gl.attachShader(program, fs);
-        gl.linkProgram(program);
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          throw new Error(gl.getProgramInfoLog(program) || "Program link failed");
-        }
-        return program;
-      };
-
-      let program;
-      try {
-        program = createProgram(vertexSource, fragmentSource);
-      } catch (error) {
-        return;
-      }
-
-      const positionLocation = gl.getAttribLocation(program, "a_position");
-      const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-      const timeLocation = gl.getUniformLocation(program, "u_time");
-      const mobileBoostLocation = gl.getUniformLocation(program, "u_mobileBoost");
-
-      const buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([
-          -1, -1,
-           1, -1,
-          -1,  1,
-          -1,  1,
-           1, -1,
-           1,  1
-        ]),
-        gl.STATIC_DRAW
-      );
-
-      let rafId = 0;
-      const start = performance.now();
-
-      const resize = () => {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const width = Math.max(1, Math.floor(window.innerWidth * dpr));
-        const height = Math.max(1, Math.floor(window.innerHeight * dpr));
-
-        if (canvas.width !== width || canvas.height !== height) {
-          canvas.width = width;
-          canvas.height = height;
-          canvas.style.width = window.innerWidth + "px";
-          canvas.style.height = window.innerHeight + "px";
-        }
-
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      };
-
-      const draw = (elapsedSeconds) => {
-        resize();
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.useProgram(program);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-        gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-        gl.uniform1f(timeLocation, elapsedSeconds);
-        gl.uniform1f(mobileBoostLocation, window.innerWidth < 768 ? 1.35 : 1.0);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      };
-
-      const render = (now) => {
-        draw((now - start) * 0.001);
-        rafId = window.requestAnimationFrame(render);
-      };
-
-      const syncMotionPreference = () => {
-        window.cancelAnimationFrame(rafId);
-        rafId = 0;
-        if (reducedMotionQuery.matches) {
-          draw(0);
-          return;
-        }
-        rafId = window.requestAnimationFrame(render);
-      };
-
-      syncMotionPreference();
-      window.addEventListener("resize", resize);
-      reducedMotionQuery.addEventListener("change", syncMotionPreference);
     })();
 
     (function revealOnScroll() {
