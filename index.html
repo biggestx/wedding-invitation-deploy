@@ -43,11 +43,13 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.42;
-      background-image:
-        linear-gradient(rgba(255,255,255,.24), rgba(255,255,255,.24)),
-        radial-gradient(circle at 18% 12%, rgba(255,255,255,.46) 0, transparent 16%),
-        radial-gradient(circle at 84% 18%, rgba(255,255,255,.28) 0, transparent 14%);
+      z-index:0;
+      opacity:.2;
+      background:
+        linear-gradient(rgba(255,255,255,.03), rgba(255,255,255,.03)),
+        url("./images/wall-texture-crop.png") left top / 260px 396px repeat;
+      mix-blend-mode:multiply;
+      filter:contrast(1.08) brightness(1);
     }
 
     .scroll-wash{
@@ -74,12 +76,13 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(255,252,248,.72) 0%, rgba(239,228,216,.56) 48%, rgba(226,210,196,.68) 100%),
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.40) 0, transparent 34%),
-        radial-gradient(circle at 18% 82%, rgba(232,214,198,.34) 0, transparent 28%);
+        linear-gradient(180deg, rgba(255,252,248,.76) 0%, rgba(239,228,216,.58) 48%, rgba(226,210,196,.7) 100%),
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.42) 0, transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(232,214,198,.34) 0, transparent 28%),
+        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.34) 38%, rgba(255,255,255,.16) 50%, transparent 64%);
       transform-origin:top center;
       transform:scaleY(var(--page-progress, 0));
-      opacity:.34;
+      opacity:.38;
       filter:blur(6px);
       transition:transform .18s linear;
     }
@@ -158,6 +161,54 @@
       background:
         linear-gradient(180deg, rgba(255,255,255,.04), rgba(10,7,5,.28)),
         linear-gradient(90deg, rgba(255,255,255,.18), transparent 24%, transparent 76%, rgba(255,255,255,.08));
+    }
+
+    .hero-photo::before{
+      content:"";
+      position:absolute;
+      inset:-12%;
+      z-index:1;
+      pointer-events:none;
+      background:
+        linear-gradient(110deg, transparent 0%, rgba(255,255,255,.04) 38%, rgba(255,247,239,.24) 50%, rgba(255,255,255,.04) 62%, transparent 100%);
+      transform:translateX(-72%) skewX(-12deg);
+      opacity:.7;
+      mix-blend-mode:screen;
+      animation:heroShimmer 7.5s ease-in-out infinite;
+    }
+
+    .hero-photo,
+    .hero-date,
+    .scroll-cue{
+      transition:transform .8s cubic-bezier(.22, 1, .36, 1), opacity .8s ease, filter .8s ease;
+    }
+
+    .hero.screen-active .hero-photo{
+      transform:translateY(0) scale(1);
+      filter:none;
+    }
+
+    .hero.screen-active .hero-date{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .hero.screen-active .scroll-cue{
+      opacity:.66;
+    }
+
+    .hero:not(.screen-active) .hero-photo{
+      transform:translateY(16px) scale(.985);
+      filter:saturate(.92);
+    }
+
+    .hero:not(.screen-active) .hero-date{
+      transform:translateY(14px);
+      opacity:.5;
+    }
+
+    .hero:not(.screen-active) .scroll-cue{
+      opacity:.16;
     }
 
     .hero-date{
@@ -283,6 +334,22 @@
     .story-step{
       position:relative;
       min-height:220svh;
+    }
+
+    .story-step::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(255,255,255,.22) 0, transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0));
+      opacity:0;
+      transition:opacity .7s ease;
+    }
+
+    .story-step.screen-active::before{
+      opacity:1;
     }
 
     .story-step.dark{
@@ -1019,6 +1086,7 @@
       border:1px solid rgba(22,19,17,.08);
       background:#f4efe8;
       box-shadow:0 10px 24px rgba(22,19,17,.06);
+      transition:transform .8s cubic-bezier(.22, 1, .36, 1), box-shadow .8s ease, filter .8s ease;
     }
 
     .map-preview img{
@@ -1181,17 +1249,91 @@
       border-top:none;
     }
 
+    .date-massive,
+    .count-band,
+    .info-block{
+      transition:transform .85s cubic-bezier(.22, 1, .36, 1), opacity .85s ease, filter .85s ease;
+    }
+
+    .date-main,
+    .date-copy{
+      transition:transform .85s cubic-bezier(.22, 1, .36, 1), opacity .85s ease, letter-spacing .85s ease;
+    }
+
     [data-reveal]{
       opacity:.12;
       transform:translateY(32px) scale(.97);
       filter:blur(14px);
-      transition:opacity .6s ease, transform .6s ease, filter .6s ease;
+      transition:opacity .75s ease, transform .75s cubic-bezier(.22, 1, .36, 1), filter .75s ease;
     }
 
     [data-reveal].is-visible{
       opacity:1;
       transform:translateY(0) scale(1);
       filter:blur(0);
+    }
+
+    [data-reveal="soft"]{
+      transform:translateY(0) scale(.94);
+      filter:blur(16px);
+    }
+
+    [data-reveal="left"]{
+      transform:translate3d(-24px, 18px, 0) scale(.98);
+    }
+
+    [data-reveal="right"]{
+      transform:translate3d(24px, 18px, 0) scale(.98);
+    }
+
+    [data-reveal="lift"]{
+      transform:translateY(44px) scale(.94);
+      filter:blur(18px);
+    }
+
+    .screen-active .date-main{
+      transform:scale(1);
+      opacity:1;
+      letter-spacing:.02em;
+    }
+
+    .story-step:not(.screen-active) .date-main{
+      transform:scale(.92);
+      opacity:.72;
+      letter-spacing:.1em;
+    }
+
+    .story-step:not(.screen-active) .date-copy{
+      transform:translateY(12px);
+      opacity:.52;
+    }
+
+    .info-step.screen-active .map-preview{
+      transform:translateY(0) scale(1);
+      filter:none;
+      box-shadow:0 30px 76px rgba(24,18,14,.2);
+    }
+
+    .info-step:not(.screen-active) .map-preview{
+      transform:translateY(18px) scale(.97);
+      filter:saturate(.88);
+    }
+
+    @keyframes heroShimmer{
+      0%, 100%{
+        transform:translateX(-72%) skewX(-12deg);
+        opacity:0;
+      }
+      18%{
+        opacity:.18;
+      }
+      48%{
+        transform:translateX(18%) skewX(-12deg);
+        opacity:.7;
+      }
+      64%{
+        opacity:.1;
+      }
     }
 
     @media (max-width: 390px){
@@ -1234,6 +1376,30 @@
       }
       .photo-cascade{ height:380px; }
     }
+
+    @media (prefers-reduced-motion: reduce){
+      .hero-photo,
+      .hero-date,
+      .scroll-cue,
+      .cascade-card,
+      .gallery-shell,
+      .map-preview,
+      .accordion,
+      .date-main,
+      .date-copy,
+      [data-reveal]{
+        transition:none;
+        animation:none;
+        transform:none !important;
+        filter:none !important;
+        opacity:1 !important;
+      }
+
+      .hero-photo::before{
+        animation:none;
+        opacity:0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1258,7 +1424,7 @@
 
     <section class="story-step" data-screen="1">
       <div class="sticky">
-        <div class="panel center" data-reveal>
+        <div class="panel center" data-reveal="soft">
           <div class="date-massive">
             <div class="date-shadow">11.22</div>
             <div class="date-main">11.22</div>
@@ -1273,7 +1439,7 @@
 
     <section class="story-step" data-screen="2">
       <div class="sticky">
-        <div class="panel" data-reveal>
+        <div class="panel" data-reveal="lift">
           <div class="statement">
             <div class="statement-head">
                 <p class="statement-copy">저희 두 사람이 결혼합니다.<br /><br />서로를 아끼고 존중하며<br />잘 살아가겠습니다.</p>
@@ -1297,7 +1463,7 @@
 
     <section class="story-step count-step" data-screen="3">
       <div class="sticky">
-        <div class="panel" data-reveal>
+        <div class="panel" data-reveal="soft">
           <div class="count-band">
             <div class="count-topline">
               <p class="count-pill">결혼까지 남은 시간</p>
@@ -1337,12 +1503,12 @@
     <section class="story-step gallery-step" data-screen="4">
       <div class="sticky">
         <div class="panel gallery-panel gallery-stage">
-      <div data-reveal>
+      <div data-reveal="left">
         <p class="kicker">Gallery</p>
 
       </div>
 
-          <div class="gallery-shell" data-reveal>
+          <div class="gallery-shell">
         <div class="gallery-stack" aria-hidden="true">
           <div class="gallery-ghost left"><img id="ghostLeft" src="./images/gallery/gallery-02.jpg" alt="" /></div>
           <div class="gallery-ghost right"><img id="ghostRight" src="./images/gallery/gallery-07.jpg" alt="" /></div>
@@ -1388,7 +1554,7 @@
       <div class="story-step info-step">
         <div class="sticky">
           <div class="panel info-panel">
-            <div class="info-block" data-reveal>
+            <div class="info-block" data-reveal="right">
               <p class="info-label">오시는길</p>
               <a class="map-preview" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">
                 <img src="./images/map.jpeg" alt="Wedding venue map" />
@@ -1411,7 +1577,7 @@
       <div class="story-step info-step">
         <div class="sticky">
           <div class="panel info-panel">
-            <div class="info-block" data-reveal>
+            <div class="info-block">
               <p class="info-label">마음전하실곳</p>
 
               <div class="accordion">
@@ -1469,6 +1635,21 @@
       }, { threshold: 0.42 });
 
       items.forEach((item) => observer.observe(item));
+    })();
+
+    (function screenArrivalEffects() {
+      const screens = Array.from(document.querySelectorAll("[data-screen]"));
+      if (!screens.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("screen-active", entry.isIntersecting);
+        });
+      }, {
+        threshold: 0.58
+      });
+
+      screens.forEach((screen) => observer.observe(screen));
     })();
 
     (function pageProgressWash() {
