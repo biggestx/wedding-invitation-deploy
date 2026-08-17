@@ -1786,7 +1786,7 @@
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-      const fillUntil = 0.5;
+      const fillUntil = 0.7;
       const getViewport = () => ({
         width: Math.round(window.visualViewport?.width || window.innerWidth),
         height: Math.round(window.visualViewport?.height || window.innerHeight)
@@ -1794,12 +1794,6 @@
 
       let viewport = getViewport();
       let stableViewportHeight = viewport.height;
-      let lockedScreen = null;
-      let lockedScrollY = 0;
-      let lockActive = false;
-      let readyForNextGesture = false;
-      const completedScreens = new WeakSet();
-      let armTimer = null;
       const refreshViewportBaseline = () => {
         viewport = getViewport();
         stableViewportHeight = viewport.height;
@@ -1821,47 +1815,13 @@
       };
 
       const sync = () => {
-        if (lockActive) {
-          if (Math.abs(window.scrollY - lockedScrollY) > 1) {
-            window.scrollTo({ top: lockedScrollY, behavior: "auto" });
-          }
-          root.style.setProperty("--page-progress", "1.0000");
-          return;
-        }
-
         const active = findActiveScreen();
         if (!active) return;
 
         const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
-        if (progress >= fillUntil && !completedScreens.has(active.screen)) {
-          lockActive = true;
-          lockedScreen = active.screen;
-          lockedScrollY = Math.round(window.scrollY + active.rect.top + (active.stickyRange * fillUntil));
-          readyForNextGesture = false;
-          if (armTimer) window.clearTimeout(armTimer);
-          armTimer = window.setTimeout(() => {
-            if (lockActive) readyForNextGesture = true;
-          }, 140);
-          window.scrollTo({ top: lockedScrollY, behavior: "auto" });
-          root.style.setProperty("--page-progress", "1.0000");
-          return;
-        }
-
         const filledProgress = clamp(progress / fillUntil, 0, 1);
-        const easedProgress = Math.pow(filledProgress, 1.06);
+        const easedProgress = Math.pow(filledProgress, 1.85);
         root.style.setProperty("--page-progress", easedProgress.toFixed(4));
-      };
-
-      const releaseLock = () => {
-        if (!lockActive || !readyForNextGesture) return;
-        if (lockedScreen) completedScreens.add(lockedScreen);
-        lockActive = false;
-        lockedScreen = null;
-        readyForNextGesture = false;
-        if (armTimer) {
-          window.clearTimeout(armTimer);
-          armTimer = null;
-        }
       };
 
       const handleResize = () => {
@@ -1878,9 +1838,6 @@
       window.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", handleResize);
       window.visualViewport?.addEventListener("resize", handleResize);
-      ["touchstart", "pointerdown", "wheel", "keydown"].forEach((eventName) => {
-        window.addEventListener(eventName, releaseLock, { passive: true });
-      });
     })();
 
     (function countdown() {
