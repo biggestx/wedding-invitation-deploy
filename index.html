@@ -1481,6 +1481,10 @@
 
       let viewport = getViewport();
       let stableViewportHeight = viewport.height;
+      const refreshViewportBaseline = () => {
+        viewport = getViewport();
+        stableViewportHeight = viewport.height;
+      };
 
       const findActiveScreen = () => {
         return screens.reduce((best, screen) => {
@@ -1498,14 +1502,6 @@
       };
 
       const sync = () => {
-        const nextViewport = getViewport();
-        if (nextViewport.width !== viewport.width) {
-          stableViewportHeight = nextViewport.height;
-        } else {
-          stableViewportHeight = Math.min(stableViewportHeight, nextViewport.height);
-        }
-        viewport = nextViewport;
-
         const active = findActiveScreen();
         if (!active) return;
 
@@ -1513,10 +1509,20 @@
         root.style.setProperty("--page-progress", progress.toFixed(4));
       };
 
+      const handleResize = () => {
+        const nextViewport = getViewport();
+        const widthChanged = nextViewport.width !== viewport.width;
+        const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
+        if (widthChanged || heightJumped) {
+          refreshViewportBaseline();
+          sync();
+        }
+      };
+
       sync();
       window.addEventListener("scroll", sync, { passive: true });
-      window.addEventListener("resize", sync);
-      window.visualViewport?.addEventListener("resize", sync);
+      window.addEventListener("resize", handleResize);
+      window.visualViewport?.addEventListener("resize", handleResize);
     })();
 
     (function countdown() {
