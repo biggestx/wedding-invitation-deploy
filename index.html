@@ -68,10 +68,10 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(255,251,247,.50) 0%, rgba(242,233,224,.34) 52%, rgba(232,219,208,.38) 100%),
+        linear-gradient(180deg, rgba(255,251,247,.44) 0%, rgba(242,233,224,.24) 52%, rgba(232,219,208,.30) 100%),
         radial-gradient(circle at 50% 12%, rgba(255,255,255,.22) 0, transparent 36%),
         radial-gradient(circle at 18% 82%, rgba(232,214,198,.18) 0, transparent 30%);
-      opacity:.22;
+      opacity:.2;
     }
 
     .scroll-wash::after{
@@ -79,13 +79,13 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(255,252,248,.76) 0%, rgba(239,228,216,.58) 48%, rgba(226,210,196,.7) 100%),
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.42) 0, transparent 34%),
-        radial-gradient(circle at 18% 82%, rgba(232,214,198,.34) 0, transparent 28%),
-        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.34) 38%, rgba(255,255,255,.16) 50%, transparent 64%);
+        linear-gradient(180deg, rgba(255,252,248,.62) 0%, rgba(239,228,216,.42) 48%, rgba(226,210,196,.5) 100%),
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.30) 0, transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(232,214,198,.24) 0, transparent 28%),
+        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.26) 38%, rgba(255,255,255,.14) 50%, transparent 64%);
       transform-origin:top center;
       transform:scaleY(var(--page-progress, 0));
-      opacity:.38;
+      opacity:.4;
       filter:blur(6px);
       transition:transform .18s linear;
     }
@@ -256,34 +256,34 @@
     .hero-photo,
     .hero-date,
     .scroll-cue{
-      transition:transform .8s cubic-bezier(.22, 1, .36, 1), opacity .8s ease, filter .8s ease;
+      transition:transform .42s cubic-bezier(.22, 1, .36, 1), opacity .36s ease, filter .36s ease;
     }
 
-    .hero.screen-active .hero-photo{
+    .hero.screen-animated .hero-photo{
       transform:translateY(0) scale(1);
       filter:none;
     }
 
-    .hero.screen-active .hero-date{
+    .hero.screen-animated .hero-date{
       transform:translateY(0);
       opacity:1;
     }
 
-    .hero.screen-active .scroll-cue{
+    .hero.screen-animated .scroll-cue{
       opacity:.66;
     }
 
-    .hero:not(.screen-active) .hero-photo{
-      transform:translateY(16px) scale(.985);
+    .hero:not(.screen-animated) .hero-photo{
+      transform:translateY(8px) scale(.992);
       filter:saturate(.92);
     }
 
-    .hero:not(.screen-active) .hero-date{
-      transform:translateY(14px);
-      opacity:.5;
+    .hero:not(.screen-animated) .hero-date{
+      transform:translateY(7px);
+      opacity:.72;
     }
 
-    .hero:not(.screen-active) .scroll-cue{
+    .hero:not(.screen-animated) .scroll-cue{
       opacity:.16;
     }
 
@@ -394,7 +394,7 @@
 
     .story-step{
       position:relative;
-      min-height:220svh;
+      min-height:185svh;
     }
 
     .story-step::before{
@@ -403,14 +403,14 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 22%, rgba(255,255,255,.22) 0, transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0));
+        radial-gradient(circle at 50% 22%, rgba(255,255,255,.10) 0, transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
       opacity:0;
-      transition:opacity .7s ease;
+      transition:opacity .32s ease;
     }
 
-    .story-step.screen-active::before{
-      opacity:1;
+    .story-step.screen-animated::before{
+      opacity:.28;
     }
 
     .story-step.dark{
@@ -621,8 +621,8 @@
 
     .count-step::before{
       background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
-        radial-gradient(circle at 50% 18%, rgba(255,255,255,.12) 0, transparent 28%);
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.06) 0, transparent 28%);
     }
 
     .count-band{
@@ -943,7 +943,7 @@
     }
 
     .gallery-step{
-      min-height:185svh;
+      min-height:160svh;
     }
 
     .gallery-step .sticky{
@@ -1078,18 +1078,8 @@
       font-size:13px;
     }
 
-    .info{
-      padding:48px 0 0;
-      display:grid;
-      gap:0;
-    }
-
     .info-step{
-      min-height:165svh;
-    }
-
-    .info-step:last-child{
-      min-height:112svh;
+      min-height:140svh;
     }
 
     .info-step .sticky{
@@ -1105,7 +1095,7 @@
       border-top:1px solid var(--line);
     }
 
-    .info-step:last-child .info-block{
+    .info-accounts .info-block{
       border-bottom:none;
     }
 
@@ -1162,19 +1152,19 @@
       height:auto;
     }
 
-    .info-step:first-child .info-block{
+    .info-route .info-block{
       display:flex;
       flex-direction:column;
     }
 
-    .info-step:first-child .info-label{ order:1; }
-    .info-step:first-child .location-name{ order:2; }
-    .info-step:first-child .info-copy{ order:3; }
-    .info-step:first-child .map-preview{ order:4; }
-    .info-step:first-child .map-link{ order:5; }
-    .info-step:first-child .location-notes{ order:6; }
+    .info-route .info-label{ order:1; }
+    .info-route .location-name{ order:2; }
+    .info-route .info-copy{ order:3; }
+    .info-route .map-preview{ order:4; }
+    .info-route .map-link{ order:5; }
+    .info-route .location-notes{ order:6; }
 
-    .info-step:last-child .info-label{
+    .info-accounts .info-label{
       margin-bottom:84px;
     }
 
@@ -1347,43 +1337,43 @@
     }
 
     [data-reveal="left"]{
-      transform:translate3d(-24px, 18px, 0) scale(.98);
+      transform:translate3d(-14px, 10px, 0) scale(.99);
     }
 
     [data-reveal="right"]{
-      transform:translate3d(24px, 18px, 0) scale(.98);
+      transform:translate3d(14px, 10px, 0) scale(.99);
     }
 
     [data-reveal="lift"]{
-      transform:translateY(44px) scale(.94);
-      filter:blur(18px);
+      transform:translateY(18px) scale(.98);
+      filter:blur(8px);
     }
 
-    .screen-active .date-main{
+    .screen-animated .date-main{
       transform:scale(1);
       opacity:1;
       letter-spacing:.02em;
     }
 
-    .story-step:not(.screen-active) .date-main{
-      transform:scale(.92);
+    .story-step:not(.screen-animated) .date-main{
+      transform:scale(.97);
+      opacity:.84;
+      letter-spacing:.05em;
+    }
+
+    .story-step:not(.screen-animated) .date-copy{
+      transform:translateY(6px);
       opacity:.72;
-      letter-spacing:.1em;
     }
 
-    .story-step:not(.screen-active) .date-copy{
-      transform:translateY(12px);
-      opacity:.52;
-    }
-
-    .info-step.screen-active .map-preview{
+    .info-step.screen-animated .map-preview{
       transform:translateY(0) scale(1);
       filter:none;
       box-shadow:0 30px 76px rgba(24,18,14,.2);
     }
 
-    .info-step:not(.screen-active) .map-preview{
-      transform:translateY(18px) scale(.97);
+    .info-step:not(.screen-animated) .map-preview{
+      transform:translateY(8px) scale(.985);
       filter:saturate(.88);
     }
 
@@ -1606,68 +1596,66 @@
       </div>
     </section>
 
-    <section class="info" data-screen="5">
-      <div class="story-step info-step">
-        <div class="sticky">
-          <div class="panel info-panel">
-            <div class="info-block" data-reveal="right">
-              <p class="info-label">오시는길</p>
-              <p class="location-name">로얄파크 컨벤션 파크홀</p>
-              <p class="info-copy">2026년 11월 22일 일요일 낮 1시</p>
-              <a class="map-preview" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">
-                <img src="./images/map.jpeg" alt="Wedding venue map" />
-              </a>
-              <a class="map-link" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">지도에서 보기</a>
-              <div class="location-notes">
-                <div class="location-note"><strong>주소</strong>서울특별시 용산구 이태원로 29</div>
-                <div class="location-note"><strong>지하철</strong>6호선 삼각지역 12번 출구 (도보 5분)<br />4호선 삼각지역 1번 출구 (도보 10분)<br />1호선 남영역 1번 출구 (도보 15분)</div>
-                <div class="location-note"><strong>버스</strong>150, 500, 505, 605, 750A, 750B 등</div>
-                <div class="location-note"><strong>차량 안내</strong>네비게이션에 전쟁기념관 북문 검색,<br />삼각지역 사거리(서울역 방면) 지나서 우회전하여 진입<br />※ 북문 진입 불가 시 동문 이용</div>
-                <div class="location-note"><strong>주차</strong>전쟁기념관 주차장 2시간 무료 이용 가능</div>
-              </div>
+    <section class="story-step info-step info-route" data-screen="5">
+      <div class="sticky">
+        <div class="panel info-panel">
+          <div class="info-block" data-reveal="right">
+            <p class="info-label">오시는길</p>
+            <p class="location-name">로얄파크 컨벤션 파크홀</p>
+            <p class="info-copy">2026년 11월 22일 일요일 낮 1시</p>
+            <a class="map-preview" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">
+              <img src="./images/map.jpeg" alt="Wedding venue map" />
+            </a>
+            <a class="map-link" href="https://maps.google.com/?q=%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%ED%8C%8C%ED%81%AC%ED%99%80" target="_blank" rel="noreferrer">지도에서 보기</a>
+            <div class="location-notes">
+              <div class="location-note"><strong>주소</strong>서울특별시 용산구 이태원로 29</div>
+              <div class="location-note"><strong>지하철</strong>6호선 삼각지역 12번 출구 (도보 5분)<br />4호선 삼각지역 1번 출구 (도보 10분)<br />1호선 남영역 1번 출구 (도보 15분)</div>
+              <div class="location-note"><strong>버스</strong>150, 500, 505, 605, 750A, 750B 등</div>
+              <div class="location-note"><strong>차량 안내</strong>네비게이션에 전쟁기념관 북문 검색,<br />삼각지역 사거리(서울역 방면) 지나서 우회전하여 진입<br />※ 북문 진입 불가 시 동문 이용</div>
+              <div class="location-note"><strong>주차</strong>전쟁기념관 주차장 2시간 무료 이용 가능</div>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="story-step info-step">
-        <div class="sticky">
-          <div class="panel info-panel">
-            <div class="info-block">
-              <p class="info-label">마음전하실곳</p>
+    <section class="story-step info-step info-accounts" data-screen="6">
+      <div class="sticky">
+        <div class="panel info-panel">
+          <div class="info-block">
+            <p class="info-label">마음전하실곳</p>
 
-              <div class="accordion">
-                <div class="acc-group">
-                  <p class="acc-label">신랑측 계좌</p>
-                  <div class="acc-item">
-                    <div class="acc-detail">
-                      <div class="acc-bank-row">
-                        <span class="acc-bank">신한은행 110-283-303699</span>
-                        <button class="copy-btn" type="button" data-copy="110-283-303699" aria-label="신랑측 계좌 복사">⧉</button>
-                      </div>
-                      <span class="acc-owner">예금주 김대국</span>
+            <div class="accordion">
+              <div class="acc-group">
+                <p class="acc-label">신랑측 계좌</p>
+                <div class="acc-item">
+                  <div class="acc-detail">
+                    <div class="acc-bank-row">
+                      <span class="acc-bank">신한은행 110-283-303699</span>
+                      <button class="copy-btn" type="button" data-copy="110-283-303699" aria-label="신랑측 계좌 복사">⧉</button>
                     </div>
-                  </div>
-                </div>
-
-                <div class="acc-group">
-                  <p class="acc-label">신부측 계좌</p>
-                  <div class="acc-item">
-                    <div class="acc-detail">
-                      <div class="acc-bank-row">
-                        <span class="acc-bank">카카오뱅크 3333-11-5369308</span>
-                        <button class="copy-btn" type="button" data-copy="3333-11-5369308" aria-label="신부측 계좌 복사">⧉</button>
-                      </div>
-                      <span class="acc-owner">예금주 조민지</span>
-                    </div>
+                    <span class="acc-owner">예금주 김대국</span>
                   </div>
                 </div>
               </div>
 
-              <div class="footer info-signoff">
-                함께해 주셔서 감사합니다.<br />
-                문의는 <a href="tel:010-0000-0000">신랑</a> / <a href="tel:010-0000-0000">신부</a> 에게 편하게 주세요.
+              <div class="acc-group">
+                <p class="acc-label">신부측 계좌</p>
+                <div class="acc-item">
+                  <div class="acc-detail">
+                    <div class="acc-bank-row">
+                      <span class="acc-bank">카카오뱅크 3333-11-5369308</span>
+                      <button class="copy-btn" type="button" data-copy="3333-11-5369308" aria-label="신부측 계좌 복사">⧉</button>
+                    </div>
+                    <span class="acc-owner">예금주 조민지</span>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div class="footer info-signoff">
+              함께해 주셔서 감사합니다.<br />
+              문의는 <a href="tel:010-0000-0000">신랑</a> / <a href="tel:010-0000-0000">신부</a> 에게 편하게 주세요.
             </div>
           </div>
         </div>
@@ -1742,11 +1730,13 @@
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-          } else {
-            entry.target.classList.remove("is-visible");
+            observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.42 });
+      }, {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px"
+      });
 
       items.forEach((item) => observer.observe(item));
     })();
@@ -1755,15 +1745,40 @@
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          entry.target.classList.toggle("screen-active", entry.isIntersecting);
-        });
-      }, {
-        threshold: 0.58
-      });
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const holdUntil = 1;
+      const activeUntil = 1;
+      const getViewportHeight = () => Math.round(window.visualViewport?.height || window.innerHeight);
 
-      screens.forEach((screen) => observer.observe(screen));
+      let viewportHeight = getViewportHeight();
+      let ticking = false;
+
+      const sync = () => {
+        ticking = false;
+        viewportHeight = getViewportHeight();
+
+        screens.forEach((screen) => {
+          const rect = screen.getBoundingClientRect();
+          const stickyRange = Math.max(rect.height - viewportHeight, 1);
+          const progress = clamp((-rect.top) / stickyRange, 0, 1);
+          const fullyHoldingViewport = rect.top <= 0 && rect.bottom >= viewportHeight;
+          const isAnimated = fullyHoldingViewport && progress < holdUntil;
+          const isActive = fullyHoldingViewport && progress < activeUntil;
+          screen.classList.toggle("screen-animated", isAnimated);
+          screen.classList.toggle("screen-active", isActive);
+        });
+      };
+
+      const requestSync = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(sync);
+      };
+
+      sync();
+      window.addEventListener("scroll", requestSync, { passive: true });
+      window.addEventListener("resize", requestSync);
+      window.visualViewport?.addEventListener("resize", requestSync);
     })();
 
     (function pageProgressWash() {
@@ -1771,6 +1786,7 @@
       const screens = Array.from(document.querySelectorAll("[data-screen]"));
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const fillUntil = 0.5;
       const getViewport = () => ({
         width: Math.round(window.visualViewport?.width || window.innerWidth),
         height: Math.round(window.visualViewport?.height || window.innerHeight)
@@ -1778,6 +1794,12 @@
 
       let viewport = getViewport();
       let stableViewportHeight = viewport.height;
+      let lockedScreen = null;
+      let lockedScrollY = 0;
+      let lockActive = false;
+      let readyForNextGesture = false;
+      const completedScreens = new WeakSet();
+      let armTimer = null;
       const refreshViewportBaseline = () => {
         viewport = getViewport();
         stableViewportHeight = viewport.height;
@@ -1791,7 +1813,7 @@
           const distance = isActive ? 0 : Math.min(Math.abs(rect.top), Math.abs(rect.bottom - stableViewportHeight));
 
           if (!best || distance < best.distance) {
-            return { rect, stickyRange, distance };
+            return { screen, rect, stickyRange, distance };
           }
 
           return best;
@@ -1799,11 +1821,47 @@
       };
 
       const sync = () => {
+        if (lockActive) {
+          if (Math.abs(window.scrollY - lockedScrollY) > 1) {
+            window.scrollTo({ top: lockedScrollY, behavior: "auto" });
+          }
+          root.style.setProperty("--page-progress", "1.0000");
+          return;
+        }
+
         const active = findActiveScreen();
         if (!active) return;
 
         const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
-        root.style.setProperty("--page-progress", progress.toFixed(4));
+        if (progress >= fillUntil && !completedScreens.has(active.screen)) {
+          lockActive = true;
+          lockedScreen = active.screen;
+          lockedScrollY = Math.round(window.scrollY + active.rect.top + (active.stickyRange * fillUntil));
+          readyForNextGesture = false;
+          if (armTimer) window.clearTimeout(armTimer);
+          armTimer = window.setTimeout(() => {
+            if (lockActive) readyForNextGesture = true;
+          }, 140);
+          window.scrollTo({ top: lockedScrollY, behavior: "auto" });
+          root.style.setProperty("--page-progress", "1.0000");
+          return;
+        }
+
+        const filledProgress = clamp(progress / fillUntil, 0, 1);
+        const easedProgress = Math.pow(filledProgress, 1.06);
+        root.style.setProperty("--page-progress", easedProgress.toFixed(4));
+      };
+
+      const releaseLock = () => {
+        if (!lockActive || !readyForNextGesture) return;
+        if (lockedScreen) completedScreens.add(lockedScreen);
+        lockActive = false;
+        lockedScreen = null;
+        readyForNextGesture = false;
+        if (armTimer) {
+          window.clearTimeout(armTimer);
+          armTimer = null;
+        }
       };
 
       const handleResize = () => {
@@ -1820,6 +1878,9 @@
       window.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", handleResize);
       window.visualViewport?.addEventListener("resize", handleResize);
+      ["touchstart", "pointerdown", "wheel", "keydown"].forEach((eventName) => {
+        window.addEventListener(eventName, releaseLock, { passive: true });
+      });
     })();
 
     (function countdown() {
