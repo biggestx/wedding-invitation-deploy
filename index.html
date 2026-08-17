@@ -1877,7 +1877,7 @@
       if (!screens.length) return;
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
       const fillUntil = 1;
-      const progressMin = -1;
+      const progressMin = -0.5;
       const progressMax = 2;
       const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
       const viewportLockMs = 320;
