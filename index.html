@@ -10,6 +10,7 @@
 
     :root{
       --bg:#f3ece4;
+      --paper:#f7efe6;
       --bg-dark:#12100f;
       --bg-dark-soft:#1d1916;
       --ink:#161311;
@@ -52,6 +53,41 @@
         url("./images/wall-texture-crop.png") left top / 260px 396px repeat;
       mix-blend-mode:multiply;
       filter:contrast(1.08) brightness(1);
+    }
+
+    .scroll-wash{
+      position:fixed;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .scroll-wash::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,251,247,.50) 0%, rgba(242,233,224,.34) 52%, rgba(232,219,208,.38) 100%),
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.22) 0, transparent 36%),
+        radial-gradient(circle at 18% 82%, rgba(232,214,198,.18) 0, transparent 30%);
+      opacity:.22;
+    }
+
+    .scroll-wash::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,252,248,.76) 0%, rgba(239,228,216,.58) 48%, rgba(226,210,196,.7) 100%),
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.42) 0, transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(232,214,198,.34) 0, transparent 28%),
+        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.34) 38%, rgba(255,255,255,.16) 50%, transparent 64%);
+      transform-origin:top center;
+      transform:scaleY(var(--page-progress, 0));
+      opacity:.38;
+      filter:blur(6px);
+      transition:transform .18s linear;
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -566,6 +602,12 @@
       min-height:155svh;
     }
 
+    .count-step::before{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)),
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.12) 0, transparent 28%);
+    }
+
     .count-band{
       display:grid;
       gap:24px;
@@ -625,7 +667,7 @@
     .count-axis-track{
       position:relative;
       height:1px;
-      background:rgba(22,19,17,.11);
+      background:rgba(22,19,17,.08);
     }
 
     .count-axis-track::before{
@@ -635,7 +677,7 @@
       top:0;
       width:var(--today-progress);
       height:1px;
-      background:rgba(22,19,17,.34);
+      background:rgba(22,19,17,.22);
     }
 
     .count-axis-sweep{
@@ -647,8 +689,8 @@
       border-radius:50%;
       transform:translate(-50%, -50%);
       background:var(--ink);
-      opacity:.8;
-      box-shadow:0 0 0 5px rgba(248,242,235,.76), 0 8px 18px rgba(22,19,17,.12);
+      opacity:.62;
+      box-shadow:0 0 0 3px rgba(247,239,230,.48), 0 6px 12px rgba(22,19,17,.08);
       animation:countAxisSweep 3.8s cubic-bezier(.65,0,.35,1) infinite;
     }
 
@@ -660,8 +702,8 @@
       border-radius:50%;
       transform:translate(-50%, -50%);
       background:var(--paper);
-      border:1px solid rgba(22,19,17,.48);
-      box-shadow:0 0 0 5px rgba(248,242,235,.88);
+      border:1px solid rgba(22,19,17,.32);
+      box-shadow:0 0 0 3px rgba(247,239,230,.58);
     }
 
     .count-axis-dot.today{
@@ -677,7 +719,7 @@
       height:12px;
       background:var(--ink);
       border-color:var(--ink);
-      box-shadow:0 0 0 6px rgba(248,242,235,.9), 0 0 24px rgba(143,76,61,.12);
+      box-shadow:0 0 0 4px rgba(247,239,230,.64), 0 0 16px rgba(143,76,61,.08);
     }
 
     .count-axis-dot.wedding::after{
@@ -685,7 +727,7 @@
       position:absolute;
       inset:-10px;
       border-radius:50%;
-      border:1px solid rgba(143,76,61,.18);
+      border:1px solid rgba(143,76,61,.12);
       animation:countWeddingPulse 5.2s ease-in-out infinite;
     }
 
@@ -711,7 +753,7 @@
       position:relative;
       display:block;
       height:1px;
-      background:rgba(22,19,17,.24);
+      background:rgba(22,19,17,.16);
     }
 
     .count-axis-dday-line::before{
@@ -720,7 +762,7 @@
       top:50%;
       width:1px;
       height:9px;
-      background:rgba(22,19,17,.32);
+      background:rgba(22,19,17,.2);
       transform:translateY(-50%);
     }
 
@@ -1395,6 +1437,7 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-label="배경음악 음소거" aria-pressed="false" data-muted="false">
     <span class="icon" aria-hidden="true"></span>
   </button>
+  <div class="scroll-wash" aria-hidden="true"></div>
 
   <main class="page">
     <section class="hero" data-screen="0">
@@ -1698,6 +1741,62 @@
       });
 
       screens.forEach((screen) => observer.observe(screen));
+    })();
+
+    (function pageProgressWash() {
+      const root = document.documentElement;
+      const screens = Array.from(document.querySelectorAll("[data-screen]"));
+      if (!screens.length) return;
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const getViewport = () => ({
+        width: Math.round(window.visualViewport?.width || window.innerWidth),
+        height: Math.round(window.visualViewport?.height || window.innerHeight)
+      });
+
+      let viewport = getViewport();
+      let stableViewportHeight = viewport.height;
+      const refreshViewportBaseline = () => {
+        viewport = getViewport();
+        stableViewportHeight = viewport.height;
+      };
+
+      const findActiveScreen = () => {
+        return screens.reduce((best, screen) => {
+          const rect = screen.getBoundingClientRect();
+          const stickyRange = Math.max(rect.height - stableViewportHeight, 1);
+          const isActive = rect.top <= 0 && rect.bottom >= stableViewportHeight;
+          const distance = isActive ? 0 : Math.min(Math.abs(rect.top), Math.abs(rect.bottom - stableViewportHeight));
+
+          if (!best || distance < best.distance) {
+            return { rect, stickyRange, distance };
+          }
+
+          return best;
+        }, null);
+      };
+
+      const sync = () => {
+        const active = findActiveScreen();
+        if (!active) return;
+
+        const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
+        root.style.setProperty("--page-progress", progress.toFixed(4));
+      };
+
+      const handleResize = () => {
+        const nextViewport = getViewport();
+        const widthChanged = nextViewport.width !== viewport.width;
+        const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
+        if (widthChanged || heightJumped) {
+          refreshViewportBaseline();
+          sync();
+        }
+      };
+
+      sync();
+      window.addEventListener("scroll", sync, { passive: true });
+      window.addEventListener("resize", handleResize);
+      window.visualViewport?.addEventListener("resize", handleResize);
     })();
 
     (function countdown() {
