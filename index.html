@@ -54,21 +54,13 @@
       filter:contrast(1.08) brightness(1);
     }
 
-    .scroll-wash{
-      position:fixed;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-      overflow:hidden;
-    }
-
     .bokeh-shader{
       position:fixed;
       inset:0;
       z-index:2;
       pointer-events:none;
       overflow:hidden;
-      opacity:.6;
+      opacity:.92;
     }
 
     .bokeh-shader canvas{
@@ -76,33 +68,6 @@
       height:100%;
       display:block;
       background:transparent;
-    }
-
-    .scroll-wash::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(180deg, rgba(255,251,247,.50) 0%, rgba(242,233,224,.34) 52%, rgba(232,219,208,.38) 100%),
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.22) 0, transparent 36%),
-        radial-gradient(circle at 18% 82%, rgba(232,214,198,.18) 0, transparent 30%);
-      opacity:.22;
-    }
-
-    .scroll-wash::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(180deg, rgba(255,252,248,.76) 0%, rgba(239,228,216,.58) 48%, rgba(226,210,196,.7) 100%),
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.42) 0, transparent 34%),
-        radial-gradient(circle at 18% 82%, rgba(232,214,198,.34) 0, transparent 28%),
-        linear-gradient(115deg, transparent 12%, rgba(255,248,241,.34) 38%, rgba(255,255,255,.16) 50%, transparent 64%);
-      transform-origin:top center;
-      transform:scaleY(var(--page-progress, 0));
-      opacity:.38;
-      filter:blur(6px);
-      transition:transform .18s linear;
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -923,7 +888,7 @@
 
     @media (prefers-reduced-motion: reduce){
       .bokeh-shader{
-        opacity:.52;
+        opacity:.72;
       }
 
       .scroll-cue::before,
@@ -1453,7 +1418,6 @@
   <div class="bokeh-shader" aria-hidden="true">
     <canvas id="bokehShaderCanvas"></canvas>
   </div>
-  <div class="scroll-wash" aria-hidden="true"></div>
 
   <main class="page">
     <section class="hero" data-screen="0">
@@ -1750,6 +1714,7 @@
 
         uniform vec2 u_resolution;
         uniform float u_time;
+        uniform float u_mobileBoost;
 
         float hash11(float p) {
           p = fract(p * 0.1031);
@@ -1766,59 +1731,60 @@
 
         float bokeh(vec2 uv, vec2 pos, float radius, float blur) {
           float d = length(uv - pos);
-          return smoothstep(radius + blur, radius * 0.35, d);
+          return smoothstep(radius + blur, radius * 0.28, d);
         }
 
         vec3 orbColor(float t) {
-          vec3 c1 = vec3(1.00, 0.97, 0.93);
-          vec3 c2 = vec3(0.96, 0.82, 0.62);
-          vec3 c3 = vec3(0.88, 0.67, 0.46);
-          return mix(mix(c1, c2, 0.55), c3, t);
+          vec3 c1 = vec3(1.00, 0.99, 0.97);
+          vec3 c2 = vec3(0.98, 0.89, 0.77);
+          vec3 c3 = vec3(0.96, 0.77, 0.60);
+          return mix(mix(c1, c2, 0.62), c3, t);
         }
 
         void main() {
           vec2 uv = gl_FragCoord.xy / u_resolution.xy;
           vec3 color = vec3(0.0);
           float alpha = 0.0;
+          float t = u_time * 0.58;
 
-          float t = u_time * 0.65;
-
-          for (int i = 0; i < 34; i++) {
+          for (int i = 0; i < 30; i++) {
             float fi = float(i);
             vec2 seed = hash21(fi * 13.7);
             vec2 drift = vec2(
-              sin(t * (0.9 + seed.x * 0.6) + fi * 1.7),
-              cos(t * (0.72 + seed.y * 0.6) + fi * 2.1)
+              sin(t * (0.86 + seed.x * 0.54) + fi * 1.5),
+              cos(t * (0.68 + seed.y * 0.52) + fi * 1.9)
             );
 
-            vec2 pos = seed * vec2(1.28, 1.34) - vec2(0.14, 0.16);
-            pos += drift * vec2(0.16, 0.11);
+            vec2 pos = seed;
+            pos += drift * vec2(0.14, 0.10);
 
-            float radius = mix(0.026, 0.11, hash11(fi * 4.13));
-            float blur = radius * 2.1;
+            float radius = mix(0.034, 0.128, hash11(fi * 4.13));
+            float blur = radius * 2.4;
             float light = bokeh(uv, pos, radius, blur);
 
-            float tintMix = hash11(fi * 8.71);
-            vec3 orb = orbColor(tintMix);
-            float intensity = mix(0.05, 0.138, hash11(fi * 6.17));
+            vec3 orb = orbColor(hash11(fi * 8.71));
+            float intensity = mix(0.082, 0.19, hash11(fi * 6.17)) * u_mobileBoost;
             color += orb * light * intensity;
-            alpha += light * intensity * 0.3;
+            alpha += light * intensity * 0.46;
           }
 
-          for (int i = 0; i < 18; i++) {
+          for (int i = 0; i < 14; i++) {
             float fi = float(i);
             vec2 seed = hash21(90.0 + fi * 19.3);
             vec2 pos = seed;
-            pos.x += sin(t * 1.8 + fi) * 0.032;
-            pos.y += cos(t * 1.4 + fi * 1.3) * 0.022;
-            float spark = smoothstep(0.012, 0.0, length(uv - pos));
-            color += vec3(1.0, 0.97, 0.88) * spark * 0.08;
-            alpha += spark * 0.058;
+            pos += vec2(
+              sin(t * 1.34 + fi * 0.8) * 0.042,
+              cos(t * 1.18 + fi * 1.1) * 0.03
+            );
+
+            float spark = smoothstep(0.018, 0.0, length(uv - pos));
+            color += vec3(1.0, 0.98, 0.92) * spark * 0.09 * u_mobileBoost;
+            alpha += spark * 0.082 * u_mobileBoost;
           }
 
-          color = 1.0 - exp(-1.05 * color);
-          color = pow(color, vec3(0.985));
-          alpha = clamp(alpha, 0.0, 0.21);
+          color = 1.0 - exp(-1.28 * color);
+          color = pow(color, vec3(0.96));
+          alpha = clamp(alpha, 0.0, 0.38 * u_mobileBoost);
 
           gl_FragColor = vec4(color, alpha);
         }
@@ -1854,6 +1820,11 @@
         return;
       }
 
+      const positionLocation = gl.getAttribLocation(program, "a_position");
+      const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+      const timeLocation = gl.getUniformLocation(program, "u_time");
+      const mobileBoostLocation = gl.getUniformLocation(program, "u_mobileBoost");
+
       const buffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.bufferData(
@@ -1869,11 +1840,8 @@
         gl.STATIC_DRAW
       );
 
-      const positionLocation = gl.getAttribLocation(program, "a_position");
-      const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-      const timeLocation = gl.getUniformLocation(program, "u_time");
-      const start = performance.now();
       let rafId = 0;
+      const start = performance.now();
 
       const resize = () => {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1900,6 +1868,7 @@
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
         gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
         gl.uniform1f(timeLocation, elapsedSeconds);
+        gl.uniform1f(mobileBoostLocation, window.innerWidth < 768 ? 1.35 : 1.0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       };
 
@@ -1953,62 +1922,6 @@
       });
 
       screens.forEach((screen) => observer.observe(screen));
-    })();
-
-    (function pageProgressWash() {
-      const root = document.documentElement;
-      const screens = Array.from(document.querySelectorAll("[data-screen]"));
-      if (!screens.length) return;
-      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-      const getViewport = () => ({
-        width: Math.round(window.visualViewport?.width || window.innerWidth),
-        height: Math.round(window.visualViewport?.height || window.innerHeight)
-      });
-
-      let viewport = getViewport();
-      let stableViewportHeight = viewport.height;
-      const refreshViewportBaseline = () => {
-        viewport = getViewport();
-        stableViewportHeight = viewport.height;
-      };
-
-      const findActiveScreen = () => {
-        return screens.reduce((best, screen) => {
-          const rect = screen.getBoundingClientRect();
-          const stickyRange = Math.max(rect.height - stableViewportHeight, 1);
-          const isActive = rect.top <= 0 && rect.bottom >= stableViewportHeight;
-          const distance = isActive ? 0 : Math.min(Math.abs(rect.top), Math.abs(rect.bottom - stableViewportHeight));
-
-          if (!best || distance < best.distance) {
-            return { rect, stickyRange, distance };
-          }
-
-          return best;
-        }, null);
-      };
-
-      const sync = () => {
-        const active = findActiveScreen();
-        if (!active) return;
-
-        const progress = clamp((-active.rect.top) / active.stickyRange, 0, 1);
-        root.style.setProperty("--page-progress", progress.toFixed(4));
-      };
-
-      const handleResize = () => {
-        const nextViewport = getViewport();
-        const widthChanged = nextViewport.width !== viewport.width;
-        const heightJumped = Math.abs(nextViewport.height - stableViewportHeight) > 120;
-        if (widthChanged || heightJumped) {
-          refreshViewportBaseline();
-          sync();
-        }
-      };
-
-      sync();
-      window.addEventListener("scroll", sync, { passive: true });
-      window.addEventListener("resize", handleResize);
-      window.visualViewport?.addEventListener("resize", handleResize);
     })();
 
     (function countdown() {
