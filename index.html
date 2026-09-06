@@ -235,6 +235,11 @@
       margin:14px 0 0;
     }
 
+    .hero-frame{
+      position:relative;
+      width:100%;
+    }
+
     .hero-photo{
       position:relative;
       width:100%;
@@ -322,17 +327,17 @@
 
     body.intro-play .hero-photo{
       will-change:opacity;
-      animation:heroIntroFade 1.45s .2s ease-out both;
+      animation:heroIntroFade 1.1s 2.55s ease-in-out both;
     }
 
     body.intro-play .hero-date{
       will-change:opacity;
-      animation:heroIntroFade 1.1s 1.85s ease-out both;
+      animation:heroIntroFade .8s 3.1s ease-out both;
     }
 
     body.intro-play .scroll-cue{
       will-change:opacity;
-      animation:heroIntroFade .8s 3.1s ease-out both;
+      animation:heroIntroFade .6s 3.7s ease-out both;
     }
 
     @keyframes heroIntroFade{
@@ -406,9 +411,9 @@
 
     .hero-title{
       position:absolute;
-      left:16px;
-      right:16px;
-      bottom:34px;
+      left:24px;
+      right:24px;
+      bottom:42px;
       z-index:2;
       display:flex;
       flex-direction:column;
@@ -439,6 +444,66 @@
       width:min(100%, 320px);
       height:auto;
       filter:drop-shadow(0 10px 24px rgba(15,10,8,.22));
+    }
+
+    .hero-ink{
+      fill:none;
+      stroke:#fffaf4;
+      stroke-width:12;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    body.intro-pending .hero-ink path,
+    body.intro-play .hero-ink path{
+      stroke-dasharray:1;
+      stroke-dashoffset:1;
+    }
+
+    body.intro-play .hero-ink path{
+      animation:heroWrite var(--duration) var(--delay) linear both;
+    }
+
+    body.intro-pending .hero-ink{
+      stroke:#72533f;
+    }
+
+    body.intro-play .hero-ink{
+      animation:heroInkLighten 1.1s 2.55s ease-in-out both;
+    }
+
+    @keyframes heroInkLighten{
+      from{ stroke:#72533f; }
+      to{ stroke:#fffaf4; }
+    }
+
+    @keyframes heroWrite{
+      to{ stroke-dashoffset:0; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body.intro-pending .hero-photo,
+      body.intro-play .hero-photo,
+      body.intro-pending .hero-date,
+      body.intro-play .hero-date,
+      body.intro-pending .scroll-cue,
+      body.intro-play .scroll-cue{
+        animation:none;
+        opacity:1;
+      }
+
+      body.intro-pending .hero-ink,
+      body.intro-play .hero-ink{
+        animation:none;
+        stroke:#fffaf4;
+      }
+
+      body.intro-pending .hero-ink path,
+      body.intro-play .hero-ink path{
+        animation:none;
+        stroke-dashoffset:0;
+      }
+
     }
 
     .hero-sub{
@@ -1601,10 +1666,28 @@
     <section class="hero" data-screen="0">
       <div class="sticky">
         <div class="hero-visual">
-          <div class="hero-photo">
-            <img src="./images/hero-main.jpg" alt="신랑 신부 메인 사진" />
+          <div class="hero-frame">
+            <div class="hero-photo">
+              <img src="./images/hero-main.jpg" alt="신랑 신부 메인 사진" />
+            </div>
             <div class="hero-title">
-              <img class="hero-calligraphy" src="./images/hero-calligraphy-wedding-day.png" alt="Wedding day" />
+              <svg class="hero-calligraphy" viewBox="0 0 2048 768" role="img" aria-labelledby="wedding-script-title">
+                <title id="wedding-script-title">Wedding day</title>
+                <!-- Ordered pen strokes: each letter starts where the previous one finishes. -->
+                <g class="hero-ink">
+                  <path pathLength="1" style="--delay:0.150s;--duration:0.500s" d="M236 299 C223 365 97 414 62 350 C15 260 181 135 276 172 C384 213 294 380 245 477 C206 558 230 516 287 450 L435 245 C456 215 439 288 412 367 C384 447 367 554 407 512 C468 443 619 261 643 166 C664 74 589 99 551 134" />
+                  <path pathLength="1" style="--delay:0.650s;--duration:0.150s" d="M495 399 C548 396 624 354 611 334 C589 301 521 378 535 435 C551 494 620 418 665 367" />
+                  <path pathLength="1" style="--delay:0.800s;--duration:0.200s" d="M709 349 C679 299 617 375 638 424 C663 482 753 323 811 253 C907 135 867 125 817 183 C755 253 695 416 700 465 C704 540 760 454 793 402" />
+                  <path pathLength="1" style="--delay:1.000s;--duration:0.200s" d="M849 347 C815 306 760 390 783 429 C812 478 899 314 947 245 C1030 127 995 143 963 182 C898 258 841 413 851 469 C861 523 908 445 941 397" />
+                  <path pathLength="1" style="--delay:1.200s;--duration:0.090s" d="M978 342 C955 376 928 428 943 443 C959 459 995 416 1024 380" />
+                  <path pathLength="1" style="--delay:1.290s;--duration:0.040s" d="M985 292 L990 285" />
+                  <path pathLength="1" style="--delay:1.330s;--duration:0.150s" d="M1030 341 L1007 429 C1051 364 1087 307 1111 320 C1140 336 1081 407 1100 438 C1113 460 1151 413 1172 384" />
+                  <path pathLength="1" style="--delay:1.480s;--duration:0.250s" d="M1242 331 C1220 295 1163 348 1155 401 C1141 478 1208 430 1250 350 C1225 455 1190 595 1085 651 C968 715 916 632 997 551 C1082 467 1337 446 1351 371" />
+                  <path pathLength="1" style="--delay:1.810s;--duration:0.200s" d="M1512 339 C1488 291 1417 355 1426 424 C1435 492 1528 342 1616 246 C1734 117 1681 120 1630 177 C1550 266 1495 425 1509 478 C1521 525 1570 444 1600 399" />
+                  <path pathLength="1" style="--delay:2.010s;--duration:0.150s" d="M1679 342 C1657 307 1590 344 1597 411 C1605 477 1665 400 1699 338 C1675 388 1655 444 1680 443 C1704 443 1737 398 1758 365" />
+                  <path pathLength="1" style="--delay:2.160s;--duration:0.275s" d="M1780 335 C1759 371 1731 430 1754 439 C1780 450 1828 376 1843 321 C1860 423 1779 589 1693 640 C1586 704 1561 616 1610 552 C1671 473 1841 416 1941 429 C2014 439 2001 487 1978 505" />
+                </g>
+              </svg>
             </div>
           </div>
           <p class="hero-date">신랑 김대국 · 신부 조민지</p>
@@ -1763,6 +1846,21 @@
           </button>
           <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-18.jpg" data-gallery-title="Gallery 18" data-gallery-caption="우리의 이야기가 시작되는 곳" aria-label="사진 18">
             <img src="./images/gallery/gallery-18.jpg" alt="" />
+          </button>
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-19.jpg" data-gallery-title="Gallery 19" data-gallery-caption="함께 남긴 소중한 순간" aria-label="사진 19">
+            <img src="./images/gallery/gallery-19.jpg" alt="" />
+          </button>
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-20.jpg" data-gallery-title="Gallery 20" data-gallery-caption="함께 남긴 소중한 순간" aria-label="사진 20">
+            <img src="./images/gallery/gallery-20.jpg" alt="" />
+          </button>
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-21.jpg" data-gallery-title="Gallery 21" data-gallery-caption="함께 남긴 소중한 순간" aria-label="사진 21">
+            <img src="./images/gallery/gallery-21.jpg" alt="" />
+          </button>
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-22.jpg" data-gallery-title="Gallery 22" data-gallery-caption="함께 남긴 소중한 순간" aria-label="사진 22">
+            <img src="./images/gallery/gallery-22.jpg" alt="" />
+          </button>
+          <button class="gallery-thumb" type="button" data-gallery-src="./images/gallery/gallery-23.jpg" data-gallery-title="Gallery 23" data-gallery-caption="함께 남긴 소중한 순간" aria-label="사진 23">
+            <img src="./images/gallery/gallery-23.jpg" alt="" />
           </button>
         </div>
       </div>
