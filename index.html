@@ -1504,15 +1504,9 @@
       border-top:none;
     }
 
-    .date-massive,
     .count-band,
     .info-block{
       transition:transform .85s cubic-bezier(.22, 1, .36, 1), opacity .85s ease, filter .85s ease;
-    }
-
-    .date-main,
-    .date-copy{
-      transition:transform .85s cubic-bezier(.22, 1, .36, 1), opacity .85s ease, letter-spacing .85s ease;
     }
 
     [data-reveal]{
@@ -1544,23 +1538,6 @@
     [data-reveal="lift"]{
       transform:translateY(18px) scale(.98);
       filter:blur(8px);
-    }
-
-    .screen-animated .date-main{
-      transform:scale(1);
-      opacity:1;
-      letter-spacing:.02em;
-    }
-
-    .story-step:not(.screen-animated) .date-main{
-      transform:scale(.97);
-      opacity:.84;
-      letter-spacing:.05em;
-    }
-
-    .story-step:not(.screen-animated) .date-copy{
-      transform:translateY(6px);
-      opacity:.72;
     }
 
     .info-step.screen-animated .map-preview{
@@ -1720,7 +1697,7 @@
 
     <section class="story-step" data-screen="1">
       <div class="sticky">
-        <div class="panel center" data-reveal="soft">
+        <div class="panel center">
           <div class="date-massive">
             <div class="date-shadow">11.22</div>
             <div class="date-main">11.22</div>
