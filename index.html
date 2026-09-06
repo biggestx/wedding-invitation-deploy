@@ -464,19 +464,6 @@
       animation:heroWrite var(--duration) var(--delay) linear both;
     }
 
-    body.intro-pending .hero-ink{
-      stroke:#72533f;
-    }
-
-    body.intro-play .hero-ink{
-      animation:heroInkLighten 1.1s 2.55s ease-in-out both;
-    }
-
-    @keyframes heroInkLighten{
-      from{ stroke:#72533f; }
-      to{ stroke:#fffaf4; }
-    }
-
     @keyframes heroWrite{
       to{ stroke-dashoffset:0; }
     }
