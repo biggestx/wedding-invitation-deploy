@@ -1969,6 +1969,9 @@
         try {
           const maps = window.naver.maps;
           const venue = new maps.LatLng(37.5369322, 126.9753896);
+          // The SDK can finish its first tile load before a listener is attached.
+          // Reveal the container before construction so the map gets a real size.
+          frame.dataset.state = "ready";
           const map = new maps.Map(canvas, {
             center: venue,
             zoom: 16,
@@ -1980,11 +1983,7 @@
             scaleControl: true
           });
           new maps.Marker({ map, position: venue, title: "로얄파크컨벤션 파크홀" });
-          maps.Event.addListenerOnce(map, "tilesloaded", () => {
-            if (authFailed) return;
-            clearTimeout(timeout);
-            frame.dataset.state = "ready";
-          });
+          clearTimeout(timeout);
           if (window.ResizeObserver) {
             new ResizeObserver(() => {
               map.setSize(new maps.Size(canvas.clientWidth, canvas.clientHeight));
