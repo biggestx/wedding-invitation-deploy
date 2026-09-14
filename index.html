@@ -1313,7 +1313,10 @@
     }
 
     .map-preview{
+      position:relative;
       display:block;
+      aspect-ratio:3 / 2;
+      min-height:240px;
       margin-top:16px;
       border-radius:18px;
       overflow:hidden;
@@ -1323,10 +1326,35 @@
       transition:transform .8s cubic-bezier(.22, 1, .36, 1), box-shadow .8s ease, filter .8s ease;
     }
 
-    .map-preview img{
+    .venue-map,
+    .map-fallback{
+      position:absolute;
+      inset:0;
+    }
+
+    .venue-map{
+      visibility:hidden;
+      touch-action:none;
+    }
+
+    .map-preview[data-state="ready"] .venue-map{ visibility:visible; }
+    .map-preview[data-state="ready"] .map-fallback{ display:none; }
+
+    .map-fallback img{
       display:block;
       width:100%;
-      height:auto;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .map-status{
+      position:absolute;
+      inset:auto 0 0;
+      padding:10px 12px;
+      background:rgba(255,251,247,.94);
+      font-size:12px;
+      line-height:1.5;
+      text-align:center;
     }
 
     .info-route .info-block{
@@ -1853,15 +1881,13 @@
             <p class="info-label">오시는길</p>
             <p class="location-name">로얄파크 컨벤션 파크홀</p>
             <p class="info-copy">2026년 11월 22일 일요일 낮 1시</p>
-            <a class="map-preview" href="https://map.naver.com/p/search/%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%EC%BB%A8%EB%B2%A4%EC%85%98/place/1915861607" target="_blank" rel="noreferrer">
-              <img
-                src="https://maps.apigw.ntruss.com/map-static/v2/raster-cors?w=600&amp;h=400&amp;center=126.975390,37.536932&amp;level=16&amp;scale=2&amp;format=png&amp;markers=type:d%7Csize:mid%7Ccolor:0xA45A45%7Cpos:126.975390%2037.536932&amp;X-NCP-APIGW-API-KEY-ID=c5p27frdzg"
-                alt="삼각지역 인근 로얄파크컨벤션 위치 지도"
-                width="1200" height="800" loading="lazy" decoding="async"
-                referrerpolicy="origin"
-                onerror="this.onerror=null; this.src='./images/map.jpeg';"
-              />
-            </a>
+            <div class="map-preview" id="venueMapFrame" data-state="loading">
+              <div class="venue-map" id="venueMap" role="region" aria-label="로얄파크컨벤션 지도. 드래그로 이동하고 확대 축소할 수 있습니다."></div>
+              <a class="map-fallback" href="https://map.naver.com/p/search/%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%EC%BB%A8%EB%B2%A4%EC%85%98/place/1915861607" target="_blank" rel="noreferrer">
+                <img src="./images/map.jpeg" alt="로얄파크컨벤션 약도" width="1080" height="720" loading="lazy" decoding="async" />
+                <span class="map-status" id="venueMapStatus" role="status">네이버 지도에서 위치 보기</span>
+              </a>
+            </div>
             <a class="map-link" href="https://map.naver.com/p/search/%EB%A1%9C%EC%96%84%ED%8C%8C%ED%81%AC%EC%BB%A8%EB%B2%A4%EC%85%98/place/1915861607" target="_blank" rel="noreferrer">지도에서 보기</a>
             <div class="location-notes">
               <div class="location-note"><strong>주소</strong>서울특별시 용산구 이태원로 29</div>
@@ -1920,6 +1946,79 @@
   </main>
 
   <script>
+    (function setupVenueMap() {
+      const frame = document.getElementById("venueMapFrame");
+      const canvas = document.getElementById("venueMap");
+      const status = document.getElementById("venueMapStatus");
+      if (!frame || !canvas || !status) return;
+      let loadingStarted = false;
+      let authFailed = false;
+      let timeout;
+
+      const showFallback = () => {
+        clearTimeout(timeout);
+        frame.dataset.state = "failed";
+        status.textContent = "지도를 불러오지 못했습니다. 눌러서 네이버 지도 보기";
+      };
+      window.navermap_authFailure = () => {
+        authFailed = true;
+        showFallback();
+      };
+      window.initVenueMap = () => {
+        if (authFailed) return;
+        try {
+          const maps = window.naver.maps;
+          const venue = new maps.LatLng(37.5369322, 126.9753896);
+          const map = new maps.Map(canvas, {
+            center: venue,
+            zoom: 16,
+            draggable: true,
+            pinchZoom: true,
+            scrollWheel: false,
+            zoomControl: true,
+            zoomControlOptions: { position: maps.Position.TOP_RIGHT },
+            scaleControl: true
+          });
+          new maps.Marker({ map, position: venue, title: "로얄파크컨벤션 파크홀" });
+          maps.Event.addListenerOnce(map, "tilesloaded", () => {
+            if (authFailed) return;
+            clearTimeout(timeout);
+            frame.dataset.state = "ready";
+          });
+          if (window.ResizeObserver) {
+            new ResizeObserver(() => {
+              map.setSize(new maps.Size(canvas.clientWidth, canvas.clientHeight));
+            }).observe(canvas);
+          }
+        } catch (_) {
+          showFallback();
+        }
+      };
+      const loadMap = () => {
+        if (loadingStarted) return;
+        loadingStarted = true;
+        status.textContent = "지도를 불러오는 중입니다";
+        timeout = setTimeout(showFallback, 15000);
+        const script = document.createElement("script");
+        script.src = "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=c5p27frdzg&callback=initVenueMap";
+        script.async = true;
+        script.referrerPolicy = "origin";
+        script.onerror = showFallback;
+        document.head.appendChild(script);
+      };
+      if (window.IntersectionObserver) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            loadMap();
+          }
+        }, { rootMargin: "400px" });
+        observer.observe(frame);
+      } else {
+        loadMap();
+      }
+    })();
+
     (function setupBgm() {
       const toggle = document.getElementById("musicToggle");
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
