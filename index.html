@@ -1603,7 +1603,6 @@
   </style>
 </head>
 <body>
-  <audio id="weddingBgm" src="./images/bgm-alex-productions-traveling-around-the-world-129072.mp3" loop playsinline preload="auto"></audio>
   <button class="music-toggle" id="musicToggle" type="button" aria-label="배경음악 음소거" aria-pressed="false" data-muted="false">
     <span class="icon" aria-hidden="true"></span>
   </button>
@@ -1916,88 +1915,112 @@
 
   <script>
     (function setupBgm() {
-      const audio = document.getElementById("weddingBgm");
       const toggle = document.getElementById("musicToggle");
-      if (!audio || !toggle) return;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!toggle) return;
+      if (!AudioContextClass) {
+        toggle.hidden = true;
+        return;
+      }
 
       const storageKey = "wedding-bgm-muted";
-      const storedMuted = window.localStorage.getItem(storageKey);
-      let isMuted = storedMuted === "true";
-      let hasPlaybackStarted = false;
+      let isMuted = false;
+      try { isMuted = window.localStorage.getItem(storageKey) === "true"; } catch (_) {}
       let isPageHidden = document.hidden;
-
-      audio.volume = 0.38;
-      audio.muted = isMuted;
+      let context;
+      let gain;
+      let bufferPromise;
+      let source;
+      let offset = 0;
+      let startedAt = 0;
+      let playRequest = 0;
+      let hasInteracted = false;
 
       const syncToggle = () => {
         toggle.dataset.muted = String(isMuted);
         toggle.setAttribute("aria-pressed", String(!isMuted));
-        toggle.setAttribute("aria-label", isMuted ? "배경음악 재생" : "배경음악 음소거");
+        toggle.setAttribute("aria-label", isMuted ? "???? ??" : "???? ???");
+      };
+
+      const pause = () => {
+        playRequest += 1;
+        if (source) {
+          offset = (offset + context.currentTime - startedAt) % source.buffer.duration;
+          source.stop();
+          source.disconnect();
+          source = null;
+        }
+        if (context && context.state !== "closed") context.suspend().catch(() => {});
       };
 
       const tryPlay = async () => {
-        if (isMuted || isPageHidden || document.hidden) return;
+        if (!hasInteracted || isMuted || isPageHidden || document.hidden) return;
+        if (source && context.state === "running") return;
+        const request = ++playRequest;
         try {
-          await audio.play();
-          if (isMuted || isPageHidden || document.hidden) {
-            audio.pause();
-            hasPlaybackStarted = false;
-            return;
+          if (!context) {
+            context = new AudioContextClass();
+            gain = context.createGain();
+            gain.gain.value = 0.38;
+            gain.connect(context.destination);
           }
-          hasPlaybackStarted = true;
-        } catch (error) {
-          hasPlaybackStarted = false;
+          // Resume during the gesture, before waiting for the audio download.
+          const resumed = context.resume();
+          if (!bufferPromise) {
+            bufferPromise = fetch("./images/bgm-alex-productions-traveling-around-the-world-129072.mp3")
+              .then((response) => {
+                if (!response.ok) throw new Error("BGM download failed");
+                return response.arrayBuffer();
+              })
+              .then((data) => context.decodeAudioData(data))
+              .catch((error) => { bufferPromise = null; throw error; });
+          }
+          const [buffer] = await Promise.all([bufferPromise, resumed]);
+          if (request !== playRequest || isMuted || isPageHidden || document.hidden) return;
+          if (context.state !== "running" || source) return;
+          source = context.createBufferSource();
+          source.buffer = buffer;
+          source.loop = true;
+          source.connect(gain);
+          startedAt = context.currentTime;
+          source.start(0, offset);
+        } catch (_) {
+          // A later gesture can retry a blocked resume or failed download.
         }
       };
 
-      const startFromGesture = () => {
-        if (!hasPlaybackStarted && !isMuted) {
-          tryPlay();
-        }
-      };
-
-      toggle.addEventListener("click", async () => {
+      toggle.addEventListener("click", () => {
+        hasInteracted = true;
         isMuted = !isMuted;
-        audio.muted = isMuted;
-        window.localStorage.setItem(storageKey, String(isMuted));
+        try { window.localStorage.setItem(storageKey, String(isMuted)); } catch (_) {}
         syncToggle();
-
-        if (isMuted) {
-          audio.pause();
-          hasPlaybackStarted = false;
-          return;
-        }
-
-        await tryPlay();
+        if (isMuted) pause();
+        else tryPlay();
       });
 
-      ["pointerdown", "touchstart", "keydown"].forEach((eventName) => {
-        window.addEventListener(eventName, startFromGesture, { passive: true, once: true });
+      ["pointerdown", "touchend", "keydown"].forEach((eventName) => {
+        window.addEventListener(eventName, (event) => {
+          if (toggle.contains(event.target)) return;
+          hasInteracted = true;
+          tryPlay();
+        }, { passive: true });
       });
 
       const pauseForBackground = () => {
         isPageHidden = true;
-        audio.pause();
-        hasPlaybackStarted = false;
+        pause();
       };
-
       const resumeWhenVisible = () => {
         isPageHidden = document.hidden;
         if (!isPageHidden) tryPlay();
       };
-
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) pauseForBackground();
         else resumeWhenVisible();
       });
       window.addEventListener("pagehide", pauseForBackground);
       window.addEventListener("pageshow", resumeWhenVisible);
-      audio.addEventListener("play", () => {
-        if (isPageHidden || document.hidden) pauseForBackground();
-      });
-
       syncToggle();
-      tryPlay();
     })();
 
     (function trackScrollIntent() {
