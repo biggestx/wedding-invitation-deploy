@@ -1333,6 +1333,8 @@
     }
 
     .venue-map{
+      width:100%;
+      height:100%;
       visibility:hidden;
       touch-action:none;
     }
@@ -1972,9 +1974,14 @@
           // The SDK can finish its first tile load before a listener is attached.
           // Reveal the container before construction so the map gets a real size.
           frame.dataset.state = "ready";
+          const mapWidth = frame.clientWidth;
+          const mapHeight = frame.clientHeight;
+          canvas.style.width = `${mapWidth}px`;
+          canvas.style.height = `${mapHeight}px`;
           const map = new maps.Map(canvas, {
             center: venue,
             zoom: 16,
+            size: new maps.Size(mapWidth, mapHeight),
             draggable: true,
             pinchZoom: true,
             scrollWheel: false,
