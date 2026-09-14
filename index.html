@@ -1937,6 +1937,12 @@
       let hasInteracted = false;
       let isLoading = false;
 
+      const setAudioSessionType = (type) => {
+        try {
+          if (navigator.audioSession) navigator.audioSession.type = type;
+        } catch (_) {}
+      };
+
       const syncToggle = () => {
         const isPlaying = Boolean(source && context.state === "running" && !isMuted && !isPageHidden);
         toggle.dataset.muted = String(!isPlaying);
@@ -1957,6 +1963,7 @@
           source = null;
         }
         if (context && context.state !== "closed") context.suspend().catch(() => {});
+        setAudioSessionType("auto");
         syncToggle();
       };
 
@@ -1967,6 +1974,8 @@
         isLoading = true;
         syncToggle();
         try {
+          // iOS otherwise treats Web Audio as ambient sound and obeys silent mode.
+          setAudioSessionType("playback");
           if (!context) {
             context = new AudioContextClass();
             gain = context.createGain();
