@@ -1964,7 +1964,7 @@
         authFailed = true;
         showFallback();
       };
-      window.initVenueMap = () => {
+      const initVenueMap = () => {
         if (authFailed) return;
         try {
           const maps = window.naver.maps;
@@ -2000,9 +2000,11 @@
         status.textContent = "지도를 불러오는 중입니다";
         timeout = setTimeout(showFallback, 15000);
         const script = document.createElement("script");
-        script.src = "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=c5p27frdzg&callback=initVenueMap";
+        script.src = "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=c5p27frdzg";
         script.async = true;
         script.referrerPolicy = "origin";
+        // Wait for SDK evaluation to finish before accessing window.naver.maps.
+        script.onload = initVenueMap;
         script.onerror = showFallback;
         document.head.appendChild(script);
       };
