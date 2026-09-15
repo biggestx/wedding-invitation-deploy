@@ -1485,14 +1485,14 @@
       position:fixed;
       inset:0;
       z-index:20;
-      width:min(calc(100% - 48px), 340px);
+      width:min(calc(100% - 32px), 420px);
       height:fit-content;
       max-width:none;
       max-height:min(62svh, 460px);
       margin:auto;
       padding:0;
       border:2px solid rgba(255,255,255,.22);
-      border-radius:30px;
+      border-radius:16px;
       overflow:hidden;
       color:var(--ink);
       background:
@@ -1638,7 +1638,7 @@
       position:relative;
       z-index:1;
       max-height:min(62svh, 460px);
-      padding:26px 24px;
+      padding:28px 22px;
       overflow:auto;
       -webkit-overflow-scrolling:touch;
       animation:accountTextIn .26s cubic-bezier(.22, 1, .36, 1);
@@ -1663,8 +1663,34 @@
     }
 
     .account-dialog .acc-item{
+      display:flex;
+      flex-direction:column;
       font-family:"Gowun Batang","SUIT",serif;
       line-height:1.72;
+    }
+
+    .account-dialog .acc-item + .acc-item{
+      margin-top:24px;
+      padding-top:24px;
+      border-top:1px solid rgba(119,96,81,.18);
+    }
+
+    .account-dialog .acc-bank-name{
+      display:block;
+      margin-bottom:2px;
+      color:#655348;
+      font-family:"SUIT",sans-serif;
+      font-size:12px;
+      font-weight:500;
+      letter-spacing:.02em;
+    }
+
+    .account-dialog .acc-number{
+      font-family:"SUIT",sans-serif;
+      font-size:14px;
+      font-weight:600;
+      font-variant-numeric:tabular-nums;
+      letter-spacing:.035em;
     }
 
     .account-dialog .acc-bank{
@@ -1676,12 +1702,32 @@
     }
 
     .account-dialog .acc-owner{
-      margin-top:6px;
+      order:-1;
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+      margin:0 0 8px;
       color:#403730;
       font-size:12px;
       font-weight:700;
       letter-spacing:.12em;
       text-shadow:none;
+    }
+
+    .account-dialog .acc-relation{
+      font-size:11px;
+      font-weight:400;
+      letter-spacing:.08em;
+    }
+
+    .account-dialog .acc-person{
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.06em;
+    }
+
+    .account-dialog .acc-bank-row{
+      justify-content:space-between;
     }
 
     .account-dialog .copy-btn{
@@ -2205,7 +2251,7 @@
         <feTurbulence type="turbulence" baseFrequency=".001" numOctaves="2" stitchTiles="stitch" result="glassRipple" />
         <feDisplacementMap id="accountGlassRipple" in="SourceGraphic" in2="glassRipple" scale="12" result="glassRippled" />
         <feImage id="accountGlassWarpMap" result="glassWarpMap" preserveAspectRatio="none" />
-        <feDisplacementMap id="accountGlassBubble" in="glassRippled" in2="glassWarpMap" scale="0" xChannelSelector="R" yChannelSelector="B" result="glassWarp" />
+        <feDisplacementMap id="accountGlassBubble" in="glassRippled" in2="glassWarpMap" scale="20" xChannelSelector="R" yChannelSelector="B" result="glassWarp" />
         <feOffset id="accountGlassMapOffset" in="glassWarp" dx="0" dy="0" result="glassWarpAligned" />
 
       </filter>
@@ -2215,7 +2261,7 @@
   <button class="glass-tuner-toggle" type="button" aria-expanded="false" aria-controls="glassTuner">유리 설정</button>
   <aside class="glass-tuner" id="glassTuner" aria-label="유리 효과 설정" hidden>
     <p class="glass-tuner-title">유리 효과 설정</p>
-    <label class="glass-control"><span>굴절</span><input type="range" min="0" max="100" step="1" value="0" data-glass-setting="bubble"><input type="number" min="0" max="100" step="1" value="0" data-glass-number="bubble"></label>
+    <label class="glass-control"><span>굴절</span><input type="range" min="0" max="100" step="1" value="20" data-glass-setting="bubble"><input type="number" min="0" max="100" step="1" value="20" data-glass-number="bubble"></label>
     <label class="glass-control"><span>물결</span><input type="range" min="0" max="30" step="1" value="12" data-glass-setting="ripple"><input type="number" min="0" max="30" step="1" value="12" data-glass-number="ripple"></label>
     <label class="glass-control"><span>블러</span><input type="range" min="0" max="30" step=".5" value="3.5" data-glass-setting="blur"><input type="number" min="0" max="30" step=".5" value="3.5" data-glass-number="blur"></label>
     <label class="glass-control"><span>채도</span><input type="range" min="70" max="180" step="1" value="84" data-glass-setting="saturation"><input type="number" min="70" max="180" step="1" value="84" data-glass-number="saturation"></label>
@@ -2241,17 +2287,17 @@
       <div class="acc-list">
         <div class="acc-item">
           <div class="acc-bank-row">
-            <span class="acc-bank">신한은행 110-283-303699</span>
+            <span class="acc-bank"><span class="acc-bank-name">신한은행</span><span class="acc-number">110-283-303699</span></span>
             <button class="copy-btn" type="button" data-copy="110-283-303699" aria-label="신랑 김대국 계좌 복사">⧉</button>
           </div>
-          <span class="acc-owner">신랑 김대국</span>
+          <span class="acc-owner"><span class="acc-relation">신랑</span><strong class="acc-person">김대국</strong></span>
         </div>
         <div class="acc-item">
           <div class="acc-bank-row">
-            <span class="acc-bank">은행명 000-0000-0000</span>
+            <span class="acc-bank"><span class="acc-bank-name">은행명</span><span class="acc-number">000-0000-0000</span></span>
             <button class="copy-btn" type="button" data-copy="000-0000-0000" aria-label="신랑 어머니 심숙자 계좌 복사">⧉</button>
           </div>
-          <span class="acc-owner">신랑 어머니 심숙자</span>
+          <span class="acc-owner"><span class="acc-relation">신랑 어머니</span><strong class="acc-person">심숙자</strong></span>
         </div>
       </div>
     </div>
@@ -2266,24 +2312,24 @@
       <div class="acc-list">
         <div class="acc-item">
           <div class="acc-bank-row">
-            <span class="acc-bank">카카오뱅크 3333-11-5369308</span>
+            <span class="acc-bank"><span class="acc-bank-name">카카오뱅크</span><span class="acc-number">3333-11-5369308</span></span>
             <button class="copy-btn" type="button" data-copy="3333-11-5369308" aria-label="신부 조민지 계좌 복사">⧉</button>
           </div>
-          <span class="acc-owner">신부 조민지</span>
+          <span class="acc-owner"><span class="acc-relation">신부</span><strong class="acc-person">조민지</strong></span>
         </div>
         <div class="acc-item">
           <div class="acc-bank-row">
-            <span class="acc-bank">은행명 000-0000-0001</span>
+            <span class="acc-bank"><span class="acc-bank-name">은행명</span><span class="acc-number">000-0000-0001</span></span>
             <button class="copy-btn" type="button" data-copy="000-0000-0001" aria-label="신부 아버지 조태삼 계좌 복사">⧉</button>
           </div>
-          <span class="acc-owner">신부 아버지 조태삼</span>
+          <span class="acc-owner"><span class="acc-relation">신부 아버지</span><strong class="acc-person">조태삼</strong></span>
         </div>
         <div class="acc-item">
           <div class="acc-bank-row">
-            <span class="acc-bank">은행명 000-0000-0002</span>
+            <span class="acc-bank"><span class="acc-bank-name">은행명</span><span class="acc-number">000-0000-0002</span></span>
             <button class="copy-btn" type="button" data-copy="000-0000-0002" aria-label="신부 어머니 조홍순 계좌 복사">⧉</button>
           </div>
-          <span class="acc-owner">신부 어머니 조홍순</span>
+          <span class="acc-owner"><span class="acc-relation">신부 어머니</span><strong class="acc-person">조홍순</strong></span>
         </div>
       </div>
     </div>
@@ -2867,7 +2913,7 @@
       const glassTunerToggle = document.querySelector(".glass-tuner-toggle");
       const supportsGlassRefraction = Object.hasOwn(window, "chrome");
       const glassSettings = {
-        bubble: 0,
+        bubble: 20,
         ripple: 12,
         blur: 3.5,
         saturation: 100,
