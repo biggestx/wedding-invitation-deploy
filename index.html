@@ -1361,6 +1361,7 @@
     .info-route .info-block{
       display:flex;
       flex-direction:column;
+      border-top:none;
     }
 
     .info-route .info-label{ order:1; }
@@ -1413,6 +1414,93 @@
       color:var(--ink);
       font-size:12px;
       letter-spacing:.16em;
+    }
+
+    .info-guide{
+      min-height:calc(var(--stage-vh, 1svh) * 150);
+    }
+
+    .info-guide .sticky{
+      align-items:flex-start;
+      padding-top:calc(var(--stage-vh, 1svh) * 8);
+    }
+
+    .info-guide .info-block{
+      width:100%;
+      border-top:none;
+    }
+
+    .guide-tabs{
+      display:flex;
+      margin-top:calc(var(--stage-vh, 1svh) * 18);
+      padding-bottom:14px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .guide-tab{
+      flex:1;
+      margin:0;
+      padding:6px 4px;
+      border:none;
+      background:none;
+      color:var(--muted);
+      font-family:"Gowun Batang","SUIT",serif;
+      font-size:14px;
+      letter-spacing:.04em;
+      text-align:center;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .guide-tab[aria-selected="true"]{
+      color:var(--ink);
+      font-size:17px;
+      font-weight:700;
+    }
+
+    .guide-panels{
+      position:relative;
+      margin-top:22px;
+      min-height:168px;
+    }
+
+    .guide-panel{
+      display:none;
+    }
+
+    .guide-panel[data-active="true"]{
+      display:block;
+    }
+
+    .guide-photo{
+      display:block;
+      width:100%;
+      aspect-ratio:3 / 2;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(22,19,17,.08);
+      background:#f4efe8;
+      box-shadow:0 10px 24px rgba(22,19,17,.06);
+    }
+
+    .guide-photo img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .guide-copy{
+      margin:18px 0 0;
+      color:var(--muted);
+      font-family:"Gowun Batang","SUIT",serif;
+      font-size:15px;
+      line-height:1.9;
+      letter-spacing:.05em;
+      text-align:center;
+    }
+
+    .guide-panel:not([data-photo]) .guide-copy{
+      margin-top:8px;
     }
 
     .account-actions{
@@ -2218,7 +2306,49 @@
       </div>
     </section>
 
-    <section class="story-step info-step info-accounts" data-screen="6">
+    <section class="story-step info-step info-guide" data-screen="6">
+      <div class="sticky">
+        <div class="panel info-panel">
+          <div class="info-block" data-reveal="soft">
+            <p class="info-label">안내사항</p>
+
+            <div class="guide-tabs" role="tablist" aria-label="안내사항 탭">
+              <button class="guide-tab" type="button" role="tab" id="guideTabHall" aria-selected="true" aria-controls="guidePanelHall" data-guide-tab="hall">연회장</button>
+              <button class="guide-tab" type="button" role="tab" id="guideTabWaiting" aria-selected="false" aria-controls="guidePanelWaiting" tabindex="-1" data-guide-tab="waiting">신부대기실</button>
+              <button class="guide-tab" type="button" role="tab" id="guideTabParking" aria-selected="false" aria-controls="guidePanelParking" tabindex="-1" data-guide-tab="parking">주차</button>
+            </div>
+
+            <div class="guide-panels">
+              <div class="guide-panel" id="guidePanelHall" role="tabpanel" aria-labelledby="guideTabHall" data-active="true">
+                <p class="guide-copy">
+                  연회장은 예식 종료 후 이용하실 수 있습니다.<br />
+                  따뜻한 식사와 함께<br />
+                  축하의 마음을 편하게 나눠 주세요.
+                </p>
+              </div>
+              <div class="guide-panel" id="guidePanelWaiting" role="tabpanel" aria-labelledby="guideTabWaiting" data-active="false" hidden>
+                <p class="guide-copy">
+                  신부대기실은 웨딩홀 4층에 위치해 있습니다.<br />
+                  예식 시작 15분 전에 마감되오니<br />
+                  신부와 인사를 나누실 하객분들은<br />
+                  조금 여유 있게 도착 부탁드립니다.
+                </p>
+              </div>
+              <div class="guide-panel" id="guidePanelParking" role="tabpanel" aria-labelledby="guideTabParking" data-active="false" hidden>
+                <p class="guide-copy">
+                  전쟁기념관 내 지상·지하 주차가 가능합니다.<br /><br />
+                  출차 전 웨딩홀 1층 로비 입구에 비치된<br />
+                  태블릿 PC로 주차 등록 바랍니다.<br />
+                  (2시간 무료)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-step info-step info-accounts" data-screen="7">
       <div class="sticky">
         <div class="panel info-panel">
           <div class="info-block">
@@ -2336,6 +2466,36 @@
   </div>
 
   <script>
+    (function setupGuideTabs() {
+      const tabs = Array.from(document.querySelectorAll("[data-guide-tab]"));
+      if (!tabs.length) return;
+
+      const selectTab = (tab) => {
+        tabs.forEach((btn) => {
+          const isSelected = btn === tab;
+          btn.setAttribute("aria-selected", String(isSelected));
+          btn.tabIndex = isSelected ? 0 : -1;
+          const panel = document.getElementById(btn.getAttribute("aria-controls"));
+          if (!panel) return;
+          panel.dataset.active = String(isSelected);
+          panel.hidden = !isSelected;
+        });
+      };
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => selectTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          const nextIndex = event.key === "ArrowRight"
+            ? (index + 1) % tabs.length
+            : (index - 1 + tabs.length) % tabs.length;
+          tabs[nextIndex].focus();
+          selectTab(tabs[nextIndex]);
+        });
+      });
+    })();
+
     (function setupVenueMap() {
       const frame = document.getElementById("venueMapFrame");
       const canvas = document.getElementById("venueMap");
