@@ -1416,29 +1416,53 @@
       letter-spacing:.16em;
     }
 
-    .accordion{
+    .account-actions{
       display:grid;
-      gap:18px;
+      grid-template-columns:1fr;
+      gap:0;
       margin-top:20px;
     }
 
-    .acc-group{
-      padding:0 0 18px;
-      border-bottom:1px solid rgba(22,19,17,.08);
+    .account-open{
+      width:100%;
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:0 0 30px;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      text-align:left;
+      cursor:pointer;
     }
 
-    .acc-group:last-child{
-      padding-bottom:0;
-      border-bottom:none;
+    .account-open + .account-open{
+      padding:30px 0 0;
+      border-top:1px solid rgba(22,19,17,.12);
     }
 
-    .acc-label{
-      margin:0 0 10px;
+    .account-open-title{
       color:rgba(22,19,17,.52);
       font-family:"Gowun Batang","SUIT",serif;
-      font-size:12px;
+      font-size:15px;
       font-weight:700;
+      line-height:1.6;
       letter-spacing:.18em;
+    }
+
+    .account-open-detail{
+      color:rgba(22,19,17,.48);
+      font-family:"Gowun Batang","SUIT",serif;
+      font-size:12px;
+      letter-spacing:.12em;
+    }
+
+    .acc-list{
+      display:grid;
+      gap:0;
+      padding:0;
     }
 
     .acc-item{
@@ -1446,6 +1470,231 @@
       font-family:"Gowun Batang","SUIT",serif;
       line-height:1.7;
     }
+
+    .acc-item + .acc-item{
+      margin-top:16px;
+      padding-top:16px;
+      border-top:1px solid rgba(22,19,17,.08);
+    }
+
+    .account-dialog{
+      --glass-blur:3.5px;
+      --glass-saturation:100%;
+      --glass-contrast:100%;
+      --glass-brightness:100%;
+      --glass-hue:0deg;
+      position:fixed;
+      inset:0;
+      z-index:20;
+      width:min(calc(100% - 48px), 340px);
+      height:fit-content;
+      max-width:none;
+      max-height:min(62svh, 460px);
+      margin:auto;
+      padding:0;
+      border:2px solid rgba(255,255,255,.22);
+      border-radius:30px;
+      overflow:hidden;
+      color:var(--ink);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.018), rgba(255,255,255,0) 62%),
+        rgba(255,255,255,.04);
+      -webkit-backdrop-filter:hue-rotate(var(--glass-hue)) saturate(var(--glass-saturation)) contrast(var(--glass-contrast)) brightness(var(--glass-brightness)) blur(var(--glass-blur));
+      backdrop-filter:hue-rotate(var(--glass-hue)) saturate(var(--glass-saturation)) contrast(var(--glass-contrast)) brightness(var(--glass-brightness)) blur(var(--glass-blur));
+      box-shadow:
+        0 8px 24px rgba(76,52,34,.035);
+    }
+
+    .account-dialog.account-dialog--chromium{
+      backdrop-filter:hue-rotate(var(--glass-hue)) saturate(var(--glass-saturation)) contrast(var(--glass-contrast)) brightness(var(--glass-brightness)) blur(var(--glass-blur)) url("#accountGlassRefraction");
+    }
+
+    .account-dialog[hidden]{
+      display:none;
+    }
+
+    .account-dialog::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      border-radius:inherit;
+      pointer-events:none;
+      box-shadow:
+        inset 1px 1px 2px rgba(255,255,255,.24),
+        inset -1px -1px 2px rgba(255,255,255,.08);
+    }
+
+    .account-dialog::after{
+      content:none;
+    }
+
+    .glass-tuner-toggle{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:31;
+      display:none;
+      padding:8px 11px;
+      border:1px solid rgba(22,19,17,.13);
+      border-radius:999px;
+      color:rgba(22,19,17,.66);
+      background:rgba(252,250,247,.94);
+      box-shadow:0 5px 18px rgba(35,24,16,.1);
+      font:600 11px/1.2 "SUIT",sans-serif;
+      letter-spacing:.08em;
+    }
+
+    body.account-dialog-open .glass-tuner-toggle{
+      display:block;
+    }
+
+    .glass-tuner{
+      position:fixed;
+      right:12px;
+      bottom:56px;
+      z-index:30;
+      width:224px;
+      max-height:min(70svh, 520px);
+      padding:15px;
+      overflow:auto;
+      border:1px solid rgba(22,19,17,.1);
+      border-radius:14px;
+      color:rgba(22,19,17,.72);
+      background:#fcfaf7;
+      box-shadow:0 10px 32px rgba(35,24,16,.14);
+      font-family:"SUIT",sans-serif;
+    }
+
+    .glass-tuner[hidden]{
+      display:none;
+    }
+
+    .glass-tuner-title{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+
+    .glass-control{
+      display:grid;
+      grid-template-columns:58px 1fr 42px;
+      align-items:center;
+      gap:7px;
+      min-height:28px;
+      font-size:10px;
+    }
+
+    .glass-control input[type="range"]{
+      width:100%;
+      min-width:0;
+      accent-color:#8e8177;
+    }
+
+    .glass-control input[type="number"]{
+      width:42px;
+      padding:3px 2px;
+      border:1px solid rgba(22,19,17,.12);
+      border-radius:5px;
+      color:inherit;
+      background:#fff;
+      font:inherit;
+      text-align:center;
+    }
+
+    .glass-tuner-note{
+      margin:9px 0 0;
+      color:rgba(22,19,17,.42);
+      font-size:9px;
+      line-height:1.45;
+    }
+
+    .account-dialog:not([hidden]){
+      animation:accountDialogIn .26s cubic-bezier(.22, 1, .36, 1);
+      display:block;
+    }
+
+    .account-dialog-inner{
+      position:relative;
+      z-index:1;
+      max-height:min(62svh, 460px);
+      padding:26px 24px;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      animation:accountTextIn .26s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .account-dialog-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:26px;
+    }
+
+    .account-dialog-title{
+      margin:0;
+      color:rgba(22,19,17,.72);
+      font-family:"Gowun Batang","SUIT",serif;
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-shadow:none;
+    }
+
+    .account-dialog .acc-item{
+      font-family:"Gowun Batang","SUIT",serif;
+      line-height:1.72;
+    }
+
+    .account-dialog .acc-bank{
+      color:rgba(22,19,17,.76);
+      font-size:15px;
+      font-weight:400;
+      letter-spacing:.07em;
+      text-shadow:none;
+    }
+
+    .account-dialog .acc-owner{
+      margin-top:6px;
+      color:rgba(22,19,17,.46);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-shadow:none;
+    }
+
+    .account-dialog .copy-btn{
+      color:rgba(22,19,17,.27);
+    }
+
+    .account-dialog-close{
+      width:28px;
+      height:28px;
+      display:grid;
+      place-items:center;
+      flex:0 0 28px;
+      padding:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      color:rgba(22,19,17,.28);
+      font-size:20px;
+      font-weight:300;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    @keyframes accountDialogIn{
+      from{ opacity:0; }
+      to{ opacity:1; }
+    }
+
+    @keyframes accountTextIn{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
 
     .acc-detail{
       min-width:0;
@@ -1509,7 +1758,7 @@
     .footer a{ color:var(--ink); }
 
     .info-signoff{
-      margin-top:30px;
+      margin-top:56px;
       padding-top:22px;
       border-top:none;
     }
@@ -1614,7 +1863,7 @@
       .cascade-card,
       .gallery-shell,
       .map-preview,
-      .accordion,
+      .account-dialog,
       .date-main,
       .date-copy,
       [data-reveal]{
@@ -1909,32 +2158,15 @@
           <div class="info-block">
             <p class="info-label">마음전하실곳</p>
 
-            <div class="accordion">
-              <div class="acc-group">
-                <p class="acc-label">신랑측 계좌</p>
-                <div class="acc-item">
-                  <div class="acc-detail">
-                    <div class="acc-bank-row">
-                      <span class="acc-bank">신한은행 110-283-303699</span>
-                      <button class="copy-btn" type="button" data-copy="110-283-303699" aria-label="신랑측 계좌 복사">⧉</button>
-                    </div>
-                    <span class="acc-owner">예금주 김대국</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="acc-group">
-                <p class="acc-label">신부측 계좌</p>
-                <div class="acc-item">
-                  <div class="acc-detail">
-                    <div class="acc-bank-row">
-                      <span class="acc-bank">카카오뱅크 3333-11-5369308</span>
-                      <button class="copy-btn" type="button" data-copy="3333-11-5369308" aria-label="신부측 계좌 복사">⧉</button>
-                    </div>
-                    <span class="acc-owner">예금주 조민지</span>
-                  </div>
-                </div>
-              </div>
+            <div class="account-actions">
+              <button class="account-open" type="button" data-account-dialog="groomAccountDialog" aria-label="신랑측 계좌 자세히 보기">
+                <span class="account-open-title">신랑측 계좌</span>
+                <span class="account-open-detail" aria-hidden="true">자세히</span>
+              </button>
+              <button class="account-open" type="button" data-account-dialog="brideAccountDialog" aria-label="신부측 계좌 자세히 보기">
+                <span class="account-open-title">신부측 계좌</span>
+                <span class="account-open-detail" aria-hidden="true">자세히</span>
+              </button>
             </div>
 
             <div class="footer info-signoff">
@@ -1946,6 +2178,96 @@
       </div>
     </section>
   </main>
+
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <filter id="accountGlassRefraction" x="-20" y="-20" width="380" height="500" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feTurbulence type="turbulence" baseFrequency=".001" numOctaves="2" stitchTiles="stitch" result="glassRipple" />
+        <feDisplacementMap id="accountGlassRipple" in="SourceGraphic" in2="glassRipple" scale="12" result="glassRippled" />
+        <feImage id="accountGlassWarpMap" result="glassWarpMap" preserveAspectRatio="none" />
+        <feDisplacementMap id="accountGlassBubble" in="glassRippled" in2="glassWarpMap" scale="0" xChannelSelector="R" yChannelSelector="B" result="glassWarp" />
+        <feOffset id="accountGlassMapOffset" in="glassWarp" dx="0" dy="0" result="glassWarpAligned" />
+
+      </filter>
+    </defs>
+  </svg>
+
+  <button class="glass-tuner-toggle" type="button" aria-expanded="false" aria-controls="glassTuner">유리 설정</button>
+  <aside class="glass-tuner" id="glassTuner" aria-label="유리 효과 설정" hidden>
+    <p class="glass-tuner-title">유리 효과 설정</p>
+    <label class="glass-control"><span>굴절</span><input type="range" min="0" max="100" step="1" value="0" data-glass-setting="bubble"><input type="number" min="0" max="100" step="1" value="0" data-glass-number="bubble"></label>
+    <label class="glass-control"><span>물결</span><input type="range" min="0" max="30" step="1" value="12" data-glass-setting="ripple"><input type="number" min="0" max="30" step="1" value="12" data-glass-number="ripple"></label>
+    <label class="glass-control"><span>블러</span><input type="range" min="0" max="30" step=".5" value="3.5" data-glass-setting="blur"><input type="number" min="0" max="30" step=".5" value="3.5" data-glass-number="blur"></label>
+    <label class="glass-control"><span>채도</span><input type="range" min="70" max="180" step="1" value="84" data-glass-setting="saturation"><input type="number" min="70" max="180" step="1" value="84" data-glass-number="saturation"></label>
+    <label class="glass-control"><span>대비</span><input type="range" min="70" max="160" step="1" value="122" data-glass-setting="contrast"><input type="number" min="70" max="160" step="1" value="122" data-glass-number="contrast"></label>
+    <label class="glass-control"><span>밝기</span><input type="range" min="70" max="160" step="1" value="130" data-glass-setting="brightness"><input type="number" min="70" max="160" step="1" value="130" data-glass-number="brightness"></label>
+    <label class="glass-control"><span>색조</span><input type="range" min="-180" max="180" step="1" value="0" data-glass-setting="hue"><input type="number" min="-180" max="180" step="1" value="0" data-glass-number="hue"></label>
+    <label class="glass-control"><span>빨강</span><input type="range" min="0" max="255" step="1" value="255" data-glass-setting="tintR"><input type="number" min="0" max="255" step="1" value="255" data-glass-number="tintR"></label>
+    <label class="glass-control"><span>초록</span><input type="range" min="0" max="255" step="1" value="248" data-glass-setting="tintG"><input type="number" min="0" max="255" step="1" value="248" data-glass-number="tintG"></label>
+    <label class="glass-control"><span>파랑</span><input type="range" min="0" max="255" step="1" value="241" data-glass-setting="tintB"><input type="number" min="0" max="255" step="1" value="241" data-glass-number="tintB"></label>
+    <label class="glass-control"><span>색 농도</span><input type="range" min="0" max="50" step="1" value="18" data-glass-setting="tintOpacity"><input type="number" min="0" max="50" step="1" value="18" data-glass-number="tintOpacity"></label>
+    <label class="glass-control"><span>투명도</span><input type="range" min="0" max="100" step="1" value="82" data-glass-setting="transparency"><input type="number" min="0" max="100" step="1" value="82" data-glass-number="transparency"></label>
+    <label class="glass-control"><span>가로 보정</span><input type="range" min="-40" max="40" step="1" value="0" data-glass-setting="offsetX"><input type="number" min="-40" max="40" step="1" value="0" data-glass-number="offsetX"></label>
+    <label class="glass-control"><span>세로 보정</span><input type="range" min="-40" max="40" step="1" value="0" data-glass-setting="offsetY"><input type="number" min="-40" max="40" step="1" value="0" data-glass-number="offsetY"></label>
+    <p class="glass-tuner-note">투명도는 높을수록 뒤가 더 보입니다. 위아래 왜곡 위치가 어긋나면 ‘세로 보정’을 조절하세요.</p>
+  </aside>
+
+  <div class="account-dialog" id="groomAccountDialog" role="dialog" aria-modal="false" aria-labelledby="groomAccountTitle" hidden>
+    <div class="account-dialog-inner">
+      <div class="account-dialog-head">
+        <h2 class="account-dialog-title" id="groomAccountTitle">신랑측 계좌</h2>
+        <button class="account-dialog-close" type="button" data-dialog-close aria-label="닫기">×</button>
+      </div>
+      <div class="acc-list">
+        <div class="acc-item">
+          <div class="acc-bank-row">
+            <span class="acc-bank">신한은행 110-283-303699</span>
+            <button class="copy-btn" type="button" data-copy="110-283-303699" aria-label="신랑 김대국 계좌 복사">⧉</button>
+          </div>
+          <span class="acc-owner">신랑 김대국</span>
+        </div>
+        <div class="acc-item">
+          <div class="acc-bank-row">
+            <span class="acc-bank">은행명 000-0000-0000</span>
+            <button class="copy-btn" type="button" data-copy="000-0000-0000" aria-label="신랑 어머니 심숙자 계좌 복사">⧉</button>
+          </div>
+          <span class="acc-owner">신랑 어머니 심숙자</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="account-dialog" id="brideAccountDialog" role="dialog" aria-modal="false" aria-labelledby="brideAccountTitle" hidden>
+    <div class="account-dialog-inner">
+      <div class="account-dialog-head">
+        <h2 class="account-dialog-title" id="brideAccountTitle">신부측 계좌</h2>
+        <button class="account-dialog-close" type="button" data-dialog-close aria-label="닫기">×</button>
+      </div>
+      <div class="acc-list">
+        <div class="acc-item">
+          <div class="acc-bank-row">
+            <span class="acc-bank">카카오뱅크 3333-11-5369308</span>
+            <button class="copy-btn" type="button" data-copy="3333-11-5369308" aria-label="신부 조민지 계좌 복사">⧉</button>
+          </div>
+          <span class="acc-owner">신부 조민지</span>
+        </div>
+        <div class="acc-item">
+          <div class="acc-bank-row">
+            <span class="acc-bank">은행명 000-0000-0001</span>
+            <button class="copy-btn" type="button" data-copy="000-0000-0001" aria-label="신부 아버지 조태삼 계좌 복사">⧉</button>
+          </div>
+          <span class="acc-owner">신부 아버지 조태삼</span>
+        </div>
+        <div class="acc-item">
+          <div class="acc-bank-row">
+            <span class="acc-bank">은행명 000-0000-0002</span>
+            <button class="copy-btn" type="button" data-copy="000-0000-0002" aria-label="신부 어머니 조홍순 계좌 복사">⧉</button>
+          </div>
+          <span class="acc-owner">신부 어머니 조홍순</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     (function setupVenueMap() {
@@ -2495,18 +2817,180 @@
     (function copyButtons() {
       document.querySelectorAll("[data-copy]").forEach((button) => {
         const original = button.textContent;
+        const originalLabel = button.getAttribute("aria-label") || "계좌 복사";
         button.addEventListener("click", async () => {
           try {
             await navigator.clipboard.writeText(button.dataset.copy || "");
-            button.textContent = "복사 완료";
+            button.textContent = "✓";
+            button.setAttribute("aria-label", "계좌번호 복사 완료");
             setTimeout(() => {
               button.textContent = original;
+              button.setAttribute("aria-label", originalLabel);
             }, 1200);
           } catch (error) {
             alert("복사에 실패했어요. 길게 눌러 직접 복사해 주세요.");
           }
         });
       });
+    })();
+
+    (function accountDialogs() {
+      const dialogs = Array.from(document.querySelectorAll(".account-dialog"));
+      if (!dialogs.length) return;
+
+      const glassFilter = document.getElementById("accountGlassRefraction");
+      const glassWarpMap = document.getElementById("accountGlassWarpMap");
+      const glassMapOffset = document.getElementById("accountGlassMapOffset");
+      const glassRipple = document.getElementById("accountGlassRipple");
+      const glassBubble = document.getElementById("accountGlassBubble");
+      const glassTuner = document.getElementById("glassTuner");
+      const glassTunerToggle = document.querySelector(".glass-tuner-toggle");
+      const supportsGlassRefraction = Object.hasOwn(window, "chrome");
+      const glassSettings = {
+        bubble: 0,
+        ripple: 12,
+        blur: 3.5,
+        saturation: 100,
+        contrast: 100,
+        brightness: 100,
+        hue: 0,
+        tintR: 255,
+        tintG: 248,
+        tintB: 241,
+        tintOpacity: 0,
+        transparency: 96,
+        offsetX: 0,
+        offsetY: 0
+      };
+
+      const createGlassMap = (width, height) => {
+        const edgeInset = 20;
+        const edgeSize = 30;
+        const innerWidth = Math.max(0, width - edgeInset * 2);
+        const innerHeight = Math.max(0, height - edgeInset * 2);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+          <defs>
+            <linearGradient id="glassMapX" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stop-color="rgb(255,0,0)" stop-opacity="1"/>
+              <stop offset="${edgeSize}%" stop-color="rgb(255,0,0)" stop-opacity=".9"/>
+              <stop offset="${100 - edgeSize}%" stop-color="rgb(255,0,0)" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="rgb(255,0,0)" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="glassMapY" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="rgb(0,0,255)" stop-opacity="1"/>
+              <stop offset="${edgeSize}%" stop-color="rgb(0,0,255)" stop-opacity=".9"/>
+              <stop offset="${100 - edgeSize}%" stop-color="rgb(0,0,255)" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="rgb(0,0,255)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect width="${width}" height="${height}" fill="rgb(0,127,0)"/>
+          <rect x="${edgeInset}" y="${edgeInset}" width="${innerWidth}" height="${innerHeight}" fill="url(#glassMapX)" style="mix-blend-mode:lighten"/>
+          <rect x="${edgeInset}" y="${edgeInset}" width="${innerWidth}" height="${innerHeight}" fill="url(#glassMapY)" style="mix-blend-mode:lighten"/>
+        </svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      };
+
+      const updateGlassRefraction = (dialog) => {
+        dialog.style.setProperty("--glass-blur", `${glassSettings.blur}px`);
+        dialog.style.setProperty("--glass-saturation", `${glassSettings.saturation}%`);
+        dialog.style.setProperty("--glass-contrast", `${glassSettings.contrast}%`);
+        dialog.style.setProperty("--glass-brightness", `${glassSettings.brightness}%`);
+        dialog.style.setProperty("--glass-hue", `${glassSettings.hue}deg`);
+        const colorStrength = glassSettings.tintOpacity / 50;
+        const tintR = Math.round(255 + (glassSettings.tintR - 255) * colorStrength);
+        const tintG = Math.round(255 + (glassSettings.tintG - 255) * colorStrength);
+        const tintB = Math.round(255 + (glassSettings.tintB - 255) * colorStrength);
+        const surfaceAlpha = 1 - glassSettings.transparency / 100;
+        const highlightAlpha = surfaceAlpha * .45;
+        dialog.style.background = `linear-gradient(145deg, rgba(255,255,255,${highlightAlpha}), rgba(255,255,255,0) 62%), rgba(${tintR},${tintG},${tintB},${surfaceAlpha})`;
+        if (!supportsGlassRefraction || !glassFilter || !glassWarpMap) return;
+        const bounds = dialog.getBoundingClientRect();
+        const width = Math.ceil(bounds.width) + 40;
+        const height = Math.ceil(bounds.height) + 40;
+        glassFilter.setAttribute("width", String(width));
+        glassFilter.setAttribute("height", String(height));
+        glassRipple?.setAttribute("scale", String(glassSettings.ripple));
+        glassBubble?.setAttribute("scale", String(glassSettings.bubble));
+        glassMapOffset?.setAttribute("dx", String(glassSettings.offsetX));
+        glassMapOffset?.setAttribute("dy", String(glassSettings.offsetY));
+        glassWarpMap.setAttribute("href", createGlassMap(width, height));
+        dialog.classList.add("account-dialog--chromium");
+      };
+
+      const closeDialog = (dialog) => {
+        dialog.hidden = true;
+        document.body.classList.remove("account-dialog-open");
+        if (glassTuner) glassTuner.hidden = true;
+        glassTunerToggle?.setAttribute("aria-expanded", "false");
+      };
+
+      glassTunerToggle?.addEventListener("click", () => {
+        if (!glassTuner) return;
+        glassTuner.hidden = !glassTuner.hidden;
+        glassTunerToggle.setAttribute("aria-expanded", String(!glassTuner.hidden));
+      });
+
+      document.querySelectorAll("[data-glass-setting]").forEach((range) => {
+        const key = range.dataset.glassSetting;
+        const number = document.querySelector(`[data-glass-number="${key}"]`);
+        if (!key || !(key in glassSettings) || !(number instanceof HTMLInputElement)) return;
+        range.value = String(glassSettings[key]);
+        number.value = String(glassSettings[key]);
+
+        const applyValue = (rawValue) => {
+          const min = Number(range.min);
+          const max = Number(range.max);
+          const value = Math.min(max, Math.max(min, Number(rawValue)));
+          if (!Number.isFinite(value)) return;
+          glassSettings[key] = value;
+          range.value = String(value);
+          number.value = String(value);
+          const openDialog = dialogs.find((dialog) => !dialog.hidden);
+          if (openDialog) updateGlassRefraction(openDialog);
+        };
+
+        range.addEventListener("input", () => applyValue(range.value));
+        number.addEventListener("input", () => applyValue(number.value));
+      });
+
+      document.querySelectorAll("[data-account-dialog]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const dialog = document.getElementById(button.dataset.accountDialog || "");
+          if (!(dialog instanceof HTMLElement)) return;
+          dialogs.forEach((otherDialog) => {
+            if (otherDialog !== dialog) otherDialog.hidden = true;
+          });
+          dialog.hidden = false;
+          document.body.classList.add("account-dialog-open");
+          requestAnimationFrame(() => updateGlassRefraction(dialog));
+        });
+      });
+
+      dialogs.forEach((dialog) => {
+        dialog.querySelector("[data-dialog-close]")?.addEventListener("click", () => closeDialog(dialog));
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) closeDialog(dialog);
+        });
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        const openDialog = dialogs.find((dialog) => !dialog.hidden);
+        const target = event.target;
+        if (!openDialog || !(target instanceof Element)) return;
+        if (openDialog.contains(target) || target.closest("[data-account-dialog], .glass-tuner, .glass-tuner-toggle")) return;
+        closeDialog(openDialog);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        const openDialog = dialogs.find((dialog) => !dialog.hidden);
+        if (openDialog) closeDialog(openDialog);
+      });
+
+      window.addEventListener("resize", () => {
+        const openDialog = dialogs.find((dialog) => !dialog.hidden);
+        if (openDialog) updateGlassRefraction(openDialog);
+      }, { passive: true });
     })();
 
     document.body.classList.add("intro-pending");
