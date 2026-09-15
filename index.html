@@ -2585,6 +2585,16 @@
       window.addEventListener("pointerup", markInactive, { passive: true });
       window.addEventListener("pointercancel", markInactive, { passive: true });
       window.addEventListener("wheel", markInactive, { passive: true });
+
+      // Momentum scrolling continues well after touchend/pointerup, and the
+      // address bar show/hide animation (which fires the height-jump resize
+      // we're guarding against) often plays *during* that momentum phase,
+      // not within a fixed delay of the finger lifting. Without this, the
+      // lock window could expire mid-fling and let a stale viewport height
+      // get baked in while the page is still moving, snapping the sticky
+      // scroll progress. Treat any native scroll as ongoing gesture activity
+      // so the lock keeps extending until scrolling actually settles.
+      window.addEventListener("scroll", markMove, { passive: true });
     })();
 
     (function revealOnScroll() {
