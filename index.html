@@ -178,11 +178,11 @@
 
     .hero{
       position:relative;
-      min-height:220svh;
+      min-height:calc(var(--stage-vh, 1svh) * 220);
     }
 
     .hero .sticky{
-      min-height:100svh;
+      min-height:calc(var(--stage-vh, 1svh) * 100);
       padding:18px 0 24px;
       flex-direction:column;
       justify-content:space-between;
@@ -565,7 +565,7 @@
 
     .story-step{
       position:relative;
-      min-height:260svh;
+      min-height:calc(var(--stage-vh, 1svh) * 260);
     }
 
     .story-step::before{
@@ -601,7 +601,7 @@
     .sticky{
       position:sticky;
       top:0;
-      min-height:100svh;
+      min-height:calc(var(--stage-vh, 1svh) * 100);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -787,7 +787,7 @@
     }
 
     .count-step{
-      min-height:220svh;
+      min-height:calc(var(--stage-vh, 1svh) * 220);
     }
 
     .count-step::before{
@@ -1114,7 +1114,7 @@
     }
 
     .gallery-step{
-      min-height:230svh;
+      min-height:calc(var(--stage-vh, 1svh) * 230);
     }
 
     .gallery-step .sticky{
@@ -1250,7 +1250,7 @@
     }
 
     .info-step{
-      min-height:210svh;
+      min-height:calc(var(--stage-vh, 1svh) * 210);
     }
 
     .info-step .sticky{
@@ -1272,7 +1272,7 @@
     }
 
     .info-accounts{
-      min-height:100svh;
+      min-height:calc(var(--stage-vh, 1svh) * 100);
     }
 
     .info-label{
@@ -1885,7 +1885,7 @@
         inset:7px;
       }
       .hero-names{ font-size:clamp(46px, 13vw, 68px); }
-      .count-step{ min-height:190svh; }
+      .count-step{ min-height:calc(var(--stage-vh, 1svh) * 190); }
       .count-band{
         gap:22px;
         min-height:330px;
@@ -2595,6 +2595,44 @@
       // scroll progress. Treat any native scroll as ongoing gesture activity
       // so the lock keeps extending until scrolling actually settles.
       window.addEventListener("scroll", markMove, { passive: true });
+    })();
+
+    // KakaoTalk's in-app browser (and some other in-app WebViews) doesn't
+    // implement the CSS `svh` unit to spec: instead of staying pinned to
+    // the smallest possible viewport, it recomputes `1svh` live as the
+    // address bar collapses/expands, and Kakao's address bar is tall
+    // enough that the swing is large. Since every sticky section's scroll
+    // length is defined in `svh` (e.g. `min-height:260svh`), that live
+    // recompute changes each section's actual pixel height mid-scroll,
+    // which shifts where the current scroll position lands inside it and
+    // looks like the page jumping to the next screen and back. Freezing a
+    // `--stage-vh` custom property in JS (only refreshed once scrolling has
+    // actually settled, reusing the trackScrollIntent gesture state) and
+    // driving all the `NNNsvh` lengths from it keeps section heights
+    // stable through the address bar animation regardless of how the
+    // browser recomputes the native unit.
+    (function stageViewportUnit() {
+      const root = document.documentElement;
+      const scrollState = window.__weddingScrollState || { touchActive: false, lastGestureAt: 0 };
+      const settleLockMs = 320;
+
+      const getViewportHeight = () => Math.round(document.documentElement.clientHeight || window.innerHeight);
+
+      let stableHeight = getViewportHeight();
+      const applyHeight = (height) => {
+        stableHeight = height;
+        root.style.setProperty("--stage-vh", `${height / 100}px`);
+      };
+      applyHeight(stableHeight);
+
+      const handleResize = () => {
+        const isGestureSettling = scrollState.touchActive || (performance.now() - scrollState.lastGestureAt) < settleLockMs;
+        if (isGestureSettling) return;
+        applyHeight(getViewportHeight());
+      };
+
+      window.addEventListener("resize", handleResize);
+      window.visualViewport?.addEventListener("resize", handleResize);
     })();
 
     (function revealOnScroll() {
