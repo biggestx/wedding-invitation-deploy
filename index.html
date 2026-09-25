@@ -928,45 +928,6 @@
       opacity:.52;
     }
 
-    .count-test-controls{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      width:max-content;
-      padding:5px;
-      border:1px solid rgba(22,19,17,.1);
-      border-radius:999px;
-      background:rgba(255,255,255,.38);
-      box-shadow:0 8px 22px rgba(22,19,17,.04);
-    }
-
-    .count-test-button{
-      display:grid;
-      place-items:center;
-      width:30px;
-      height:30px;
-      padding:0;
-      border:0;
-      border-radius:50%;
-      color:var(--ink);
-      background:rgba(22,19,17,.07);
-      font:500 20px/1 "SUIT","Noto Sans KR",sans-serif;
-      cursor:pointer;
-      touch-action:manipulation;
-    }
-
-    .count-test-button:active{
-      transform:scale(.94);
-    }
-
-    .count-test-value{
-      min-width:56px;
-      color:var(--muted);
-      font:600 11px/1 "SUIT","Noto Sans KR",sans-serif;
-      text-align:center;
-      letter-spacing:.02em;
-    }
-
     .count-axis{
       --today-progress:50%;
       --wedding-progress:89%;
@@ -2270,12 +2231,6 @@
             <div class="count-stage">
               <p class="count-kicker">2026.11.22</p>
 
-              <div class="count-test-controls" aria-label="남은 날 테스트">
-                <button class="count-test-button" id="countTestMinus" type="button" aria-label="남은 날 하루 줄이기">−</button>
-                <output class="count-test-value" id="countTestValue" aria-live="polite">테스트</output>
-                <button class="count-test-button" id="countTestPlus" type="button" aria-label="남은 날 하루 늘리기">+</button>
-              </div>
-
               <div class="count-axis" id="countAxis" aria-label="2026년 진행 축">
                 <div class="count-axis-labels" aria-hidden="true">
                   <span>26.01</span>
@@ -3054,9 +3009,6 @@
       const narrativeEl = document.getElementById("countNarrative");
       const axisEl = document.getElementById("countAxis");
       const todayAxisEl = document.getElementById("countTodayAxis");
-      const testMinusEl = document.getElementById("countTestMinus");
-      const testPlusEl = document.getElementById("countTestPlus");
-      const testValueEl = document.getElementById("countTestValue");
       if (!stepEl || !ddayValueEl) return;
 
       const target = new Date("2026-11-22T13:00:00+09:00");
@@ -3072,24 +3024,23 @@
         const day = String(date.getDate()).padStart(2, "0");
         return `${month}.${day}`;
       };
+      const toKoreaDay = (date) => Math.floor((date.getTime() + 9 * 60 * 60 * 1000) / 86400000);
 
       if (axisEl) {
         axisEl.style.setProperty("--wedding-progress", toYearProgress(target));
       }
 
-      let testDays = null;
-
       const render = () => {
         const actualNow = new Date();
-        const now = testDays === null
-          ? actualNow
-          : new Date(target.getTime() - testDays * 86400000);
+        const now = actualNow;
         const diff = Math.max(0, target - now);
         const totalSeconds = Math.floor(diff / 1000);
-        const days = testDays === null ? Math.floor(totalSeconds / 86400) : testDays;
+        const days = Math.floor(totalSeconds / 86400);
+        const daysMarried = Math.max(0, toKoreaDay(actualNow) - toKoreaDay(target));
 
-        const isWeddingDay = testDays === 0 || (testDays === null && totalSeconds <= 0);
-        const nextDday = isWeddingDay ? "D-DAY" : `${days}일`;
+        const isMarried = daysMarried > 0;
+        const isWeddingDay = !isMarried && totalSeconds <= 0;
+        const nextDday = isWeddingDay ? "D-DAY" : `${isMarried ? daysMarried : days}일`;
         if (ddayValueEl.dataset.text !== nextDday) {
           ddayValueEl.dataset.text = nextDday;
           const numberEl = ddayValueEl.querySelector(".count-day-number");
@@ -3099,7 +3050,7 @@
               numberEl.textContent = "D-DAY";
               unitEl.textContent = "";
             } else {
-              numberEl.textContent = String(days);
+              numberEl.textContent = String(isMarried ? daysMarried : days);
               unitEl.textContent = "일";
             }
           } else {
@@ -3107,23 +3058,22 @@
           }
         }
         stepEl.classList.toggle("is-wedding-day", isWeddingDay);
-        if (narrativeEl) narrativeEl.textContent = isWeddingDay ? "드디어, 저희 결혼합니다" : "남은 날";
-        if (axisEl) axisEl.style.setProperty("--today-progress", toYearProgress(now));
-        if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
-        if (testValueEl) testValueEl.textContent = testDays === null ? "실시간" : `${testDays}일`;
-      };
-
-      const changeTestDays = (amount) => {
-        if (testDays === null) {
-          const actualDiff = Math.max(0, target - new Date());
-          testDays = Math.floor(actualDiff / 86400000);
+        stepEl.classList.toggle("is-married", isMarried);
+        if (narrativeEl) {
+          narrativeEl.textContent = isWeddingDay
+            ? "드디어, 저희 결혼합니다"
+            : isMarried ? "결혼한 지" : "남은 날";
         }
-        testDays = clamp(testDays + amount, 0, 365);
-        render();
+        if (axisEl) {
+          axisEl.style.setProperty("--today-progress", toYearProgress(isMarried ? target : now));
+          const ddayEl = axisEl.querySelector(".count-axis-dday");
+          if (ddayEl) {
+            ddayEl.style.removeProperty("left");
+            ddayEl.style.removeProperty("right");
+          }
+        }
+        if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
       };
-
-      testMinusEl?.addEventListener("click", () => changeTestDays(-1));
-      testPlusEl?.addEventListener("click", () => changeTestDays(1));
 
       render();
       setInterval(render, 1000);
