@@ -1722,87 +1722,6 @@
       mask-composite:exclude;
     }
 
-    .glass-tuner-toggle{
-      position:fixed;
-      right:14px;
-      bottom:14px;
-      z-index:31;
-      display:none;
-      padding:8px 11px;
-      border:1px solid rgba(22,19,17,.13);
-      border-radius:999px;
-      color:rgba(22,19,17,.66);
-      background:rgba(252,250,247,.94);
-      box-shadow:0 5px 18px rgba(35,24,16,.1);
-      font:600 11px/1.2 "SUIT",sans-serif;
-      letter-spacing:.08em;
-    }
-
-    body.account-dialog-open .glass-tuner-toggle{
-      display:block;
-    }
-
-    .glass-tuner{
-      position:fixed;
-      right:12px;
-      bottom:56px;
-      z-index:30;
-      width:224px;
-      max-height:min(70svh, 520px);
-      padding:15px;
-      overflow:auto;
-      border:1px solid rgba(22,19,17,.1);
-      border-radius:14px;
-      color:rgba(22,19,17,.72);
-      background:#fcfaf7;
-      box-shadow:0 10px 32px rgba(35,24,16,.14);
-      font-family:"SUIT",sans-serif;
-    }
-
-    .glass-tuner[hidden]{
-      display:none;
-    }
-
-    .glass-tuner-title{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.08em;
-    }
-
-    .glass-control{
-      display:grid;
-      grid-template-columns:58px 1fr 42px;
-      align-items:center;
-      gap:7px;
-      min-height:28px;
-      font-size:10px;
-    }
-
-    .glass-control input[type="range"]{
-      width:100%;
-      min-width:0;
-      accent-color:#8e8177;
-    }
-
-    .glass-control input[type="number"]{
-      width:42px;
-      padding:3px 2px;
-      border:1px solid rgba(22,19,17,.12);
-      border-radius:5px;
-      color:inherit;
-      background:#fff;
-      font:inherit;
-      text-align:center;
-    }
-
-    .glass-tuner-note{
-      margin:9px 0 0;
-      color:rgba(22,19,17,.42);
-      font-size:9px;
-      line-height:1.45;
-    }
-
     .account-dialog:not([hidden]){
       animation:accountDialogIn .26s cubic-bezier(.22, 1, .36, 1);
       display:block;
@@ -2486,26 +2405,6 @@
       </filter>
     </defs>
   </svg>
-
-  <button class="glass-tuner-toggle" type="button" aria-expanded="false" aria-controls="glassTuner">유리 설정</button>
-  <aside class="glass-tuner" id="glassTuner" aria-label="유리 효과 설정" hidden>
-    <p class="glass-tuner-title">유리 효과 설정</p>
-    <label class="glass-control"><span>굴절</span><input type="range" min="0" max="100" step="1" value="20" data-glass-setting="bubble"><input type="number" min="0" max="100" step="1" value="20" data-glass-number="bubble"></label>
-    <label class="glass-control"><span>물결</span><input type="range" min="0" max="30" step="1" value="12" data-glass-setting="ripple"><input type="number" min="0" max="30" step="1" value="12" data-glass-number="ripple"></label>
-    <label class="glass-control"><span>블러</span><input type="range" min="0" max="30" step=".5" value="3.5" data-glass-setting="blur"><input type="number" min="0" max="30" step=".5" value="3.5" data-glass-number="blur"></label>
-    <label class="glass-control"><span>채도</span><input type="range" min="70" max="180" step="1" value="84" data-glass-setting="saturation"><input type="number" min="70" max="180" step="1" value="84" data-glass-number="saturation"></label>
-    <label class="glass-control"><span>대비</span><input type="range" min="70" max="160" step="1" value="122" data-glass-setting="contrast"><input type="number" min="70" max="160" step="1" value="122" data-glass-number="contrast"></label>
-    <label class="glass-control"><span>밝기</span><input type="range" min="70" max="160" step="1" value="130" data-glass-setting="brightness"><input type="number" min="70" max="160" step="1" value="130" data-glass-number="brightness"></label>
-    <label class="glass-control"><span>색조</span><input type="range" min="-180" max="180" step="1" value="0" data-glass-setting="hue"><input type="number" min="-180" max="180" step="1" value="0" data-glass-number="hue"></label>
-    <label class="glass-control"><span>빨강</span><input type="range" min="0" max="255" step="1" value="255" data-glass-setting="tintR"><input type="number" min="0" max="255" step="1" value="255" data-glass-number="tintR"></label>
-    <label class="glass-control"><span>초록</span><input type="range" min="0" max="255" step="1" value="248" data-glass-setting="tintG"><input type="number" min="0" max="255" step="1" value="248" data-glass-number="tintG"></label>
-    <label class="glass-control"><span>파랑</span><input type="range" min="0" max="255" step="1" value="241" data-glass-setting="tintB"><input type="number" min="0" max="255" step="1" value="241" data-glass-number="tintB"></label>
-    <label class="glass-control"><span>색 농도</span><input type="range" min="0" max="50" step="1" value="18" data-glass-setting="tintOpacity"><input type="number" min="0" max="50" step="1" value="18" data-glass-number="tintOpacity"></label>
-    <label class="glass-control"><span>투명도</span><input type="range" min="0" max="100" step="1" value="82" data-glass-setting="transparency"><input type="number" min="0" max="100" step="1" value="82" data-glass-number="transparency"></label>
-    <label class="glass-control"><span>가로 보정</span><input type="range" min="-40" max="40" step="1" value="0" data-glass-setting="offsetX"><input type="number" min="-40" max="40" step="1" value="0" data-glass-number="offsetX"></label>
-    <label class="glass-control"><span>세로 보정</span><input type="range" min="-40" max="40" step="1" value="0" data-glass-setting="offsetY"><input type="number" min="-40" max="40" step="1" value="0" data-glass-number="offsetY"></label>
-    <p class="glass-tuner-note">투명도는 높을수록 뒤가 더 보입니다. 위아래 왜곡 위치가 어긋나면 ‘세로 보정’을 조절하세요.</p>
-  </aside>
 
   <div class="account-dialog" id="groomAccountDialog" role="dialog" aria-modal="false" aria-labelledby="groomAccountTitle" hidden>
     <div class="account-dialog-inner">
@@ -3216,8 +3115,6 @@
       const glassMapOffset = document.getElementById("accountGlassMapOffset");
       const glassRipple = document.getElementById("accountGlassRipple");
       const glassBubble = document.getElementById("accountGlassBubble");
-      const glassTuner = document.getElementById("glassTuner");
-      const glassTunerToggle = document.querySelector(".glass-tuner-toggle");
       const supportsGlassRefraction = Object.hasOwn(window, "chrome");
       const glassSettings = {
         bubble: 20,
@@ -3293,38 +3190,7 @@
       const closeDialog = (dialog) => {
         dialog.hidden = true;
         document.body.classList.remove("account-dialog-open");
-        if (glassTuner) glassTuner.hidden = true;
-        glassTunerToggle?.setAttribute("aria-expanded", "false");
       };
-
-      glassTunerToggle?.addEventListener("click", () => {
-        if (!glassTuner) return;
-        glassTuner.hidden = !glassTuner.hidden;
-        glassTunerToggle.setAttribute("aria-expanded", String(!glassTuner.hidden));
-      });
-
-      document.querySelectorAll("[data-glass-setting]").forEach((range) => {
-        const key = range.dataset.glassSetting;
-        const number = document.querySelector(`[data-glass-number="${key}"]`);
-        if (!key || !(key in glassSettings) || !(number instanceof HTMLInputElement)) return;
-        range.value = String(glassSettings[key]);
-        number.value = String(glassSettings[key]);
-
-        const applyValue = (rawValue) => {
-          const min = Number(range.min);
-          const max = Number(range.max);
-          const value = Math.min(max, Math.max(min, Number(rawValue)));
-          if (!Number.isFinite(value)) return;
-          glassSettings[key] = value;
-          range.value = String(value);
-          number.value = String(value);
-          const openDialog = dialogs.find((dialog) => !dialog.hidden);
-          if (openDialog) updateGlassRefraction(openDialog);
-        };
-
-        range.addEventListener("input", () => applyValue(range.value));
-        number.addEventListener("input", () => applyValue(number.value));
-      });
 
       document.querySelectorAll("[data-account-dialog]").forEach((button) => {
         button.addEventListener("click", () => {
@@ -3350,7 +3216,7 @@
         const openDialog = dialogs.find((dialog) => !dialog.hidden);
         const target = event.target;
         if (!openDialog || !(target instanceof Element)) return;
-        if (openDialog.contains(target) || target.closest("[data-account-dialog], .glass-tuner, .glass-tuner-toggle")) return;
+        if (openDialog.contains(target) || target.closest("[data-account-dialog]")) return;
         closeDialog(openDialog);
       });
 
