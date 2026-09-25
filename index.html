@@ -928,6 +928,45 @@
       opacity:.52;
     }
 
+    .count-test-controls{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      padding:5px;
+      border:1px solid rgba(22,19,17,.1);
+      border-radius:999px;
+      background:rgba(255,255,255,.38);
+      box-shadow:0 8px 22px rgba(22,19,17,.04);
+    }
+
+    .count-test-button{
+      display:grid;
+      place-items:center;
+      width:30px;
+      height:30px;
+      padding:0;
+      border:0;
+      border-radius:50%;
+      color:var(--ink);
+      background:rgba(22,19,17,.07);
+      font:500 20px/1 "SUIT","Noto Sans KR",sans-serif;
+      cursor:pointer;
+      touch-action:manipulation;
+    }
+
+    .count-test-button:active{
+      transform:scale(.94);
+    }
+
+    .count-test-value{
+      min-width:56px;
+      color:var(--muted);
+      font:600 11px/1 "SUIT","Noto Sans KR",sans-serif;
+      text-align:center;
+      letter-spacing:.02em;
+    }
+
     .count-axis{
       --today-progress:50%;
       --wedding-progress:89%;
@@ -1010,11 +1049,9 @@
       left:var(--today-progress);
       right:calc(100% - var(--wedding-progress));
       top:24px;
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      align-items:center;
-      gap:10px;
-      min-width:96px;
+      display:block;
+      height:11px;
+      min-width:0;
       pointer-events:none;
     }
 
@@ -1024,10 +1061,22 @@
     }
 
     .count-axis-dday-line{
-      position:relative;
+      position:absolute;
+      top:50%;
       display:block;
       height:1px;
       background:rgba(22,19,17,.16);
+    }
+
+    .count-axis-dday-line.left{
+      left:0;
+      right:0;
+    }
+
+    .count-axis-dday-line.right{
+      right:0;
+      width:1px;
+      background:transparent;
     }
 
     .count-axis-dday-line::before{
@@ -1049,24 +1098,26 @@
     }
 
     .count-axis-dday-label{
-      position:relative;
+      position:absolute;
+      left:50%;
+      bottom:calc(50% + 7px);
       display:grid;
+      gap:4px;
       justify-items:center;
-      padding:0 4px;
+      padding:0;
       white-space:nowrap;
+      transform:translateX(-50%);
     }
 
     .count-axis-dday-value{
-      position:absolute;
-      left:50%;
-      bottom:calc(100% + 5px);
+      position:static;
       color:#8f4c3d;
       font-family:"SUIT","Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       font-size:31px;
       font-weight:700;
       line-height:1;
       letter-spacing:0;
-      transform:translateX(-50%);
+      transform:none;
       text-shadow:0 10px 22px rgba(143,76,61,.14);
     }
 
@@ -1092,6 +1143,51 @@
       letter-spacing:.12em;
       opacity:.72;
       text-transform:uppercase;
+    }
+
+    .count-step.is-wedding-day .count-axis-dday-value{
+      left:auto;
+      right:0;
+      font-size:27px;
+      font-weight:600;
+      letter-spacing:.08em;
+      transform:none;
+      text-shadow:0 8px 20px rgba(143,76,61,.16);
+    }
+
+    .count-step.is-wedding-day .count-axis-dday{
+      left:auto;
+      right:0;
+      display:block;
+      width:min(220px, 72vw);
+      min-width:0;
+    }
+
+    .count-step.is-wedding-day .count-axis-dday-line{
+      display:none;
+    }
+
+    .count-step.is-wedding-day .count-axis-dday-label{
+      left:auto;
+      right:0;
+      bottom:calc(50% + 7px);
+      justify-items:end;
+      padding-right:0;
+      text-align:right;
+      transform:none;
+    }
+
+    .count-step.is-wedding-day .count-axis-dday-caption{
+      color:#8f4c3d;
+      letter-spacing:.04em;
+      opacity:1;
+    }
+
+    .count-step.is-wedding-day .count-axis-dot.wedding{
+      box-shadow:
+        0 0 0 5px rgba(247,239,230,.76),
+        0 0 0 10px rgba(143,76,61,.08),
+        0 0 24px rgba(143,76,61,.2);
     }
 
     .count-axis-labels,
@@ -2174,6 +2270,12 @@
             <div class="count-stage">
               <p class="count-kicker">2026.11.22</p>
 
+              <div class="count-test-controls" aria-label="남은 날 테스트">
+                <button class="count-test-button" id="countTestMinus" type="button" aria-label="남은 날 하루 줄이기">−</button>
+                <output class="count-test-value" id="countTestValue" aria-live="polite">테스트</output>
+                <button class="count-test-button" id="countTestPlus" type="button" aria-label="남은 날 하루 늘리기">+</button>
+              </div>
+
               <div class="count-axis" id="countAxis" aria-label="2026년 진행 축">
                 <div class="count-axis-labels" aria-hidden="true">
                   <span>26.01</span>
@@ -2952,6 +3054,9 @@
       const narrativeEl = document.getElementById("countNarrative");
       const axisEl = document.getElementById("countAxis");
       const todayAxisEl = document.getElementById("countTodayAxis");
+      const testMinusEl = document.getElementById("countTestMinus");
+      const testPlusEl = document.getElementById("countTestPlus");
+      const testValueEl = document.getElementById("countTestValue");
       if (!stepEl || !ddayValueEl) return;
 
       const target = new Date("2026-11-22T13:00:00+09:00");
@@ -2972,20 +3077,26 @@
         axisEl.style.setProperty("--wedding-progress", toYearProgress(target));
       }
 
-      const tick = () => {
-        const now = new Date();
+      let testDays = null;
+
+      const render = () => {
+        const actualNow = new Date();
+        const now = testDays === null
+          ? actualNow
+          : new Date(target.getTime() - testDays * 86400000);
         const diff = Math.max(0, target - now);
         const totalSeconds = Math.floor(diff / 1000);
-        const days = Math.floor(totalSeconds / 86400);
+        const days = testDays === null ? Math.floor(totalSeconds / 86400) : testDays;
 
-        const nextDday = totalSeconds <= 0 ? "오늘" : `${days}일`;
+        const isWeddingDay = testDays === 0 || (testDays === null && totalSeconds <= 0);
+        const nextDday = isWeddingDay ? "D-DAY" : `${days}일`;
         if (ddayValueEl.dataset.text !== nextDday) {
           ddayValueEl.dataset.text = nextDday;
           const numberEl = ddayValueEl.querySelector(".count-day-number");
           const unitEl = ddayValueEl.querySelector(".count-day-unit");
           if (numberEl && unitEl) {
-            if (totalSeconds <= 0) {
-              numberEl.textContent = "오늘";
+            if (isWeddingDay) {
+              numberEl.textContent = "D-DAY";
               unitEl.textContent = "";
             } else {
               numberEl.textContent = String(days);
@@ -2995,13 +3106,27 @@
             ddayValueEl.textContent = nextDday;
           }
         }
-        if (narrativeEl) narrativeEl.textContent = "남은 날";
+        stepEl.classList.toggle("is-wedding-day", isWeddingDay);
+        if (narrativeEl) narrativeEl.textContent = isWeddingDay ? "드디어, 저희 결혼합니다" : "남은 날";
         if (axisEl) axisEl.style.setProperty("--today-progress", toYearProgress(now));
         if (todayAxisEl) todayAxisEl.textContent = formatAxisDate(now);
+        if (testValueEl) testValueEl.textContent = testDays === null ? "실시간" : `${testDays}일`;
       };
 
-      tick();
-      setInterval(tick, 1000);
+      const changeTestDays = (amount) => {
+        if (testDays === null) {
+          const actualDiff = Math.max(0, target - new Date());
+          testDays = Math.floor(actualDiff / 86400000);
+        }
+        testDays = clamp(testDays + amount, 0, 365);
+        render();
+      };
+
+      testMinusEl?.addEventListener("click", () => changeTestDays(-1));
+      testPlusEl?.addEventListener("click", () => changeTestDays(1));
+
+      render();
+      setInterval(render, 1000);
     })();
 
     (function dramaticGallery() {
